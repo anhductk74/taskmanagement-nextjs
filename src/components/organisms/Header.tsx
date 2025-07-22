@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import Logo from '@/components/atoms/Logo/Logo';
 
 export default function Header() {
   return (
@@ -8,9 +8,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-gray-900">TaskManager</span>
-            </Link>
+            <Logo variant="default" />
           </div>
 
           {/* Navigation */}
