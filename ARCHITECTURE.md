@@ -5,9 +5,10 @@
 - [Technology Stack](#technology-stack)
 - [Project Structure](#project-structure)
 - [Component Architecture](#component-architecture)
-- [Development Guidelines](#development-guidelines)
+- [Authentication & Authorization](#authentication--authorization)
 - [State Management](#state-management)
-- [Routing & Authentication](#routing--authentication)
+- [API Integration](#api-integration)
+- [Testing Strategy](#testing-strategy)
 - [Best Practices](#best-practices)
 
 ## 🎯 Project Overview
@@ -18,58 +19,305 @@ TaskManager is a task management application inspired by Asana, built with moder
 
 - **Framework:** Next.js 13+ (App Router)
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **State Management:** React Context + React Query
-- **Authentication:** NextAuth.js
-- **Database:** (Your database choice)
-- **Testing:** Jest + React Testing Library
-- **Documentation:** Storybook
+- **Styling:** 
+  - Tailwind CSS
+  - Class Variance Authority (cva)
+  - CSS Modules (optional)
+- **State Management:** 
+  - React Query (Server State)
+  - Context API (Global UI State)
+  - Zustand (Complex UI State)
+- **Authentication:** 
+  - NextAuth.js
+  - JWT + HTTP-only Cookies
+- **Form Management:**
+  - React Hook Form
+  - Zod Validation
+- **Testing:** 
+  - Jest
+  - React Testing Library
+  - Cypress (E2E)
+- **Documentation:** 
+  - Storybook
+  - TypeDoc (API docs)
+- **Code Quality:**
+  - ESLint
+  - Prettier
+  - Husky (Git Hooks)
+  - TypeScript strict mode
 
 ## 📂 Project Structure
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── (routes)/          # Route groups
-│   │   ├── (public)/      # Public routes
-│   │   ├── (auth)/        # Authentication routes
-│   │   └── (admin)/       # Admin routes
-│   ├── api/               # API routes
-│   └── layout.tsx         # Root layout
+├── app/                              # Next.js 13+ App Router
+│   ├── layout.tsx                    # Root layout (Public)
+│   ├── page.tsx                      # Landing page
+│   ├── (public)/                     # Public routes
+│   │   ├── about/
+│   │   │   └── page.tsx
+│   │   └── contact/
+│   │       └── page.tsx
+│   ├── (auth)/                       # Authentication routes
+│   │   ├── layout.tsx               # Auth layout
+│   │   ├── login/
+│   │   │   ├── page.tsx
+│   │   │   └── loading.tsx
+│   │   ├── register/
+│   │   │   ├── page.tsx
+│   │   │   └── loading.tsx
+│   │   └── setup/                   # Initial setup after registration
+│   │       └── page.tsx
+│   ├── dashboard/                    # Main dashboard area
+│   │   ├── layout.tsx               # Dashboard shared layout
+│   │   ├── page.tsx                 # Dashboard home
+│   │   ├── loading.tsx              # Loading UI
+│   │   ├── error.tsx                # Error handling
+│   │   ├── projects/                # Projects management
+│   │   │   ├── page.tsx            # Projects list
+│   │   │   ├── [id]/               # Single project view
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── tasks/
+│   │   │   │   ├── members/
+│   │   │   │   └── settings/
+│   │   │   └── new/                # Create new project
+│   │   ├── tasks/                  # Tasks management
+│   │   │   ├── page.tsx            # All tasks
+│   │   │   ├── [id]/              # Single task view
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── comments/
+│   │   │   ├── assigned/          # Tasks assigned to me
+│   │   │   └── created/           # Tasks created by me
+│   │   ├── owner/                 # Owner specific pages
+│   │   │   ├── layout.tsx
+│   │   │   ├── report-summary/
+│   │   │   │   └── page.tsx
+│   │   │   └── settings/
+│   │   │       └── page.tsx
+│   │   ├── manager/               # Manager specific pages
+│   │   │   ├── layout.tsx
+│   │   │   └── team-overview/
+│   │   │       └── page.tsx
+│   │   ├── leader/                # Team leader pages
+│   │   │   ├── layout.tsx
+│   │   │   └── task-distribution/
+│   │   │       └── page.tsx
+│   │   └── member/                # Team member pages
+│   │       ├── layout.tsx
+│   │       └── my-tasks/
+│   │           └── page.tsx
+│   └── api/                       # API Routes
+│       ├── auth/                  # Auth endpoints
+│       │   ├── [...nextauth]/
+│       │   ├── register/
+│       │   └── verify/
+│       ├── projects/             # Project endpoints
+│       │   ├── route.ts         # GET, POST /api/projects
+│       │   └── [id]/
+│       │       ├── route.ts     # GET, PUT, DELETE /api/projects/[id]
+│       │       ├── members/
+│       │       └── tasks/
+│       ├── tasks/               # Task endpoints
+│       │   ├── route.ts        # GET, POST /api/tasks
+│       │   └── [id]/
+│       │       ├── route.ts    # GET, PUT, DELETE /api/tasks/[id]
+│       │       └── comments/
+│       └── users/              # User endpoints
+│           ├── route.ts
+│           └── [id]/
 │
-├── components/            # UI Components (Atomic Design)
-│   ├── atoms/            # Basic components
-│   │   ├── forms/        # Form elements
-│   │   ├── typography/   # Text elements
-│   │   └── data-display/ # Display elements
+├── components/                    # UI Components (Atomic Design)
+│   ├── atoms/                    # Basic UI elements
+│   │   ├── Button/              # Button variations
+│   │   │   ├── Button.tsx
+│   │   │   ├── Button.test.tsx
+│   │   │   └── Button.stories.tsx
+│   │   ├── Input/               # Input elements
+│   │   │   ├── TextInput/
+│   │   │   ├── SearchInput/
+│   │   │   └── DateInput/
+│   │   ├── Select/              # Select components
+│   │   │   ├── Select.tsx
+│   │   │   └── MultiSelect.tsx
+│   │   ├── Avatar/             # User avatars
+│   │   │   ├── Avatar.tsx
+│   │   │   └── AvatarGroup.tsx
+│   │   └── Icon/               # Icon system
+│   │       ├── icons/
+│   │       └── Icon.tsx
 │   │
-│   ├── molecules/        # Composite components
-│   │   ├── task/        # Task-related components
-│   │   └── project/     # Project-related components
+│   ├── molecules/              # Composite components
+│   │   ├── TaskCard/          # Task display
+│   │   │   ├── TaskCard.tsx
+│   │   │   ├── TaskStatus.tsx
+│   │   │   └── TaskPriority.tsx
+│   │   ├── UserDropdown/      # User menu
+│   │   │   ├── UserDropdown.tsx
+│   │   │   └── UserMenu.tsx
+│   │   ├── SearchBar/         # Search functionality
+│   │   │   ├── SearchBar.tsx
+│   │   │   └── SearchResults.tsx
+│   │   ├── FormGroup/         # Form elements
+│   │   │   ├── FormGroup.tsx
+│   │   │   ├── FormLabel.tsx
+│   │   │   └── FormError.tsx
+│   │   └── Modals/           # Modal dialogs
+│   │       ├── ConfirmModal.tsx
+│   │       └── FormModal.tsx
 │   │
-│   ├── organisms/       # Complex components
-│   │   ├── navigation/  # Navigation components
-│   │   └── task-management/
+│   ├── organisms/            # Complex components
+│   │   ├── Header/          # Main header
+│   │   │   ├── Header.tsx
+│   │   │   ├── Navigation.tsx
+│   │   │   └── UserNav.tsx
+│   │   ├── Sidebar/         # Dashboard sidebar
+│   │   │   ├── Sidebar.tsx
+│   │   │   ├── SidebarItem.tsx
+│   │   │   └── SidebarSection.tsx
+│   │   ├── TaskBoard/       # Kanban board
+│   │   │   ├── TaskBoard.tsx
+│   │   │   ├── TaskColumn.tsx
+│   │   │   └── TaskDragDrop.tsx
+│   │   └── ProjectList/     # Project management
+│   │       ├── ProjectList.tsx
+│   │       ├── ProjectCard.tsx
+│   │       └── ProjectFilters.tsx
 │   │
-│   └── templates/       # Page layouts
-│       └── layouts/     # Layout templates
+│   └── templates/           # Page layouts
+│       ├── DashboardLayout/ # Main app layout
+│       │   ├── DashboardLayout.tsx
+│       │   └── DashboardHeader.tsx
+│       ├── AuthLayout/      # Auth pages layout
+│       │   ├── AuthLayout.tsx
+│       │   └── AuthHeader.tsx
+│       └── ErrorLayout/     # Error pages
+│           ├── ErrorLayout.tsx
+│           └── ErrorMessage.tsx
 │
-├── features/            # Feature-based code organization
-│   ├── tasks/          # Task management feature
-│   │   ├── api/        # API functions
-│   │   ├── hooks/      # Custom hooks
-│   │   └── context/    # Context providers
-│   ├── projects/       # Project management
-│   └── workspace/      # Workspace management
+├── features/                     # Feature modules
+│   ├── tasks/                     # Task management
+│   │   ├── api/                   # Task API functions
+│   │   │   ├── createTask.ts
+│   │   │   ├── updateTask.ts
+│   │   │   └── deleteTask.ts
+│   │   ├── components/            # Task-specific components
+│   │   │   ├── TaskForm/
+│   │   │   ├── TaskFilters/
+│   │   │   └── TaskComments/
+│   │   ├── hooks/                # Task-specific hooks
+│   │   │   ├── useTask.ts
+│   │   │   ├── useTaskList.ts
+│   │   │   └── useTaskActions.ts
+│   │   ├── store/                # Task state management
+│   │   │   ├── taskStore.ts
+│   │   │   └── taskSelectors.ts
+│   │   ├── types/                # Task type definitions
+│   │   │   └── task.types.ts
+│   │   └── utils/                # Task utilities
+│   │       ├── taskHelpers.ts
+│   │       └── taskValidation.ts
+│   │
+│   ├── projects/                 # Project management
+│   │   ├── api/                  # Project API
+│   │   │   ├── createProject.ts
+│   │   │   └── projectMembers.ts
+│   │   ├── components/           # Project components
+│   │   │   ├── ProjectForm/
+│   │   │   └── ProjectMembers/
+│   │   ├── hooks/               # Project hooks
+│   │   │   ├── useProject.ts
+│   │   │   └── useProjectMembers.ts
+│   │   ├── store/               # Project state
+│   │   │   └── projectStore.ts
+│   │   └── types/               # Project types
+│   │       └── project.types.ts
+│   │
+│   └── auth/                    # Authentication
+│       ├── api/                 # Auth API calls
+│       │   ├── login.ts
+│       │   ├── register.ts
+│       │   └── verify.ts
+│       ├── components/          # Auth components
+│       │   ├── LoginForm/
+│       │   └── RegisterForm/
+│       ├── hooks/              # Auth hooks
+│       │   ├── useAuth.ts
+│       │   └── usePermissions.ts
+│       ├── store/              # Auth state
+│       │   └── authStore.ts
+│       └── utils/              # Auth utilities
+│           ├── jwt.ts
+│           └── validation.ts
 │
-├── lib/                # Shared utilities
-│   ├── auth/          # Authentication utilities
-│   ├── api/           # API utilities
-│   └── utils/         # Helper functions
+├── lib/                          # Core utilities
+│   ├── api/                       # API infrastructure
+│   │   ├── client/               # API client setup
+│   │   │   ├── axios.ts         # Axios instance
+│   │   │   └── fetch.ts         # Fetch wrapper
+│   │   ├── middleware/          # API middlewares
+│   │   │   ├── auth.ts
+│   │   │   └── error.ts
+│   │   └── endpoints.ts         # API endpoints
+│   │
+│   ├── hooks/                    # Shared hooks
+│   │   ├── common/              # Common hooks
+│   │   │   ├── useDisclosure.ts
+│   │   │   ├── usePagination.ts
+│   │   │   └── useDebounce.ts
+│   │   ├── form/               # Form hooks
+│   │   │   ├── useForm.ts
+│   │   │   └── useFieldArray.ts
+│   │   └── ui/                 # UI hooks
+│   │       ├── useMediaQuery.ts
+│   │       └── useLocalStorage.ts
+│   │
+│   ├── utils/                   # Helper functions
+│   │   ├── date/               # Date utilities
+│   │   │   ├── format.ts
+│   │   │   └── timezone.ts
+│   │   ├── validation/         # Validation utils
+│   │   │   ├── schemas.ts
+│   │   │   └── rules.ts
+│   │   └── format/             # Formatting utils
+│   │       ├── number.ts
+│   │       └── string.ts
+│   │
+│   └── config/                 # App configuration
+│       ├── auth.config.ts
+│       ├── api.config.ts
+│       └── theme.config.ts
 │
-├── constants/          # Application constants
-├── types/             # TypeScript types
-└── config/            # Configuration files
+├── types/                         # TypeScript types
+│   ├── api/                       # API types
+│   │   ├── requests.ts           # Request types
+│   │   └── responses.ts          # Response types
+│   ├── models/                   # Domain models
+│   │   ├── user.types.ts
+│   │   ├── task.types.ts
+│   │   └── project.types.ts
+│   └── common/                   # Shared types
+│       ├── form.types.ts
+│       └── ui.types.ts
+│
+├── constants/                    # Application constants
+│   ├── api.constants.ts         # API related
+│   ├── routes.constants.ts      # Route paths
+│   ├── validation.constants.ts  # Validation rules
+│   └── ui.constants.ts          # UI constants
+│
+├── styles/                      # Global styles
+│   ├── globals.css             # Global CSS
+│   ├── themes/                 # Theme files
+│   │   ├── light.ts
+│   │   └── dark.ts
+│   └── components/            # Component styles
+│       └── custom/
+│
+└── config/                     # Configuration
+    ├── app.config.ts          # App settings
+    ├── auth.config.ts         # Auth config
+    ├── api.config.ts          # API config
+    └── theme.config.ts        # Theme config
 ```
 
 ## 🎨 Component Architecture
