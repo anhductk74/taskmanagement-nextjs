@@ -76,7 +76,7 @@ export default function SetupAccountPage() {
         {/* Logo và Header */}
         <div className="text-center mb-12">
           <div className="mb-8">
-            <Logo size="lg" variant="default" />
+            <Logo variant="default" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
             Tell us about your work

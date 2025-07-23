@@ -28,7 +28,7 @@ export default function SignUpPage() {
       setIsLoading(true)
       // Giả lập đăng ký thành công
       await new Promise(resolve => setTimeout(resolve, 1000))
-      router.push('/auth/setup')
+      router.push('/setup')
     } catch (error) {
       console.error(error)
     } finally {
