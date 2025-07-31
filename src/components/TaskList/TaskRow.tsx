@@ -22,40 +22,36 @@ const TaskRow: React.FC<TaskRowProps> = ({
 }) => {
   const assigneeDropdownRef = useRef<HTMLDivElement>(null)
 
-  // Handle click outside to close dropdown
+  // ✅ Handle outside click properly
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (assigneeDropdownRef.current && !assigneeDropdownRef.current.contains(event.target as Node)) {
-        if (task.isEditing?.assignee) {
-          onToggleEdit(task.id, 'assignee')
-        }
+      const dropdown = assigneeDropdownRef.current
+      if (dropdown && !dropdown.contains(event.target as Node)) {
+        requestAnimationFrame(() => {
+          if (task.isEditing?.assignee) {
+            onToggleEdit(task.id, 'assignee')
+          }
+        })
       }
     }
 
     if (task.isEditing?.assignee) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
     }
   }, [task.isEditing?.assignee, task.id, onToggleEdit])
 
   return (
-    <tr className={`border-b border-gray-200 hover:bg-gray-100`}>
-      {/* Name Column */}
-      <td className="min-w-[200px] py-1 px-2 border-b border-t border-gray-200 ">
+    <tr className="border-b border-gray-200 hover:bg-gray-100">
+      {/* Name */}
+      <td className="min-w-[200px] py-1 px-2 border-b border-t border-gray-200">
         <div className="flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-gray-400" />
           {task.isEditing?.name ? (
             <input
               type="text"
               value={task.name}
-              onChange={(e) => {
-                // Update task name in parent component
-                const updatedTask = { ...task, name: e.target.value }
-                // You'll need to implement this in parent
-              }}
+              onChange={(e) => onEdit(task.id, 'name', e.target.value)}
               onBlur={() => onEdit(task.id, 'name', task.name)}
               onKeyDown={(e) => onKeyPress(e, task.id, 'name', task.name)}
               className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:border-blue-500 hover:border-gray-800 transition-all duration-200"
@@ -72,18 +68,19 @@ const TaskRow: React.FC<TaskRowProps> = ({
         </div>
       </td>
 
-      {/* Assignee Column */}
+      {/* Assignee */}
       <td className="min-w-[180px] py-1 px-2 border border-gray-200">
         {task.isEditing?.assignee ? (
           <div className="relative" ref={assigneeDropdownRef}>
             <div className="absolute z-10 bg-white border border-gray-300 rounded shadow-md w-64 p-2 max-h-48 overflow-y-auto space-y-1">
               {assignees.map((assignee) => {
-                const isSelected = task.assignee.includes(assignee.name);
+                const isSelected = task.assignee.includes(assignee.name)
                 return (
                   <label
                     key={assignee.id}
-                    className={` w-full flex items-center gap-2  py-1 rounded cursor-pointer ${isSelected ? 'bg-blue-100' : 'hover:bg-gray-100'
-                      }`}
+                    className={`w-full flex items-center gap-2 py-1 rounded cursor-pointer ${
+                      isSelected ? 'bg-blue-100' : 'hover:bg-gray-100'
+                    }`}
                   >
                     <input
                       type="checkbox"
@@ -91,8 +88,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
                       onChange={(e) => {
                         const newSelection = e.target.checked
                           ? [...task.assignee, assignee.name]
-                          : task.assignee.filter(name => name !== assignee.name);
-                        onEdit(task.id, 'assignee', newSelection);
+                          : task.assignee.filter(name => name !== assignee.name)
+                        onEdit(task.id, 'assignee', newSelection)
                       }}
                     />
                     <img
@@ -102,14 +99,14 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     />
                     <span className="text-sm w-full">{assignee.name}</span>
                   </label>
-                );
+                )
               })}
               <div className="flex justify-end gap-2 mt-2">
                 <button
                   onClick={() => onToggleEdit(task.id, 'assignee')}
                   className="text-sm px-2 py-1 rounded border hover:bg-gray-100"
                 >
-                  Huỷ
+                  Đóng
                 </button>
               </div>
             </div>
@@ -122,12 +119,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
             {task.assignee.length > 0 ? (
               <div className="flex items-center gap-2 w-full">
                 <AvatarGroup
-                  users={task.assignee.map(assigneeName => {
-                    const assignee = assignees.find(a => a.name === assigneeName);
-                    return {
-                      name: assigneeName,
-                      src: assignee?.avatar
-                    };
+                  users={task.assignee.map(name => {
+                    const found = assignees.find(a => a.name === name)
+                    return { name, src: found?.avatar }
                   })}
                   maxVisible={2}
                 />
@@ -140,16 +134,16 @@ const TaskRow: React.FC<TaskRowProps> = ({
         )}
       </td>
 
-      {/* Due Date Column */}
+      {/* Due Date */}
       <td className="min-w-[100px] py-1 px-2 border border-gray-200">
         {task.isEditing?.dueDate ? (
           <input
             type="date"
             value={task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : ''}
             onChange={(e) => {
-              const selectedDate = e.target.value;
-              const formattedDate = selectedDate ? formatDate(selectedDate) : '';
-              onEdit(task.id, 'dueDate', formattedDate);
+              const selectedDate = e.target.value
+              const formattedDate = selectedDate ? formatDate(selectedDate) : ''
+              onEdit(task.id, 'dueDate', formattedDate)
             }}
             onBlur={() => onToggleEdit(task.id, 'dueDate')}
             className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
@@ -172,7 +166,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
         )}
       </td>
 
-      {/* Priority Column */}
+      {/* Priority */}
       <td className="min-w-[100px] py-1 px-2 border border-gray-200">
         {task.isEditing?.priority ? (
           <select
@@ -196,7 +190,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
         )}
       </td>
 
-      {/* Status Column */}
+      {/* Status */}
       <td className="min-w-[100px] py-1 px-2 border border-gray-200">
         {task.isEditing?.status ? (
           <select
@@ -222,7 +216,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
         )}
       </td>
 
-      {/* Actions Column */}
+      {/* Actions */}
       <td className="min-w-[70px] py-1 px-2 border-l border-b border-t border-gray-200">
         <div className="flex items-center gap-1">
           <MoreHorizontal className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
@@ -232,4 +226,4 @@ const TaskRow: React.FC<TaskRowProps> = ({
   )
 }
 
-export default TaskRow 
+export default TaskRow
