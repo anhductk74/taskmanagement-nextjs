@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PrivateHeader from "./PrivateHeader";
 import PrivateSidebar from "./PrivateSidebar";
 import {
@@ -8,6 +8,9 @@ import {
   useLayoutActions,
 } from "../context/PrivateLayoutContext";
 import { DetailPanel } from "@/components/DetailPanel";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/auth/firebaseConfig";
+import { useRouter } from "next/navigation";
 
 interface PrivateLayoutContentProps {
   children: React.ReactNode;
@@ -19,10 +22,19 @@ export default function PrivateLayoutContent({
   const { user, isSidebarOpen, isSidebarCollapsed } = useLayoutContext();
   const { toggleSidebar, setSidebarOpen, toggleSidebarCollapse } =
     useLayoutActions();
-
+  const [userAuth, setUserAuth] = useState<any>(null);
+  const router = useRouter();
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
+      if (userAuth) setUserAuth(userAuth as any);
+      else router.push("/login");
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div
@@ -32,6 +44,7 @@ export default function PrivateLayoutContent({
       {/* Header - Fixed at top */}
       <PrivateHeader
         user={user!}
+        userAuth={userAuth!}
         onSidebarToggle={toggleSidebar}
         onSidebarCollapseToggle={toggleSidebarCollapse}
         isSidebarCollapsed={isSidebarCollapsed}

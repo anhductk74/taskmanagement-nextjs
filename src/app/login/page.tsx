@@ -1,49 +1,84 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { THEME_COLORS, LIGHT_THEME, DARK_THEME } from "@/constants/theme";
 import { ALL_ICONS } from "@/constants/icons";
 import Button from "@/components/ui/Button/Button";
 import Input from "@/components/ui/Input/Input";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import Link from "next/link";
+import { getAdditionalUserInfo, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "@/lib/auth/firebaseConfig";
+import { useRouter } from "next/navigation";
+
+// Validation schema
+const loginSchema = yup.object({
+  email: yup
+    .string()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+}).required();
+
+type LoginFormData = yup.InferType<typeof loginSchema>;
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<LoginFormData>({
+    resolver: yupResolver(loginSchema),
+    mode: "onChange",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      console.log("Email login:", formData);
+      console.log("Email login:", data);
+      reset();
     }, 1000);
   };
 
   const handleGmailLogin = async () => {
     setIsLoading(true);
-    
-    // Simulate Gmail OAuth
-    setTimeout(() => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const isNewUser = getAdditionalUserInfo(result)?.isNewUser;
+      const user = (result as any).user;
+  
+      if (user) {
+        console.log("✅ User:", user);
+        console.log("✅ accessToken:", user.accessToken);
+        if (isNewUser) {
+            console.log("User is new. First time login.");
+        } else {
+            console.log("User already exists. Returning user.");
+            router.push("/home");
+          }
+      }
+  
+    } catch (error: any) {
       setIsLoading(false);
-      console.log("Gmail login initiated");
-    }, 1000);
+    }
+    
   };
+  
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
@@ -63,12 +98,12 @@ export default function LoginPage() {
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">TaskManager</h1>
-          <p className="text-slate-400">Đăng nhập vào tài khoản của bạn</p>
+          <p className="text-slate-400">Sign in to your account</p>
         </div>
 
         {/* Login Form */}
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20">
-          <form onSubmit={handleEmailLogin} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
@@ -76,31 +111,28 @@ export default function LoginPage() {
               </label>
               <Input
                 id="email"
-                name="email"
                 type="email"
-                placeholder="Nhập email của bạn"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
+                placeholder="Enter your email"
+                error={!!errors.email}
+                helperText={errors.email?.message}
                 leftIcon={<Mail className="w-5 h-5" />}
                 className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                 inputSize="lg"
+                {...register("email")}
               />
             </div>
 
             {/* Password Input */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
-                Mật khẩu
+                Password
               </label>
               <Input
                 id="password"
-                name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Nhập mật khẩu của bạn"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
+                placeholder="Enter your password"
+                error={!!errors.password}
+                helperText={errors.password?.message}
                 leftIcon={<Lock className="w-5 h-5" />}
                 rightIcon={
                   <button
@@ -113,6 +145,7 @@ export default function LoginPage() {
                 }
                 className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                 inputSize="lg"
+                {...register("password")}
               />
             </div>
 
@@ -123,10 +156,10 @@ export default function LoginPage() {
                   type="checkbox"
                   className="w-4 h-4 text-red-500 bg-white/5 border-white/20 rounded focus:ring-red-500 focus:ring-2"
                 />
-                <span className="ml-2 text-sm text-slate-300">Ghi nhớ đăng nhập</span>
+                <span className="ml-2 text-sm text-slate-300">Remember me</span>
               </label>
               <a href="#" className="text-sm text-red-400 hover:text-red-300 transition-colors">
-                Quên mật khẩu?
+                Forgot password?
               </a>
             </div>
 
@@ -139,7 +172,7 @@ export default function LoginPage() {
               loading={isLoading}
               className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+              {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
@@ -149,7 +182,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-white/20"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 text-slate-400">hoặc</span>
+              <span className="px-2 text-slate-400">or</span>
             </div>
           </div>
 
@@ -182,15 +215,15 @@ export default function LoginPage() {
               </svg>
             }
           >
-            {isLoading ? "Đang xử lý..." : "Đăng nhập bằng Gmail"}
+            {isLoading ? "Processing..." : "Sign in with Gmail"}
           </Button>
 
           {/* Sign Up Link */}
           <div className="text-center mt-6">
             <p className="text-slate-400">
-              Chưa có tài khoản?{" "}
+              Don't have an account?{" "}
               <Link href="/register" className="text-red-400 hover:text-red-300 font-medium transition-colors">
-                Đăng ký ngay
+                Sign up now
               </Link>
             </p>
           </div>
@@ -199,7 +232,7 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-slate-500 text-sm">
-            © 2024 TaskManager. Tất cả quyền được bảo lưu.
+            © 2024 TaskManager. All rights reserved.
           </p>
         </div>
       </div>

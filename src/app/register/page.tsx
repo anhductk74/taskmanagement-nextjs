@@ -1,49 +1,78 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { THEME_COLORS, LIGHT_THEME, DARK_THEME } from "@/constants/theme";
 import { ALL_ICONS } from "@/constants/icons";
 import Button from "@/components/ui/Button/Button";
 import Input from "@/components/ui/Input/Input";
 import { Eye, EyeOff, Mail, Lock, User, Phone, Building } from "lucide-react";
+import Link from "next/link";
+
+// Validation schema
+const registerSchema = yup.object({
+  firstName: yup
+    .string()
+    .min(2, "First name must be at least 2 characters")
+    .required("First name is required"),
+  lastName: yup
+    .string()
+    .min(2, "Last name must be at least 2 characters")
+    .required("Last name is required"),
+  email: yup
+    .string()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+  phone: yup
+    .string()
+    .matches(/^[+]?[\d\s\-\(\)]+$/, "Please enter a valid phone number")
+    .required("Phone number is required"),
+  company: yup
+    .string()
+    .required("Company is required"),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain at least one uppercase letter, one lowercase letter, and one number")
+    .required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Please confirm your password"),
+  terms: yup
+    .boolean()
+    .oneOf([true], "You must accept the terms and conditions")
+    .required("You must accept the terms and conditions"),
+}).required();
+
+type RegisterFormData = yup.InferType<typeof registerSchema>;
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    password: "",
-    confirmPassword: "",
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+  } = useForm<RegisterFormData>({
+    resolver: yupResolver(registerSchema),
+    mode: "onChange",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleEmailRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
-    
-    // Validate password match
-    if (formData.password !== formData.confirmPassword) {
-      alert("Mật khẩu xác nhận không khớp!");
-      setIsLoading(false);
-      return;
-    }
     
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      console.log("Email registration:", formData);
+      console.log("Email registration:", data);
+      reset();
     }, 1000);
   };
 
@@ -75,46 +104,44 @@ export default function RegisterPage() {
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">TaskManager</h1>
-          <p className="text-slate-400">Tạo tài khoản mới</p>
+          <p className="text-slate-400">Create a new account</p>
         </div>
 
         {/* Register Form */}
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20">
-          <form onSubmit={handleEmailRegister} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Name Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-slate-300 mb-2">
-                  Họ
+                  First Name
                 </label>
                 <Input
                   id="firstName"
-                  name="firstName"
                   type="text"
-                  placeholder="Nhập họ của bạn"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  required
+                  placeholder="Enter your first name"
+                  error={!!errors.firstName}
+                  helperText={errors.firstName?.message}
                   leftIcon={<User className="w-5 h-5" />}
                   className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                   inputSize="lg"
+                  {...register("firstName")}
                 />
               </div>
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-slate-300 mb-2">
-                  Tên
+                  Last Name
                 </label>
                 <Input
                   id="lastName"
-                  name="lastName"
                   type="text"
-                  placeholder="Nhập tên của bạn"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  required
+                  placeholder="Enter your last name"
+                  error={!!errors.lastName}
+                  helperText={errors.lastName?.message}
                   leftIcon={<User className="w-5 h-5" />}
                   className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                   inputSize="lg"
+                  {...register("lastName")}
                 />
               </div>
             </div>
@@ -126,15 +153,14 @@ export default function RegisterPage() {
               </label>
               <Input
                 id="email"
-                name="email"
                 type="email"
-                placeholder="Nhập email của bạn"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
+                placeholder="Enter your email"
+                error={!!errors.email}
+                helperText={errors.email?.message}
                 leftIcon={<Mail className="w-5 h-5" />}
                 className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                 inputSize="lg"
+                {...register("email")}
               />
             </div>
 
@@ -142,34 +168,34 @@ export default function RegisterPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-slate-300 mb-2">
-                  Số điện thoại
+                  Phone Number
                 </label>
                 <Input
                   id="phone"
-                  name="phone"
                   type="tel"
-                  placeholder="Nhập số điện thoại"
-                  value={formData.phone}
-                  onChange={handleInputChange}
+                  placeholder="Enter your phone number"
+                  error={!!errors.phone}
+                  helperText={errors.phone?.message}
                   leftIcon={<Phone className="w-5 h-5" />}
                   className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                   inputSize="lg"
+                  {...register("phone")}
                 />
               </div>
               <div>
                 <label htmlFor="company" className="block text-sm font-medium text-slate-300 mb-2">
-                  Công ty (tùy chọn)
+                  Company (Optional)
                 </label>
                 <Input
                   id="company"
-                  name="company"
                   type="text"
-                  placeholder="Nhập tên công ty"
-                  value={formData.company}
-                  onChange={handleInputChange}
+                  placeholder="Enter company name"
+                  error={!!errors.company}
+                  helperText={errors.company?.message}
                   leftIcon={<Building className="w-5 h-5" />}
                   className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                   inputSize="lg"
+                  {...register("company")}
                 />
               </div>
             </div>
@@ -177,16 +203,14 @@ export default function RegisterPage() {
             {/* Password Input */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
-                Mật khẩu
+                Password
               </label>
               <Input
                 id="password"
-                name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Tạo mật khẩu mới"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
+                placeholder="Create a new password"
+                error={!!errors.password}
+                helperText={errors.password?.message}
                 leftIcon={<Lock className="w-5 h-5" />}
                 rightIcon={
                   <button
@@ -199,22 +223,21 @@ export default function RegisterPage() {
                 }
                 className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                 inputSize="lg"
+                {...register("password")}
               />
             </div>
 
             {/* Confirm Password Input */}
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-2">
-                Xác nhận mật khẩu
+                Confirm Password
               </label>
               <Input
                 id="confirmPassword"
-                name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="Nhập lại mật khẩu"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                required
+                placeholder="Confirm your password"
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword?.message}
                 leftIcon={<Lock className="w-5 h-5" />}
                 rightIcon={
                   <button
@@ -227,6 +250,7 @@ export default function RegisterPage() {
                 }
                 className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
                 inputSize="lg"
+                {...register("confirmPassword")}
               />
             </div>
 
@@ -235,20 +259,23 @@ export default function RegisterPage() {
               <input
                 type="checkbox"
                 id="terms"
-                required
                 className="w-4 h-4 text-red-500 bg-white/5 border-white/20 rounded focus:ring-red-500 focus:ring-2 mt-1"
+                {...register("terms")}
               />
               <label htmlFor="terms" className="ml-2 text-sm text-slate-300">
-                Tôi đồng ý với{" "}
+                I agree to the{" "}
                 <a href="#" className="text-red-400 hover:text-red-300 font-medium transition-colors">
-                  Điều khoản sử dụng
+                  Terms of Service
                 </a>{" "}
-                và{" "}
+                and{" "}
                 <a href="#" className="text-red-400 hover:text-red-300 font-medium transition-colors">
-                  Chính sách bảo mật
+                  Privacy Policy
                 </a>
               </label>
             </div>
+            {errors.terms && (
+              <p className="text-red-400 text-sm mt-1">{errors.terms.message}</p>
+            )}
 
             {/* Register Button */}
             <Button
@@ -259,7 +286,7 @@ export default function RegisterPage() {
               loading={isLoading}
               className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              {isLoading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
+              {isLoading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
 
@@ -269,7 +296,7 @@ export default function RegisterPage() {
               <div className="w-full border-t border-white/20"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 text-slate-400">hoặc</span>
+              <span className="px-2 text-slate-400">or</span>
             </div>
           </div>
 
@@ -302,16 +329,16 @@ export default function RegisterPage() {
               </svg>
             }
           >
-            {isLoading ? "Đang xử lý..." : "Đăng ký bằng Gmail"}
+            {isLoading ? "Processing..." : "Sign up with Gmail"}
           </Button>
 
           {/* Sign In Link */}
           <div className="text-center mt-6">
             <p className="text-slate-400">
-              Đã có tài khoản?{" "}
-              <a href="/login" className="text-red-400 hover:text-red-300 font-medium transition-colors">
-                Đăng nhập ngay
-              </a>
+              Already have an account?{" "}
+              <Link href="/login" className="text-red-400 hover:text-red-300 font-medium transition-colors">
+                Sign in now
+              </Link>
             </p>
           </div>
         </div>
@@ -319,7 +346,7 @@ export default function RegisterPage() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-slate-500 text-sm">
-            © 2024 TaskManager. Tất cả quyền được bảo lưu.
+            © 2024 TaskManager. All rights reserved.
           </p>
         </div>
       </div>
