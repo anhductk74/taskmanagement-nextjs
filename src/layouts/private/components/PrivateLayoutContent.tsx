@@ -64,7 +64,7 @@ export default function PrivateLayoutContent({
   return (
     <div
       className="h-screen flex flex-col"
-      // style={{ backgroundColor: "#0f172a" }}
+      style={{ backgroundColor: "#0f172a" }}
     >
       {/* Header - Fixed at top */}
       <PrivateHeader
@@ -88,7 +88,15 @@ export default function PrivateLayoutContent({
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0">
-          <main className="flex-1 overflow-auto relative">{children}</main>
+          <main 
+            className="flex-1 overflow-auto relative"
+            style={{
+              overscrollBehavior: 'none',
+              overscrollBehaviorX: 'none', 
+              overscrollBehaviorY: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >{children}</main>
         </div>
 
         {/* Detail Panel */}
