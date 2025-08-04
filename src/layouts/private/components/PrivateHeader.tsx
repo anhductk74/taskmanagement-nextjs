@@ -9,11 +9,17 @@ import Dropdown, {
   DropdownItem,
   DropdownSeparator,
 } from "@/components/ui/Dropdown/Dropdown";
+
+import { auth } from "@/lib/auth/firebaseConfig";
+import { signOut as firebaseSignOut } from "firebase/auth";
+import { signOut as nextAuthSignOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import SearchPanel from "./SearchPanel";
-import { useDisclosure } from "@/layouts/hooks/ui/useDisclosure";
 
 interface PrivateHeaderProps {
   user: User;
+  userAuth: any;
   onSidebarToggle: () => void;
   onSidebarCollapseToggle: () => void;
   isSidebarCollapsed: boolean;
@@ -21,13 +27,18 @@ interface PrivateHeaderProps {
 
 export default function PrivateHeader({
   user,
+  userAuth,
   onSidebarToggle,
   onSidebarCollapseToggle,
   isSidebarCollapsed,
 }: PrivateHeaderProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const { data: session } = useSession();
   // Use useDisclosure for dropdowns
-  const notificationDropdown = useDisclosure(false);
-  const userDropdown = useDisclosure(false);
+  const handleSignOut = async () => {
+    await nextAuthSignOut({ callbackUrl: "/login" })
+  }
 
   const handleSearch = (query: string) => {
     // Handle search logic here
@@ -101,6 +112,8 @@ export default function PrivateHeader({
       />
     </svg>
   );
+
+  
 
   return (
     <header className="h-12 bg-gray-800 flex items-center justify-between px-4 border-b border-gray-700">
@@ -191,8 +204,8 @@ export default function PrivateHeader({
           trigger={
             <button className="flex items-center space-x-2 p-1 rounded hover:bg-gray-700 transition-colors">
               <Avatar
-                name={user.name}
-                src={user.avatar}
+                name={userAuth?.displayName}
+                src={userAuth?.photoURL}
                 size="sm"
                 className="ring-2 ring-gray-600"
               />
@@ -214,8 +227,17 @@ export default function PrivateHeader({
           placement="bottom-right"
         >
           <div className="p-3 border-b border-gray-200">
-            <p className="font-semibold text-gray-900">{user.name}</p>
-            <p className="text-sm text-gray-500">{user.email}</p>
+            {userAuth && (
+              <>
+                <p className="font-semibold text-gray-900">{userAuth?.displayName}</p>
+                <p className="text-sm text-gray-500">{userAuth?.email}</p>
+              </>
+            )}
+            {session && (
+              <>
+                <p className="text-sm text-gray-500">{session.user?.email}</p>
+              </>
+            )}
           </div>
 
           <DropdownItem>My Profile Settings</DropdownItem>
@@ -234,7 +256,11 @@ export default function PrivateHeader({
 
           <DropdownSeparator />
 
-          <DropdownItem>Log out</DropdownItem>
+          <DropdownItem onClick={()=>{
+            firebaseSignOut(auth)
+            handleSignOut()
+            router.push("/login")
+          }}>Log out</DropdownItem>
         </Dropdown>
       </div>
     </header>

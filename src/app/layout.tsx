@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/layouts/hooks/useTheme";
 import "./globals.css";
 import { DetailPanelProvider } from "@/components/DetailPanel";
 import { Geist, Geist_Mono } from "next/font/google";
+import SessionProviderWrapper from "./SessionProviderWrapper";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -27,13 +28,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider defaultTheme="dark" storageKey="taskmanagement-theme">
-          <DetailPanelProvider>{children}</DetailPanelProvider>
-        </ThemeProvider>
-      </body>
+      <SessionProviderWrapper>
+
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <ThemeProvider defaultTheme="dark" storageKey="taskmanagement-theme">
+            <DetailPanelProvider>{children}</DetailPanelProvider>
+          </ThemeProvider>
+        </body>
+      </SessionProviderWrapper>
     </html>
   );
 }
