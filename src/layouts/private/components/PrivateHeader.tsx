@@ -13,8 +13,7 @@ import Dropdown, {
 import { auth } from "@/lib/auth/firebaseConfig";
 import { signOut as firebaseSignOut } from "firebase/auth";
 import { signOut as nextAuthSignOut } from "next-auth/react";
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface PrivateHeaderProps {
@@ -34,7 +33,7 @@ export default function PrivateHeader({
 }: PrivateHeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
-  // const session = getServerSession(authOptions)
+  const { data: session } = useSession();
   // Use useDisclosure for dropdowns
   const handleSignOut = async () => {
     await nextAuthSignOut({ callbackUrl: "/login" })
@@ -255,11 +254,11 @@ export default function PrivateHeader({
                 <p className="text-sm text-gray-500">{userAuth?.email}</p>
               </>
             )}
-            {/* {session && (
+            {session && (
               <>
-                <p className="text-sm text-gray-500">{session}</p>
+                <p className="text-sm text-gray-500">{session.user?.email}</p>
               </>
-            )} */}
+            )}
           </div>
 
           <DropdownItem>My Profile Settings</DropdownItem>
