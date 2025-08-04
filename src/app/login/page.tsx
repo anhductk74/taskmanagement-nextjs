@@ -13,6 +13,8 @@ import Link from "next/link";
 import { getAdditionalUserInfo, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "@/lib/auth/firebaseConfig";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react"
+
 
 // Validation schema
 const loginSchema = yup.object({
@@ -32,30 +34,58 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
+  const [error, setError] = useState("")
+  const { data: session, status } = useSession()
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
     mode: "onChange",
+    defaultValues: {
+      email: "nam@gmail.com",
+      password: "123456"
+    }
   });
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
+    setError("");
     
-    // Simulate API call
-    setTimeout(() => {
+    console.log("🚀 Attempting login with:", data.email);
+    
+    try {
+      const res = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+      
+      console.log("📡 NextAuth response:", res);
+      
+      if (res?.ok) {
+        console.log("✅ Login successful, redirecting to /home");
+        router.push("/home");
+      } else {
+        console.log("❌ Login failed:", res?.error);
+        setError("Email hoặc mật khẩu không đúng!");
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("💥 Login error:", error);
+      setError("Có lỗi xảy ra khi đăng nhập!");
       setIsLoading(false);
-      console.log("Email login:", data);
-      reset();
-    }, 1000);
+    }
   };
 
   const handleGmailLogin = async () => {
     setIsLoading(true);
+    setError("");
+    
     try {
       const result = await signInWithPopup(auth, provider);
       const isNewUser = getAdditionalUserInfo(result)?.isNewUser;
@@ -69,16 +99,15 @@ export default function LoginPage() {
         } else {
             console.log("User already exists. Returning user.");
             router.push("/home");
-          }
+        }
       }
-  
+      setIsLoading(false);
     } catch (error: any) {
+      console.error("Gmail login error:", error);
+      setError("Có lỗi xảy ra khi đăng nhập bằng Gmail!");
       setIsLoading(false);
     }
-    
   };
-  
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
@@ -103,6 +132,13 @@ export default function LoginPage() {
 
         {/* Login Form */}
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20">
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Input */}
             <div>

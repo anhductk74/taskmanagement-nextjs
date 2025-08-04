@@ -10,9 +10,11 @@ import Dropdown, {
   DropdownSeparator,
 } from "@/components/ui/Dropdown/Dropdown";
 
-import { useDisclosure } from "@/layouts/hooks/ui/useDisclosure";
 import { auth } from "@/lib/auth/firebaseConfig";
-import { signOut } from "firebase/auth";
+import { signOut as firebaseSignOut } from "firebase/auth";
+import { signOut as nextAuthSignOut } from "next-auth/react";
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { useRouter } from "next/navigation";
 
 interface PrivateHeaderProps {
@@ -32,7 +34,11 @@ export default function PrivateHeader({
 }: PrivateHeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  // const session = getServerSession(authOptions)
   // Use useDisclosure for dropdowns
+  const handleSignOut = async () => {
+    await nextAuthSignOut({ callbackUrl: "/login" })
+  }
 
   const SearchIcon = () => (
     <svg
@@ -249,6 +255,11 @@ export default function PrivateHeader({
                 <p className="text-sm text-gray-500">{userAuth?.email}</p>
               </>
             )}
+            {/* {session && (
+              <>
+                <p className="text-sm text-gray-500">{session}</p>
+              </>
+            )} */}
           </div>
 
           <DropdownItem>My Profile Settings</DropdownItem>
@@ -268,7 +279,8 @@ export default function PrivateHeader({
           <DropdownSeparator />
 
           <DropdownItem onClick={()=>{
-            signOut(auth)
+            firebaseSignOut(auth)
+            handleSignOut()
             router.push("/login")
           }}>Log out</DropdownItem>
         </Dropdown>

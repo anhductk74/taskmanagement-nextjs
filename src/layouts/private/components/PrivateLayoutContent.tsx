@@ -11,6 +11,7 @@ import { DetailPanel } from "@/components/DetailPanel";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/auth/firebaseConfig";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface PrivateLayoutContentProps {
   children: React.ReactNode;
@@ -24,17 +25,41 @@ export default function PrivateLayoutContent({
     useLayoutActions();
   const [userAuth, setUserAuth] = useState<any>(null);
   const router = useRouter();
+  const { data: session, status } = useSession();
+  
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
+
   useEffect(() => {
+    // Check Firebase auth
     const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
-      if (userAuth) setUserAuth(userAuth as any);
-      else router.push("/login");
+      if (userAuth) {
+        setUserAuth(userAuth as any);
+      } else {
+        // If no Firebase user and no NextAuth session, redirect to login
+        if (status === "unauthenticated") {
+          router.push("/login");
+        }
+      }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [status, router]);
+
+  // Show loading while checking authentication
+  if (status === "loading") {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (status === "unauthenticated" && !userAuth) {
+    return null; // Will redirect in useEffect
+  }
 
   return (
     <div
