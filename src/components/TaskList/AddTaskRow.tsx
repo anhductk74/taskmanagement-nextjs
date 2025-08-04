@@ -49,7 +49,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({
 
   return (
     <tr className="border-b border-gray-200 p-2">
-      <td className="min-w-[200px] py-1 px-2 border-r border-b border-t border-gray-200">
+      <td className="w-[250px] py-1 px-2 border-r border-b border-t border-gray-200">
         <div className="flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-gray-400" />
           {editingNewTaskField === 'name' ? (
@@ -73,7 +73,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({
           )}
         </div>
       </td>
-      <td className="min-w-[130px] py-1 px-4 border border-gray-200">
+      <td className="w-[170px] py-1 px-4 border border-gray-200">
         {editingNewTaskField === 'assignee' ? (
           <div className="relative" ref={assigneeDropdownRef}>
             <div className="absolute z-10 bg-white border border-gray-300 rounded shadow-md w-64 p-2 max-h-48 overflow-y-auto space-y-1">
@@ -139,7 +139,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({
           </div>
         )}
       </td>
-      <td className="min-w-[100px] py-1 px-2 border border-gray-200">
+      <td className="w-[90px] py-1 px-2 border border-gray-200">
         {editingNewTaskField === 'dueDate' ? (
           <input
             type="date"
@@ -169,7 +169,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({
           </span>
         )}
       </td>
-      <td className="min-w-[100px] py-1 px-2 border border-gray-200">
+      <td className="w-[90px] py-1 px-2 border border-gray-200">
         {editingNewTaskField === 'priority' ? (
           <select
             value={newTaskData.priority}
@@ -191,7 +191,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({
           </span>
         )}
       </td>
-      <td className="min-w-[100px] py-1 px-2 border border-gray-200">
+      <td className="w-[90px] py-1 px-2 border border-gray-200">
         {editingNewTaskField === 'status' ? (
           <select
             value={newTaskData.status}
@@ -212,7 +212,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({
           </span>
         )}
       </td>
-      <td className="min-w-[70px] py-1 px-2 border-l border-b border-t border-gray-200">
+      <td className="w-[60px] py-1 px-2 border-l border-b border-t border-gray-200">
         <div className="flex items-center gap-1">
           <button
             onClick={onAddTask}
