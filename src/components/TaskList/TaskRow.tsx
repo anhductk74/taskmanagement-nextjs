@@ -70,7 +70,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
       }}
     >
              {/* Name */}
-       <td className="w-[250px] py-1 px-2 border-y border-gray-200">
+       <td className="w-[240px] py-1 px-2 border-y border-gray-200">
         <div className="flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-gray-400" />
           {task.isEditing?.name ? (
@@ -277,7 +277,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
       </td>
 
              {/* Actions */}
-       <td className="w-[60px] py-1 px-2 border-l border-y border-gray-200">
+       <td className="w-[70px] py-1 px-2 border-l border-y border-gray-200">
         <div className="flex items-center gap-1">
           <MoreHorizontal className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
         </div>

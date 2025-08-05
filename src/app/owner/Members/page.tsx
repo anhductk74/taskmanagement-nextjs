@@ -11,11 +11,13 @@ export default function UserManagementPage() {
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
   const [users, setUsers] = useState<User[]>([
     {
       id: 1,
       username: "Nguyen Van A",
       email: "nguyen.vana@company.com",
+      avatarUrl: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
       roleId: 1,
       organizationId: 1,
       status: "active",
@@ -26,6 +28,7 @@ export default function UserManagementPage() {
       id: 2,
       username: "Tran Thi B",
       email: "tran.thib@company.com",
+      avatarUrl: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
       roleId: 2,
       organizationId: 1,
       status: "active",
@@ -36,6 +39,7 @@ export default function UserManagementPage() {
       id: 3,
       username: "Nguyen Van C",
       email: "nguyen.vanc@company.com",
+      avatarUrl: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
       roleId: 3,
       organizationId: 1,
       status: "active",
@@ -46,6 +50,7 @@ export default function UserManagementPage() {
       id: 4,
       username: "Nguyen Van D",
       email: "nguyen.vand@company.com",
+      avatarUrl: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
       roleId: 4,
       organizationId: 1,
       status: "active",
@@ -59,6 +64,7 @@ export default function UserManagementPage() {
       id: users.length + 1,
       username: userData.username,
       email: userData.email,
+      avatarUrl: userData.avatarUrl,
       roleId: userData.roleId,
       organizationId: userData.organizationId,
       status: userData.status,
@@ -83,7 +89,7 @@ export default function UserManagementPage() {
   };
 
   const handleDeleteUser = (userId: number) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+    if (window.confirm('Are you sure you want to delete this user?')) {
       setUsers(prev => prev.filter(user => user.id !== userId));
     }
   };
@@ -92,12 +98,7 @@ export default function UserManagementPage() {
     <div className="p-6 bg-white min-h-screen text-black">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Users Management</h1>
-        <button
-          onClick={() => setIsAddUserModalOpen(true)}
-          className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded"
-        >
-          <Plus className="w-4 h-4" /> Invite Member
-        </button>
+
       </div>
 
       <div className="grid grid-cols-4 gap-4 mb-6">
@@ -121,11 +122,24 @@ export default function UserManagementPage() {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mb-6">
-        <input
-          placeholder="Tìm kiếm người dùng..."
-          className="flex-1 bg-white border border-neutral-700 rounded px-4 py-2 text-black"
-        />
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <button
+          onClick={() => setIsAddUserModalOpen(true)}
+          className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+        >
+          <Plus className="w-4 h-4" /> Create Member
+        </button>
+       <div className="flex items-center gap-2">
+         <div className="relative">
+          <input
+            placeholder="Search user..."
+            className="w-64 bg-white border border-neutral-700 rounded-lg pl-10 pr-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+          />
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+        </div>
         <select className="bg-white text-black p-2 rounded border border-neutral-700">
           <option>All roles</option>
           <option>Admin</option>
@@ -136,6 +150,7 @@ export default function UserManagementPage() {
           <option>Active</option>
           <option>Inactive</option>
         </select>
+       </div>
       </div>
 
       <div className="bg-white rounded-xl overflow-hidden">
@@ -162,15 +177,27 @@ export default function UserManagementPage() {
                 key={user.id}
                 className="hover:bg-gray-100 transition-colors"
               >
-                <td className="p-4">
-                  <p className="font-semibold text-base">{user.username}</p>
-                  <p className="text-xs text-gray-400">User ID: {user.id}</p>
+                <td className="p-4 w-1/4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-200 to-blue-400 flex items-center justify-center text-white text-lg font-bold shadow-inner overflow-hidden flex-shrink-0">
+                      {user.avatarUrl ? (
+                        <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover rounded-full" />
+                      ) : (
+                        user.username.charAt(0)
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-sm truncate">{user.username}</p>
+                    </div>
+                  </div>
                 </td>
-                <td className="p-4 flex items-center gap-1">
-                  <Mail className="w-4 h-4 text-gray-500" />
-                  <span>{user.email}</span>
+                <td className="p-4 w-1/4">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <span className="text-sm truncate">{user.email}</span>
+                  </div>
                 </td>
-                <td className="p-4">
+                <td className="p-4 w-1/6">
                   <span
                     className={`text-xs px-3 py-1 rounded-full font-medium text-white ${user.roleId === 1 ? 'bg-red-500' : 'bg-purple-400'
                       }`}
@@ -178,16 +205,16 @@ export default function UserManagementPage() {
                     {user.roleId === 1 ? "Admin" : "Member"}
                   </span>
                 </td>
-                <td className="p-4">
+                <td className="p-4 w-1/6">
                   <span className={`text-xs px-3 py-1 rounded-full font-medium text-white ${user.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
                     }`}>
                     {user.status === 'active' ? 'Active' : 'Inactive'}
                   </span>
                 </td>
-                <td className="p-4 text-gray-400">
-                  {new Date(user.updatedAt).toLocaleString('vi-VN')}
+                <td className="p-4 w-1/6 text-gray-400">
+                  <span className="text-sm">{new Date(user.updatedAt).toLocaleString('vi-VN')}</span>
                 </td>
-                <td className="flex justify-center">
+                <td className="p-4 w-1/12 flex justify-center">
                   <UserActionsDropdown
                     user={user}
                     onEdit={handleEditUser}

@@ -81,12 +81,12 @@ const TaskTable: React.FC<TaskTableProps> = ({
       <table className="w-full border-collapse mt-4 table-fixed">
         <thead>
           <tr className="text-left text-sm text-gray-500">
-            <th className="w-[250px] px-2 py-2">Name</th>
+            <th className="w-[240px] px-2 py-2">Name</th>
             <th className="w-[170px] px-2 py-2">Assignee</th>
             <th className="w-[90px] px-2 py-2">Due date</th>
             <th className="w-[90px] px-2 py-2">Priority</th>
             <th className="w-[90px] px-2 py-2">Status</th>
-            <th className="w-[60px] px-2 py-2">
+            <th className="w-[70px] px-2 py-2">
               <Plus className="w-4 h-4" />
             </th>
           </tr>

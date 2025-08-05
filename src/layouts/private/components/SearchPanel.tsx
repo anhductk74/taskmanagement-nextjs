@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Avatar from "@/components/ui/Avatar/Avatar";
 import Button from "@/components/ui/Button/Button";
+import { TaskStatus } from "@/types/task";
 
 interface SearchPanelProps {
   onSearch: (query: string) => void;
@@ -22,10 +23,11 @@ interface SearchPanelProps {
 interface SearchResult {
   id: string;
   title: string;
-  type: "task" | "project" | "people" | "portfolio" | "goal";
+  type: "task" | "project" | "people" | "portfolio" | "goal" | "status";
   description?: string;
   avatar?: string;
   completed?: boolean;
+  status?: TaskStatus;
 }
 
 interface SavedSearch {
@@ -125,6 +127,8 @@ const SearchResultItem = ({
         return Briefcase;
       case "goal":
         return Target;
+      case "status":
+        return CheckSquare;
       default:
         return CheckSquare;
     }
@@ -194,20 +198,20 @@ export default function SearchPanel({
   const [isSearching, setIsSearching] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const mockSearchResults: Record<string, SearchResult[]> = useMemo(
-    () => ({
+  const mockSearchResults = useMemo(
+    (): Record<string, SearchResult[]> => ({
       tasks: [
         {
           id: "1",
           title: "Draft project brief",
-          type: "task",
+          type: "task" as const,
           description: "Cross-functional project plan",
           avatar: "LC",
         },
         {
           id: "2",
           title: "Schedule kickoff meeting",
-          type: "task",
+          type: "task" as const,
           description: "Cross-functional project plan",
           avatar: "JD",
         },
@@ -216,14 +220,14 @@ export default function SearchPanel({
         {
           id: "3",
           title: "Cross-functional project plan",
-          type: "project",
+          type: "project" as const,
           description: "K",
           avatar: "K",
         },
         {
           id: "4",
           title: "K 1 project",
-          type: "project",
+          type: "project" as const,
           description: "Marketing initiative",
         },
       ],
@@ -231,9 +235,18 @@ export default function SearchPanel({
         {
           id: "5",
           title: "John Doe",
-          type: "people",
+          type: "people" as const,
           description: "Product Manager",
           avatar: "JD",
+        },
+      ],
+      status: [
+        {
+          id: "6",
+          title: "To Do",
+          type: "status" as const,
+          description: "To Do",
+          avatar: "TD",
         },
       ],
     }),
@@ -241,25 +254,25 @@ export default function SearchPanel({
   );
 
   const mockRecentItems = useMemo(
-    () => [
+    (): SearchResult[] => [
       {
         id: "r1",
         title: "Cross-functional project plan",
-        type: "project",
+        type: "project" as const,
         description: "K",
         avatar: "K",
       },
       {
         id: "r2",
         title: "Schedule kickoff meeting",
-        type: "task",
+        type: "task" as const,
         description: "Cross-functional project plan",
         avatar: "LC",
       },
       {
         id: "r3",
         title: "Draft project brief",
-        type: "task",
+        type: "task" as const,
         description: "Cross-functional project plan",
         avatar: "LC",
       },
@@ -268,7 +281,7 @@ export default function SearchPanel({
   );
 
   const mockSavedSearches = useMemo(
-    () => [
+    (): SavedSearch[] => [
       {
         id: "s1",
         title: "Tasks I've created",

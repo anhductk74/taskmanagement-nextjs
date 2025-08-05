@@ -4,52 +4,48 @@ import { User } from '@/types/user';
 
 const mockUsers: User[] = [
     {
-        id: '1',
-        name: 'Nguyễn Văn A',
+        id: 1,
+        username: 'Nguyễn Văn A',
         email: 'nguyen.a@company.com',
-        role: 'Project Manager',
-        team: 'Design Team',
-        projectCount: 3,
-        taskCount: 45,
+        avatarUrl: 'https://via.placeholder.com/150',
+        roleId: 1,
+        organizationId: 1,
         status: 'active',
-        lastActive: '2 hours ago',
-        avatarUrl: '',
+        createdAt: '2021-01-01',
+        updatedAt: '2021-01-01',
     },
     {
-        id: '2',
-        name: 'Trần Thị B',
+        id: 2,
+        username: 'Trần Thị B',
         email: 'tran.b@company.com',
-        role: 'UI/UX Designer',
-        team: 'Design Team',
-        projectCount: 2,
-        taskCount: 32,
+        avatarUrl: 'https://via.placeholder.com/150',
+        roleId: 2,
+        organizationId: 1,
         status: 'active',
-        lastActive: '1 hour ago',
-        avatarUrl: '',
+        createdAt: '2021-01-01',
+        updatedAt: '2021-01-01',
     },
     {
-        id: '3',
-        name: 'Lê Văn C',
+        id: 3,
+        username: 'Lê Văn C',
         email: 'le.c@company.com',
-        role: 'Frontend Developer',
-        team: 'Design Team',
-        projectCount: 4,
-        taskCount: 67,
+        avatarUrl: 'https://via.placeholder.com/150',
+        roleId: 3,
+        organizationId: 1,
         status: 'active',
-        lastActive: '30 minutes ago',
-        avatarUrl: '',
+        createdAt: '2021-01-01',
+        updatedAt: '2021-01-01',
     },
     {
-        id: '4',
-        name: 'Phạm Văn D',
+        id: 4,
+        username: 'Phạm Văn F',
         email: 'pham.d@company.com',
-        role: 'Mobile Developer',
-        team: 'Mobile Team',
-        projectCount: 2,
-        taskCount: 28,
+        avatarUrl: 'https://via.placeholder.com/150',
+        roleId: 4,
+        organizationId: 1,
         status: 'active',
-        lastActive: '4 hours ago',
-        avatarUrl: '',
+        createdAt: '2021-01-01',
+        updatedAt: '2021-01-01',
     },
 ];
 
@@ -66,28 +62,26 @@ function UserCard({ user, index }: { user: User; index: number }) {
             <div className="flex items-center gap-5 flex-1">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-200 to-blue-400 flex items-center justify-center text-white text-2xl font-bold shadow-inner overflow-hidden">
                     {user.avatarUrl ? (
-                        <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover rounded-full" />
+                        <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover rounded-full" />
                     ) : (
-                        user.name.charAt(0)
+                        user.username.charAt(0)
                     )}
                 </div>
                 <div>
                     <div className="font-bold text-lg text-gray-800 flex items-center gap-6 mb-2">
-                        {user.name}
+                        {user.username}
                         {user.status === 'active' && (
                             <span className="ml-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-400 to-green-600 text-white text-xs font-semibold shadow pulse-anim">
                                 Active
                             </span>
                         )}
-                        <div className="text-xs text-gray-400 mt-2 mb-2 ">Hoạt động: {user.lastActive}</div>
+                        <div className="text-xs text-gray-400 mt-2 mb-2 ">Hoạt động: {user.createdAt}</div>
                     </div>
 
                     <div className="text-gray-500 text-sm font-medium mb-4">{user.email}</div>
                     <div className="flex flex-wrap gap-4 text-xs text-blue-700 mt-2 font-semibold">
-                        <span className="bg-blue-100 px-2 py-0.5 rounded">{user.role}</span>
-                        <span className="bg-blue-100 px-2 py-0.5 rounded">{user.team}</span>
-                        <span className="bg-blue-100 px-2 py-0.5 rounded">{user.projectCount} dự án</span>
-                        <span className="bg-blue-100 px-2 py-0.5 rounded">{user.taskCount} tasks</span>
+                        <span className="bg-blue-100 px-2 py-0.5 rounded">{user.roleId}</span>
+                        <span className="bg-blue-100 px-2 py-0.5 rounded">{user.organizationId}</span>
                     </div>
 
                 </div>
@@ -106,10 +100,10 @@ export default function AllMembersPage() {
 
     const filteredUsers = mockUsers.filter(user => {
         const matchSearch =
-            user.name.toLowerCase().includes(search.toLowerCase()) ||
+            user.username.toLowerCase().includes(search.toLowerCase()) ||
             user.email.toLowerCase().includes(search.toLowerCase());
-        const matchProject = project === 'Tất cả dự án' || user.projectCount > 0;
-        const matchTeam = team === 'Tất cả team' || user.team === team;
+        const matchProject = project === 'Tất cả dự án' || user.organizationId > 0;
+        const matchTeam = team === 'Tất cả team' || user.roleId > 0;
         return matchSearch && matchProject && matchTeam;
     });
 

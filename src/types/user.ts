@@ -12,6 +12,7 @@
 // }; 
 export type User = {
   id: number;
+  avatarUrl?: string;
   username: string;
   email: string;
   roleId: number;

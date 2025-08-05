@@ -136,7 +136,7 @@ export default function PrivateSidebar({
         {
           id: "cross-functional",
           label: "Cross-functional project plan",
-          href: "/project/list",
+          href: "/project",
           tag: "/project",
           icon: <Folder size={20} className="text-gray-300" />,
         },

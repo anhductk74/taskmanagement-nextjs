@@ -1,32 +1,35 @@
 "use client";
 
 import React from "react";
-import { Task } from "@/types/task";
+import { Task, TaskStatus } from "@/types/task";
 import { CheckCircle, Plus, User } from "lucide-react";
 import { ArrowUpDown, ListFilter, Search, ChevronDown } from "lucide-react";
 import { useTheme } from "@/layouts/hooks/useTheme";
 import { Button } from "@/components/ui";
 const tasks: Task[] = [
   {
+    id: "1",
     name: "Task 1",
     assignee: ["John Doe", "Jane Doe"],
     dueDate: "2025-01-01",
     priority: "Low",
-    status: "On track",
+    status: TaskStatus.TO_DO,
   },
   {
+    id: "2",
     name: "Task 2",
     assignee: ["Jane Doe"],
     dueDate: "2025-01-02",
     priority: "Medium",
-    status: "Off track",
+    status: TaskStatus.BLOCKED,
   },
   {
+    id: "3",
     name: "Task 3",
     assignee: ["oihh", "John Doe", "Jane Doe"],
     dueDate: "2025-01-03",
     priority: "High",
-    status: "In progress",
+    status: TaskStatus.IN_PROGRESS,
   },
 ];
 const getPriorityColor = (priority: string) => {

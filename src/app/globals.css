@@ -11,7 +11,7 @@ html, body {
   overflow-anchor: none !important;
   
   /* Ensure no white space appears */
-  background-color: #0f172a !important;
+  /* background-color: #0f172a !important; */
   min-height: 100vh !important;
   height: 100% !important;
 }
