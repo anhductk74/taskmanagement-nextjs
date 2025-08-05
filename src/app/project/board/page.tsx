@@ -112,5 +112,5 @@ const sampleData: { title: string; tasks: Task[] }[] = [
 ]
 
 export default function App() {
-  return <TaskBoard sections={sampleData} assignees={assignees} />
+  return <TaskBoard sections={sampleData} assignees={assignees}/>
 }

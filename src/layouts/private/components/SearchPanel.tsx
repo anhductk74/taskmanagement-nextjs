@@ -83,7 +83,7 @@ const SearchInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onFocus={onFocus}
-        className="w-full pl-12 pr-20 py-3.5 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition-all duration-200 shadow-sm hover:bg-gray-650"
+        className="w-full pl-12 pr-20 py-2 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition-all duration-200 shadow-sm hover:bg-gray-650"
         style={{
           minWidth: "400px",
           maxWidth: "100%",

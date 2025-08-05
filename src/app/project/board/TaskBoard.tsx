@@ -63,7 +63,7 @@ const TaskCard = ({ task, assignees }: { task: Task; assignees?: Assignee[] }) =
 
 const TaskBoard = ({ sections, assignees }: { sections: TaskSection[]; assignees?: Assignee[] }) => {
     return (
-        <div className="flex gap-6 overflow-x-auto px-4 py-6">
+        <div className="flex gap-6 overflow-x-auto px-4 py-6 ">
             {sections?.map((section) => (
                 <div key={section.title} className="w-72 flex-shrink-0 ">
                     <div className="flex items-center gap-2 bg-zinc-100 rounded-xl p-2">

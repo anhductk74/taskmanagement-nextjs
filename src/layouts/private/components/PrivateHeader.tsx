@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { User } from "@/types/auth";
@@ -17,6 +17,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import SearchPanel from "./SearchPanel";
 
+import NotificationDropdown from "@/layouts/private/components/NotificationDropdown";
+import { Notification } from "@/types/notification";
+import axios from "axios";
+
 interface PrivateHeaderProps {
   user: User;
   userAuth: any;
@@ -24,6 +28,7 @@ interface PrivateHeaderProps {
   onSidebarCollapseToggle: () => void;
   isSidebarCollapsed: boolean;
 }
+
 
 export default function PrivateHeader({
   user,
@@ -43,6 +48,21 @@ export default function PrivateHeader({
   const handleSearch = (query: string) => {
     // Handle search logic here
     console.log("Searching for:", query);
+  };
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    axios.get("/api/notifications").then((res) => {
+      setNotifications(res.data);
+    });
+  }, []);
+
+  const markAsRead = (id: number) => {
+    axios.post(`/api/notifications/${id}/read`).then(() => {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+    });
   };
 
   const BellIcon = () => (
@@ -113,10 +133,10 @@ export default function PrivateHeader({
     </svg>
   );
 
-  
+
 
   return (
-    <header className="h-12 bg-gray-800 flex items-center justify-between px-4 border-b border-gray-700">
+    <header className="h-14 bg-gray-800 flex items-center justify-between px-4 border-b border-gray-700">
       {/* Left Section */}
       <div className="flex items-center space-x-4 flex-1">
         {/* Mobile Sidebar Toggle */}
@@ -161,7 +181,7 @@ export default function PrivateHeader({
         </button>
 
         {/* Notifications */}
-        <Dropdown
+        {/* <Dropdown
           trigger={
             <button className="p-1.5 rounded text-gray-300 hover:text-white hover:bg-gray-700 transition-colors relative">
               <BellIcon />
@@ -197,7 +217,11 @@ export default function PrivateHeader({
               </div>
             </div>
           </DropdownItem>
-        </Dropdown>
+        </Dropdown> */}
+        <NotificationDropdown
+          notifications={notifications}
+          onMarkAsRead={markAsRead}
+        />
 
         {/* User Menu */}
         <Dropdown
@@ -256,7 +280,7 @@ export default function PrivateHeader({
 
           <DropdownSeparator />
 
-          <DropdownItem onClick={()=>{
+          <DropdownItem onClick={() => {
             firebaseSignOut(auth)
             handleSignOut()
             router.push("/login")
