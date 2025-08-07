@@ -1,5 +1,6 @@
 import React from 'react'
 import { Plus, Search, ListFilter, ArrowUpDown } from 'lucide-react'
+import AddTaskButton from '../AddTaskButton'
 
 interface TaskHeaderProps {
   onAddTask: () => void
@@ -8,13 +9,8 @@ interface TaskHeaderProps {
 const TaskHeader: React.FC<TaskHeaderProps> = ({ onAddTask }) => {
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between mx-0 sm:mx-4 gap-2 sm:gap-0">
-      <button 
-        className="flex items-center gap-2 bg-red-500 text-white px-4 py-1 rounded-md w-full sm:w-auto justify-center"
-        onClick={onAddTask}
-      >
-        <Plus className="w-4 h-4" />
-        Add Task
-      </button>
+      <AddTaskButton></AddTaskButton>
+      
       <div className="relative flex-grow max-w-full sm:max-w-sm mx-0 sm:mx-4 w-full">
         <input
           type="text"

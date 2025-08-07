@@ -28,16 +28,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <SessionProviderWrapper>
-
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+      <head />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <SessionProviderWrapper>
           <ThemeProvider defaultTheme="dark" storageKey="taskmanagement-theme">
             <DetailPanelProvider>{children}</DetailPanelProvider>
           </ThemeProvider>
-        </body>
-      </SessionProviderWrapper>
+        </SessionProviderWrapper>
+      </body>
     </html>
   );
 }
