@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -8,6 +8,8 @@ import { THEME_COLORS, LIGHT_THEME, DARK_THEME } from "@/constants/theme";
 import { ALL_ICONS } from "@/constants/icons";
 import Button from "@/components/ui/Button/Button";
 import Input from "@/components/ui/Input/Input";
+import { signOut as firebaseSignOut } from "firebase/auth";
+import { signOut as nextAuthSignOut } from "next-auth/react";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import Link from "next/link";
 import { getAdditionalUserInfo, signInWithPopup } from "firebase/auth";
@@ -71,13 +73,13 @@ export default function LoginPage() {
         console.log("✅ Login successful, redirecting to /home");
         router.push("/home");
       } else {
-        console.log("❌ Login failed:", res?.error);
-        setError("Email hoặc mật khẩu không đúng!");
+          console.log("❌ Login failed:", res?.error);
+          setError("Email or password is incorrect!");
         setIsLoading(false);
       }
     } catch (error) {
       console.error("💥 Login error:", error);
-      setError("Có lỗi xảy ra khi đăng nhập!");
+      setError("An error occurred while logging in!");
       setIsLoading(false);
     }
   };
@@ -100,14 +102,38 @@ export default function LoginPage() {
             console.log("User already exists. Returning user.");
             router.push("/home");
         }
+        
       }
       setIsLoading(false);
     } catch (error: any) {
       console.error("Gmail login error:", error);
-      setError("Có lỗi xảy ra khi đăng nhập bằng Gmail!");
+      setError("An error occurred while logging in with Gmail!");
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const logoutAll = async () => {
+      try {
+        await firebaseSignOut(auth).catch((e) => {
+          console.warn("Firebase signOut error (can ignore if not logged in):", e);
+        });
+
+        await nextAuthSignOut({ redirect: false }).catch((e) => {
+          console.warn("NextAuth signOut error (can ignore if not logged in):", e);
+        });
+
+        try {
+          localStorage.clear();
+        } catch (e) {
+        }
+
+      } catch (err) {
+        console.error("logoutAll error:", err);
+      }
+    };
+    logoutAll();
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
@@ -268,7 +294,7 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-slate-500 text-sm">
-            © 2024 TaskManager. All rights reserved.
+            © 2025 TaskManager. By Manakai Team.
           </p>
         </div>
       </div>

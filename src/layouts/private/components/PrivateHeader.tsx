@@ -40,16 +40,34 @@ export default function PrivateHeader({
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
   const { data: session } = useSession();
-  // Use useDisclosure for dropdowns
+
   const handleSignOut = async () => {
-    await nextAuthSignOut({ callbackUrl: "/login" })
-  }
+    try {
+      await firebaseSignOut(auth).catch((e) => {
+        console.warn("Firebase signOut:", e);
+      });
+  
+      await nextAuthSignOut({ redirect: false }).catch((e) => {
+        console.warn("NextAuth signOut:", e);
+      });
+  
+      try {
+        localStorage.removeItem("some_custom_token");
+      } catch {}
+  
+      router.replace("/login");
+    } catch (err) {
+      console.error("Error during signOut:", err);
+    }
+  };
+  
 
   const handleSearch = (query: string) => {
     // Handle search logic here
     console.log("Searching for:", query);
   };
   const [notifications, setNotifications] = useState<Notification[]>([]);
+
 
   useEffect(() => {
     axios.get("/api/notifications").then((res) => {
@@ -180,44 +198,7 @@ export default function PrivateHeader({
           <QuestionIcon />
         </button>
 
-        {/* Notifications */}
-        {/* <Dropdown
-          trigger={
-            <button className="p-1.5 rounded text-gray-300 hover:text-white hover:bg-gray-700 transition-colors relative">
-              <BellIcon />
-              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white font-bold">
-                3
-              </span>
-            </button>
-          }
-          placement="bottom-right"
-        >
-          <div className="p-3 border-b border-gray-200">
-            <h3 className="font-semibold text-gray-900">Notifications</h3>
-          </div>
-          <DropdownItem>
-            <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-              <div>
-                <p className="font-medium text-sm">New task assigned</p>
-                <p className="text-xs text-gray-500">
-                  Cross-functional project plan
-                </p>
-                <p className="text-xs text-gray-400">2 minutes ago</p>
-              </div>
-            </div>
-          </DropdownItem>
-          <DropdownItem>
-            <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-              <div>
-                <p className="font-medium text-sm">Project completed</p>
-                <p className="text-xs text-gray-500">Marketing Campaign</p>
-                <p className="text-xs text-gray-400">1 hour ago</p>
-              </div>
-            </div>
-          </DropdownItem>
-        </Dropdown> */}
+       
         <NotificationDropdown
           notifications={notifications}
           onMarkAsRead={markAsRead}
@@ -280,11 +261,7 @@ export default function PrivateHeader({
 
           <DropdownSeparator />
 
-          <DropdownItem onClick={() => {
-            firebaseSignOut(auth)
-            handleSignOut()
-            router.push("/login")
-          }}>Log out</DropdownItem>
+          <DropdownItem onClick={handleSignOut}>Log out</DropdownItem>
         </Dropdown>
       </div>
     </header>
