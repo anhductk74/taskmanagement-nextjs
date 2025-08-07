@@ -391,7 +391,7 @@ export default function PrivateSidebar({
                             ? "p-2 justify-center"
                             : "px-2 py-1.5 justify-between",
                           pathname.includes(item.tag)
-                            ? "bg-orange-600 text-white"
+                            ? "bg-red-500 text-white"
                             : "text-gray-300 hover:bg-gray-700 hover:text-white"
                         )}
                         title={isCollapsed ? item.label : undefined}
