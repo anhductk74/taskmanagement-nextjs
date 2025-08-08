@@ -10,32 +10,18 @@ import Button from "@/components/ui/Button/Button";
 import Input from "@/components/ui/Input/Input";
 import { Eye, EyeOff, Mail, Lock, User, Phone, Building } from "lucide-react";
 import Link from "next/link";
+import { createUser } from "@/services/userService";
 
 // Validation schema
 const registerSchema = yup.object({
-  firstName: yup
-    .string()
-    .min(2, "First name must be at least 2 characters")
-    .required("First name is required"),
-  lastName: yup
-    .string()
-    .min(2, "Last name must be at least 2 characters")
-    .required("Last name is required"),
   email: yup
     .string()
     .email("Please enter a valid email address")
     .required("Email is required"),
-  phone: yup
-    .string()
-    .matches(/^[+]?[\d\s\-\(\)]+$/, "Please enter a valid phone number")
-    .required("Phone number is required"),
-  company: yup
-    .string()
-    .required("Company is required"),
   password: yup
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain at least one uppercase letter, one lowercase letter, and one number")
+    .min(6, "Password must be at least 6 characters")
+    // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain at least one uppercase letter, one lowercase letter, and one number")
     .required("Password is required"),
   confirmPassword: yup
     .string()
@@ -67,6 +53,14 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
+    // try {
+    //   const res = await createUser(data)
+    //   if (res) {
+    //     console.log('User created successfully!')
+    //   } else {
+    //   }
+    // } catch (err) {
+    // }
     
     // Simulate API call
     setTimeout(() => {
@@ -76,15 +70,7 @@ export default function RegisterPage() {
     }, 1000);
   };
 
-  const handleGmailRegister = async () => {
-    setIsLoading(true);
-    
-    // Simulate Gmail OAuth
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log("Gmail registration initiated");
-    }, 1000);
-  };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
@@ -111,40 +97,7 @@ export default function RegisterPage() {
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Name Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-slate-300 mb-2">
-                  First Name
-                </label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  placeholder="Enter your first name"
-                  error={!!errors.firstName}
-                  helperText={errors.firstName?.message}
-                  leftIcon={<User className="w-5 h-5" />}
-                  className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
-                  inputSize="lg"
-                  {...register("firstName")}
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-slate-300 mb-2">
-                  Last Name
-                </label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  placeholder="Enter your last name"
-                  error={!!errors.lastName}
-                  helperText={errors.lastName?.message}
-                  leftIcon={<User className="w-5 h-5" />}
-                  className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
-                  inputSize="lg"
-                  {...register("lastName")}
-                />
-              </div>
-            </div>
+                
 
             {/* Email Input */}
             <div>
@@ -164,41 +117,7 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Phone & Company Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-slate-300 mb-2">
-                  Phone Number
-                </label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  error={!!errors.phone}
-                  helperText={errors.phone?.message}
-                  leftIcon={<Phone className="w-5 h-5" />}
-                  className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
-                  inputSize="lg"
-                  {...register("phone")}
-                />
-              </div>
-              <div>
-                <label htmlFor="company" className="block text-sm font-medium text-slate-300 mb-2">
-                  Company (Optional)
-                </label>
-                <Input
-                  id="company"
-                  type="text"
-                  placeholder="Enter company name"
-                  error={!!errors.company}
-                  helperText={errors.company?.message}
-                  leftIcon={<Building className="w-5 h-5" />}
-                  className="bg-white/5 border-white/20 text-white placeholder-slate-400 focus:border-red-500 focus:ring-red-500"
-                  inputSize="lg"
-                  {...register("company")}
-                />
-              </div>
-            </div>
+            
 
             {/* Password Input */}
             <div>
