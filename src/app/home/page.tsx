@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PrivateLayout } from "@/layouts";
 import {
   getTheme,
@@ -14,12 +14,17 @@ import ProjectCard from "./components/Cards/ProjectCard";
 import TaskIAssignCard from "./components/Cards/TaskIAssignCard";
 import StatusCard from "./components/Cards/StatusCard";
 import MyTasksCard from "./components/Cards/MyTasksCard";
+import { useSession } from "next-auth/react";
 
 export default function HomeDashboard() {
   const [themeMode] = useState<ThemeMode>("light");
   const theme = getTheme(themeMode);
   const [bgColor, setBgColor] = useState(theme.background.secondary);
+  const {data: session, status} = useSession()
 
+  useEffect(()=>{
+    console.log("session: ", session)
+  },[])
   return (
     <PrivateLayout>
       <div

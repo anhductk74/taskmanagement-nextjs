@@ -41,9 +41,12 @@ export const authOptions: NextAuthOptions = {
             return {
               id: String(data.id),
               email: data.email,
-              name: data.name || data.email,
               accessToken: data.accessToken,
-            };
+              firstName: data.profile?.firstName,
+              lastName: data.profile?.lastName,
+              name: data.profile?.firstName+" "+data.profile?.lastName || data.email,
+              roles: data.roles,
+            }
           }
 
           console.log("API returned invalid data")
@@ -63,24 +66,28 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      // Khi user login lần đầu, ghi đè token
       if (user) {
-        token.accessToken = user.accessToken
-        // token.refreshToken = user.refreshToken
-        // token.roles = user.roles
+        token.accessToken = user.accessToken;
+        token.roles = user.roles;
+        token.profile = user.profile;
+        token.id = user.id;
+        token.email = user.email;
       }
-      return token
+
+      return token;
     },
+
     async session({ session, token }) {
-      if (token) {
-        session.user = {
-          ...session.user,
-          id: token.sub,
-          // roles: token.roles,
-        }
-        session.accessToken = token.accessToken
-        // session.refreshToken = token.refreshToken
-      }
-      return session
+      session.accessToken = token.accessToken;
+      session.user = {
+        id: token.id,
+        email: token.email,
+        profile: token.profile,
+        roles: token.roles,
+      };
+
+      return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

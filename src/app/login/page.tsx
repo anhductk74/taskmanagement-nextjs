@@ -4,13 +4,11 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { THEME_COLORS, LIGHT_THEME, DARK_THEME } from "@/constants/theme";
-import { ALL_ICONS } from "@/constants/icons";
 import Button from "@/components/ui/Button/Button";
 import Input from "@/components/ui/Input/Input";
 import { signOut as firebaseSignOut } from "firebase/auth";
 import { signOut as nextAuthSignOut } from "next-auth/react";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 import { getAdditionalUserInfo, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "@/lib/auth/firebaseConfig";
@@ -37,8 +35,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [error, setError] = useState("")
-  const { data: session, status } = useSession()
-  
+  const { data: session } = useSession();
   const {
     register,
     handleSubmit,
@@ -57,9 +54,6 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setError("");
-    
-    console.log("🚀 Attempting login with:", data.email);
-    
     try {
       const res = await signIn("credentials", {
         email: data.email,
@@ -67,18 +61,13 @@ export default function LoginPage() {
         redirect: false,
       });
       
-      console.log("📡 NextAuth response:", res);
-      
       if (res?.ok) {
-        console.log("✅ Login successful, redirecting to /home");
         router.push("/home");
       } else {
-          console.log("❌ Login failed:", res?.error);
           setError("Email or password is incorrect!");
         setIsLoading(false);
       }
     } catch (error) {
-      console.error("💥 Login error:", error);
       setError("An error occurred while logging in!");
       setIsLoading(false);
     }
@@ -94,19 +83,15 @@ export default function LoginPage() {
       const user = (result as any).user;
   
       if (user) {
-        console.log("✅ User:", user);
-        console.log("✅ accessToken:", user.accessToken);
         if (isNewUser) {
-            console.log("User is new. First time login.");
+            
         } else {
-            console.log("User already exists. Returning user.");
             router.push("/home");
         }
         
       }
       setIsLoading(false);
     } catch (error: any) {
-      console.error("Gmail login error:", error);
       setError("An error occurred while logging in with Gmail!");
       setIsLoading(false);
     }
@@ -116,20 +101,15 @@ export default function LoginPage() {
     const logoutAll = async () => {
       try {
         await firebaseSignOut(auth).catch((e) => {
-          console.warn("Firebase signOut error (can ignore if not logged in):", e);
         });
-
         await nextAuthSignOut({ redirect: false }).catch((e) => {
-          console.warn("NextAuth signOut error (can ignore if not logged in):", e);
         });
-
         try {
           localStorage.clear();
         } catch (e) {
         }
 
       } catch (err) {
-        console.error("logoutAll error:", err);
       }
     };
     logoutAll();

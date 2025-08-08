@@ -11,6 +11,9 @@ import Input from "@/components/ui/Input/Input";
 import { Eye, EyeOff, Mail, Lock, User, Phone, Building } from "lucide-react";
 import Link from "next/link";
 import { createUser } from "@/services/userService";
+import { Role, UserRegister } from "@/types/user";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 // Validation schema
 const registerSchema = yup.object({
@@ -39,7 +42,8 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const router = useRouter()
+  const [message, setMessage] = useState('')
   const {
     register,
     handleSubmit,
@@ -53,22 +57,37 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
-    // try {
-    //   const res = await createUser(data)
-    //   if (res) {
-    //     console.log('User created successfully!')
-    //   } else {
-    //   }
-    // } catch (err) {
-    // }
-    
-    // Simulate API call
+  
+    const userRegister: UserRegister = {
+      email: data.email,
+      password: data.confirmPassword,
+      roleIds: [2]
+    };
+  
+    console.log("Email registration:", userRegister);
+  
+    try {
+      const res = await createUser(userRegister);
+      if (res) {
+        console.log('User created successfully!');
+        const resLogin = await signIn("credentials", {
+          email: data.email,
+          password: data.confirmPassword,
+          redirect: false,
+        });
+        if (resLogin?.ok) {
+          router.push('/home');
+        }
+      }
+    } catch (err: any) {
+      setMessage('Email already exists!');
+    }
+  
     setTimeout(() => {
       setIsLoading(false);
-      console.log("Email registration:", data);
-      reset();
     }, 1000);
   };
+  
 
   
 
@@ -96,8 +115,12 @@ export default function RegisterPage() {
         {/* Register Form */}
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Name Fields */}
-                
+            {/* Message */}
+            <div className="flex justify-center">
+              {message && (
+                <div className="text-red-400 text-sm mt-1 text-center">{message}</div>
+              )}
+            </div>
 
             {/* Email Input */}
             <div>

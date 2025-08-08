@@ -1,5 +1,4 @@
 
-
 export type UserProfile = {
   id: number;
   avatarUrl?: string;
@@ -23,5 +22,11 @@ export type User = {
 export type UserRegister = {
   email: string;
   password: string;
+  roleIds: Array<number>;
+}
+
+export type Role = {
+  id: number;
+  name: string;
 }
 

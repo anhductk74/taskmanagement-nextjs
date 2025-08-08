@@ -70,17 +70,17 @@ export default function PrivateHeader({
 
 
   useEffect(() => {
-    axios.get("/api/notifications").then((res) => {
-      setNotifications(res.data);
-    });
+    // axios.get("/api/notifications").then((res) => {
+    //   setNotifications(res.data);
+    // });
   }, []);
 
   const markAsRead = (id: number) => {
-    axios.post(`/api/notifications/${id}/read`).then(() => {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-      );
-    });
+    // axios.post(`/api/notifications/${id}/read`).then(() => {
+    //   setNotifications((prev) =>
+    //     prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    //   );
+    // });
   };
 
   const BellIcon = () => (
@@ -208,12 +208,12 @@ export default function PrivateHeader({
         <Dropdown
           trigger={
             <button className="flex items-center space-x-2 p-1 rounded hover:bg-gray-700 transition-colors">
-              <Avatar
-                name={userAuth?.displayName}
-                src={userAuth?.photoURL}
+              {/* <Avatar
+                name={userAuth?.displayName || session?.user?.email}
+                src={userAuth?.photoURL || session?.user?.email}
                 size="sm"
                 className="ring-2 ring-gray-600"
-              />
+              /> */}
               <svg
                 className="h-3 w-3 text-gray-400"
                 fill="none"
@@ -232,17 +232,9 @@ export default function PrivateHeader({
           placement="bottom-right"
         >
           <div className="p-3 border-b border-gray-200">
-            {userAuth && (
-              <>
-                <p className="font-semibold text-gray-900">{userAuth?.displayName}</p>
-                <p className="text-sm text-gray-500">{userAuth?.email}</p>
-              </>
-            )}
-            {session && (
-              <>
-                <p className="text-sm text-gray-500">{session.user?.email}</p>
-              </>
-            )}
+                {/* <p className="font-semibold text-gray-900">{userAuth?.displayName || session?.user?.id}</p>
+                <p className="text-sm text-gray-500">{userAuth?.email || session?.user?.email}</p> */}
+            
           </div>
 
           <DropdownItem>My Profile Settings</DropdownItem>

@@ -3,6 +3,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getBackendBaseUrl, serverJsonHeaders } from '@/lib/api-client/server';
 import { CalendarUser } from '@/lib/calendar/types';
 
 // Mock users data
@@ -90,6 +91,47 @@ export async function GET(request: NextRequest) {
     console.error('Users API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch users' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST /api/users
+// Proxies user creation to the backend to avoid CORS from the browser
+export async function POST(request: NextRequest) {
+  try {
+    const backendBaseUrl = getBackendBaseUrl();
+
+    const payload = await request.json();
+
+    // Forward Authorization header if present (e.g., if registration requires it)
+    const incomingAuth = request.headers.get('authorization');
+    const forwardHeaders: Record<string, string> = { ...serverJsonHeaders };
+    if (incomingAuth) {
+      forwardHeaders['Authorization'] = incomingAuth;
+    }
+
+    const response = await fetch(`${backendBaseUrl}/api/users`, {
+      method: 'POST',
+      headers: forwardHeaders,
+      body: JSON.stringify(payload),
+      // Do not use Next.js caching for auth/registration calls
+      cache: 'no-store',
+    });
+
+    // Try parse JSON, otherwise return plain text under message
+    const text = await response.text();
+    let body: unknown = {};
+    try {
+      body = text ? JSON.parse(text) : {};
+    } catch {
+      body = text ? { message: text } : {};
+    }
+    return NextResponse.json(body, { status: response.status });
+  } catch (error) {
+    console.error('Users POST API error:', error);
+    return NextResponse.json(
+      { error: 'Failed to create user' },
       { status: 500 }
     );
   }
