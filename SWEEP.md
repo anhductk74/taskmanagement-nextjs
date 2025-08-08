@@ -48,13 +48,32 @@ rm -rf .next && npm run build
 
 This clears corrupted Next.js cache and rebuilds the application. The issue commonly occurs after making significant changes to components or when switching between development and production builds.
 
+### Fix Runtime Reference Errors
+When encountering runtime errors like `ReferenceError: [Component] is not defined`:
+
+**Clear Build Cache:**
+```bash
+rm -rf .next
+```
+
+**Common Symptoms:**
+- `ReferenceError: Target is not defined`
+- `ReferenceError: [IconName] is not defined`
+- Runtime errors after refactoring imports
+
+**Root Cause:** Stale build cache containing old compiled code with outdated imports/references.
+
+**Solution:** Clear `.next` directory to force complete rebuild with latest code changes.
+
 ### Development Server
 ```bash
 npm run dev
 ```
 Starts development server (usually on port 3000, will use next available port if occupied).
 
-## FullCalendar Installation
+## Package Installations
+
+### FullCalendar Installation
 ```bash
 npm install @fullcalendar/react @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction @fullcalendar/list @fullcalendar/multimonth
 ```
@@ -66,6 +85,90 @@ This installs FullCalendar with all necessary plugins for:
 - Drag & drop interaction
 - List view
 - Multi-month year view
+
+### FullCalendar Timeline Installation (for Gantt Charts)
+```bash
+npm install @fullcalendar/timeline @fullcalendar/resource-timeline @fullcalendar/resource-common
+```
+
+This installs additional FullCalendar timeline plugins for:
+- Timeline views (Gantt chart style)
+- Resource timeline (tasks grouped by resources/sections)
+- Resource management functionality
+- Professional timeline layouts with collapsible sections
+
+**Usage Example:**
+```tsx
+import FullCalendar from '@fullcalendar/react';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import interactionPlugin from '@fullcalendar/interaction';
+
+<FullCalendar
+  plugins={[resourceTimelinePlugin, interactionPlugin]}
+  initialView="resourceTimelineMonth"
+  resources={sections}
+  events={tasks}
+  editable={true}
+  eventDrop={(info) => handleTaskMove(info)}
+/>
+```
+
+### React Icons Installation
+```bash
+npm install react-icons
+```
+
+This installs react-icons package for using professional icon sets like:
+- `import { GiHamburgerMenu } from "react-icons/gi";` - Game Icons
+- `import { FaUser } from "react-icons/fa";` - Font Awesome
+- `import { MdEmail } from "react-icons/md";` - Material Design
+- `import { AiOutlineHome } from "react-icons/ai";` - Ant Design
+
+**Common Error:** `Module not found: Can't resolve 'react-icons/gi'`
+**Solution:** Run the installation command above.
+
+### React Flow Installation
+```bash
+npm install reactflow
+npm install dagre
+```
+
+This installs React Flow - the professional workflow/dependency graph library for:
+- **Node-based workflows** - Visual task connections with drag & drop
+- **Dependency graphs** - Professional project management UI like MS Project, Asana
+- **Custom nodes & edges** - Fully customizable task boxes and connection lines  
+- **Auto-layout algorithms** - Automatic positioning with dagre library
+- **Advanced features** - Zoom, pan, minimap, controls, background patterns
+
+**Usage Example:**
+```tsx
+import ReactFlowWorkflow from '@/components/features/ReactFlowWorkflow';
+
+<ReactFlowWorkflow
+  tasks={tasks}
+  sections={sections}
+  onTaskUpdate={handleTaskUpdate}
+  onTaskClick={handleTaskClick}
+  onDependencyChange={handleDependencyChange}
+  showMiniMap={true}
+  showControls={true}
+  height="600px"
+/>
+```
+
+**Features:**
+- **Professional UI** - Task nodes with progress bars, assignees, priorities
+- **Dependency Types** - Finish-to-start, Start-to-start, Finish-to-finish, Start-to-finish  
+- **Validation** - Circular dependency detection, conflict resolution
+- **Layout Options** - Auto-layout, manual positioning, section grouping
+- **Reusable Hooks** - useReactFlowWorkflow for easy integration
+
+### Drag and Drop Installation
+```bash
+npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities @dnd-kit/modifiers
+```
+
+This installs @dnd-kit - the professional drag and drop library used by modern products like Linear, Notion, and GitHub Projects.
 
 ## Simple Calendar System
 

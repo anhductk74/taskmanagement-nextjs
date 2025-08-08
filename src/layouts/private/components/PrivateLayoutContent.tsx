@@ -1,17 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PrivateHeader from "./PrivateHeader";
 import PrivateSidebar from "./PrivateSidebar";
 import {
   useLayoutContext,
   useLayoutActions,
 } from "../context/PrivateLayoutContext";
-import { DetailPanel } from "@/components/DetailPanel";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/lib/auth/firebaseConfig";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { DetailPanel } from "@/components/features/DetailPanel";
 
 interface PrivateLayoutContentProps {
   children: React.ReactNode;
@@ -21,65 +17,41 @@ export default function PrivateLayoutContent({
   children,
 }: PrivateLayoutContentProps) {
   const { user, isSidebarOpen, isSidebarCollapsed } = useLayoutContext();
-  const { toggleSidebar, setSidebarOpen, toggleSidebarCollapse } =
+  const { toggleSidebar, setSidebarOpen, toggleSidebarCollapse, signOut } =
     useLayoutActions();
-  const [userAuth, setUserAuth] = useState<any>(null);
-  const router = useRouter();
-  const { data: session, status } = useSession();
-  
+
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
 
-  useEffect(() => {
-    // Check Firebase auth
-    const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
-      if (userAuth) {
-        setUserAuth(userAuth as any);
-      } else {
-        // If no Firebase user and no NextAuth session, redirect to login
-        if (status === "unauthenticated") {
-          router.push("/login");
-        }
-      }
-    });
-
-    return () => unsubscribe();
-  }, [status, router]);
-
-  // Show loading while checking authentication
-  if (status === "loading") {
+  // Don't render if user is null (during logout process)
+  if (!user) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="h-screen flex items-center justify-center bg-gray-900">
         <div className="text-white">Loading...</div>
       </div>
     );
   }
 
-  // Don't render if not authenticated
-  if (status === "unauthenticated" && !userAuth) {
-    return null; // Will redirect in useEffect
-  }
-
   return (
     <div
       className="h-screen flex flex-col"
-      // style={{ backgroundColor: "#0f172a" }}
+      style={{ backgroundColor: "#0f172a" }}
     >
       {/* Header - Fixed at top */}
       <PrivateHeader
-        user={user!}
-        userAuth={userAuth!}
+        user={user}
         onSidebarToggle={toggleSidebar}
         onSidebarCollapseToggle={toggleSidebarCollapse}
         isSidebarCollapsed={isSidebarCollapsed}
+        onLogout={signOut}
       />
 
       {/* Main Content Area with Sidebar */}
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <PrivateSidebar
-          user={user!}
+          user={user}
           isOpen={isSidebarOpen}
           isCollapsed={isSidebarCollapsed}
           onClose={closeSidebar}
@@ -87,7 +59,12 @@ export default function PrivateLayoutContent({
         />
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div 
+          className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out"
+          style={{
+            marginLeft: isSidebarOpen ? (isSidebarCollapsed ? '4rem' : '16rem') : '0'
+          }}
+        >
           <main 
             className="flex-1 overflow-auto relative"
             style={{

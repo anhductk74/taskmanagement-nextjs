@@ -20,9 +20,10 @@ interface UserFormData {
 }
 
 const roles = [
-  { id: 1, name: "Project Manager", description: "Project Manager" },
-  { id: 2, name: "Leader", description: "Leader" },
-  { id: 3, name: "Member", description: "Member" },
+  { id: 1, name: "Quản trị viên", description: "Toàn quyền truy cập hệ thống" },
+  { id: 2, name: "Quản lý dự án", description: "Quản lý dự án và thành viên" },
+  { id: 3, name: "Thành viên", description: "Thành viên tham gia dự án" },
+  { id: 4, name: "Khách", description: "Chỉ xem thông tin cơ bản" },
 ];
 
 const organizations = [
@@ -66,15 +67,15 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
     const newErrors: Partial<UserFormData> = {};
 
     if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+      newErrors.username = "Tên người dùng là bắt buộc";
     } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = "Tên người dùng phải có ít nhất 3 ký tự";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = "Email là bắt buộc";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Email is not valid";
+      newErrors.email = "Email không hợp lệ";
     }
 
     setErrors(newErrors);
@@ -117,7 +118,7 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
       }`}>
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
-          <h2 className="text-2xl font-bold text-gray-900">Edit Member</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Chỉnh sửa người dùng</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-200 rounded-full"
@@ -132,16 +133,16 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <User className="w-4 h-4 inline mr-2" />
-              Username *
+              Tên người dùng *
             </label>
             <input
               type="text"
               value={formData.username}
               onChange={(e) => handleInputChange("username", e.target.value)}
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent ${
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
                 errors.username ? "border-red-500" : "border-gray-300"
               }`}
-              placeholder="Enter username"
+              placeholder="Nhập tên người dùng"
             />
             {errors.username && (
               <p className="text-red-500 text-sm mt-1">{errors.username}</p>
@@ -158,7 +159,7 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent ${
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
                 errors.email ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="example@company.com"
@@ -172,23 +173,23 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Shield className="w-4 h-4 inline mr-2" />
-              Role
+              Vai trò
             </label>
             <select
               value={formData.roleId}
               onChange={(e) => handleInputChange("roleId", parseInt(e.target.value))}
-              className="w-full text-gray-700 text-sm font-medium hover:bg-gray-100 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               {roles.map((role) => (
-                <option key={role.id} value={role.id} className="text-gray-700 text-sm font-medium hover:bg-gray-100">
-                  {role.name} 
+                <option key={role.id} value={role.id}>
+                  {role.name} - {role.description}
                 </option>
               ))}
             </select>
           </div>
 
           {/* Organization */}
-          {/* <div>
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Building className="w-4 h-4 inline mr-2" />
               Tổ chức
@@ -196,7 +197,7 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
             <select
               value={formData.organizationId}
               onChange={(e) => handleInputChange("organizationId", parseInt(e.target.value))}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               {organizations.map((org) => (
                 <option key={org.id} value={org.id}>
@@ -204,12 +205,12 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
                 </option>
               ))}
             </select>
-          </div> */}
+          </div>
 
           {/* Status */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Status
+              Trạng thái
             </label>
             <div className="flex gap-4">
               <label className="flex items-center">
@@ -220,7 +221,7 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
                   onChange={(e) => handleInputChange("status", e.target.value as 'active' | 'inactive')}
                   className="mr-2 text-purple-600 focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-700">Active</span>
+                <span className="text-sm text-gray-700">Hoạt động</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -230,7 +231,7 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
                   onChange={(e) => handleInputChange("status", e.target.value as 'active' | 'inactive')}
                   className="mr-2 text-purple-600 focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-700">Inactive</span>
+                <span className="text-sm text-gray-700">Không hoạt động</span>
               </label>
             </div>
           </div>
@@ -242,13 +243,13 @@ export default function EditUserModal({ isOpen, onClose, onSubmit, user }: EditU
               onClick={onClose}
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              Hủy
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
             >
-              Update
+              Cập nhật
             </button>
           </div>
         </form>

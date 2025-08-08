@@ -9,6 +9,9 @@ import {
   FILE_ICONS,
   HEADER_ICONS,
   PROJECT_ICONS,
+  COMMUNICATION_ICONS,
+  DATA_ICONS,
+  NAVIGATION_ICONS,
 } from "@/constants/icons";
 import { useTheme } from "@/layouts/hooks/useTheme";
 import { useDisclosure } from "@/layouts/hooks/ui/useDisclosure";
@@ -63,34 +66,228 @@ export const usePageNavigation = (): PageNavigationConfig | null => {
   const pathname = usePathname();
   const teamSettingsDropdown = useDisclosure(false);
 
-  // MyTask Navigation
-  if (pathname.startsWith("/mytask")) {
+  // Reporting Navigation
+  if (pathname.startsWith("/reporting")) {
     return {
-      title: "My Task",
+      title: "Reporting",
       navItems: [
         {
-          label: "List",
-          href: "/mytask/list",
-        },
-        {
-          label: "Board",
-          href: "/mytask/board",
-        },
-        {
-          label: "Calendar",
-          href: "/mytask/calendar",
-        },
-        {
-          label: "Dashboard",
-          href: "/mytask/dashboard",
-        },
-        {
-          label: "File",
-          href: "/mytask/file",
+          label: "Dashboards",
+          href: "/reporting/dashboards",
+          icon: <DATA_ICONS.chart className="w-4 h-4" />,
         },
       ],
       actions: [],
-      showTabsPlus: true,
+      headerInfo: {
+        avatar: (
+          <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+            <DATA_ICONS.chart className="w-6 h-6 text-white" />
+          </div>
+        ),
+      },
+      showTabsPlus: false,
+    };
+  }
+
+  // Goals Navigation
+  if (pathname.startsWith("/goals")) {
+    return {
+      title: "Goals",
+      navItems: [
+        {
+          label: "Strategy map",
+          href: "/goals/strategy-map",
+          icon: <NAVIGATION_ICONS.goals className="w-4 h-4" />,
+        },
+        {
+          label: "Team goals",
+          href: "/goals/team-goals",
+          icon: <USER_ICONS.users className="w-4 h-4" />,
+        },
+        {
+          label: "My goals",
+          href: "/goals/my-goals",
+          icon: <USER_ICONS.user className="w-4 h-4" />,
+        },
+      ],
+      actions: [],
+      headerInfo: {
+        avatar: (
+          <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+            <NAVIGATION_ICONS.goals className="w-6 h-6 text-white" />
+          </div>
+        ),
+      },
+      showTabsPlus: false,
+    };
+  }
+
+  // MyTask Navigation
+  if (pathname.startsWith("/my-tasks")) {
+    return {
+      title: "My tasks",
+      navItems: [
+        {
+          label: "List",
+          href: "/my-tasks/list",
+          icon: <LAYOUT_ICONS.list className="w-4 h-4" />,
+        },
+        {
+          label: "Board", 
+          href: "/my-tasks/board",
+          icon: <LAYOUT_ICONS.board className="w-4 h-4" />,
+        },
+        {
+          label: "Calendar",
+          href: "/my-tasks/calendar",
+          icon: <LAYOUT_ICONS.calendar className="w-4 h-4" />,
+        },
+        {
+          label: "Dashboard",
+          href: "/my-tasks/dashboard", 
+          icon: <LAYOUT_ICONS.timeline className="w-4 h-4" />,
+        },
+        {
+          label: "File",
+          href: "/my-tasks/file",
+          icon: <FILE_ICONS.document className="w-4 h-4" />,
+        },
+      ],
+      actions: [],
+      headerInfo: {
+        avatar: (
+          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+            <USER_ICONS.user className="w-6 h-6" />
+          </div>
+        ),
+      },
+      showTabsPlus: false,
+    };
+  }
+
+  // Dynamic Projects Navigation
+  if (pathname.startsWith("/projects/")) {
+    const projectId = pathname.split('/')[2];
+    
+    return {
+      title: "Project", // This will be updated dynamically by the DynamicProjectProvider
+      navItems: [
+        {
+          label: "Overview",
+          href: `/projects/${projectId}`,
+          icon: <LAYOUT_ICONS.grid className="w-4 h-4" />,
+        },
+        {
+          label: "List",
+          href: `/projects/${projectId}/list`,
+          icon: <LAYOUT_ICONS.list className="w-4 h-4" />,
+        },
+        {
+          label: "Board",
+          href: `/projects/${projectId}/board`,
+          icon: <LAYOUT_ICONS.board className="w-4 h-4" />,
+        },
+        {
+          label: "Calendar",
+          href: `/projects/${projectId}/calendar`,
+          icon: <LAYOUT_ICONS.calendar className="w-4 h-4" />,
+        },
+        {
+          label: "Timeline",
+          href: `/projects/${projectId}/timeline`,
+          icon: <LAYOUT_ICONS.timeline className="w-4 h-4" />,
+        },
+        {
+          label: "Files",
+          href: `/projects/${projectId}/files`,
+          icon: <FILE_ICONS.document className="w-4 h-4" />,
+        },
+      ],
+      actions: [],
+      headerInfo: {
+        avatar: (
+          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+            <LAYOUT_ICONS.grid className="w-6 h-6" />
+          </div>
+        ),
+      },
+      showTabsPlus: false,
+    };
+  }
+
+  // Legacy Project Navigation (for backward compatibility)
+  if (pathname.startsWith("/project")) {
+    return {
+      title: "My Project",
+      navItems: [
+        {
+          label: "Overview",
+          href: "/project",
+          icon: <LAYOUT_ICONS.grid className="w-4 h-4" />,
+        },
+        {
+          label: "List",
+          href: "/project/list",
+          icon: <LAYOUT_ICONS.list className="w-4 h-4" />,
+        },
+        {
+          label: "Board",
+          href: "/project/board",
+          icon: <LAYOUT_ICONS.board className="w-4 h-4" />,
+        },
+        {
+          label: "Calendar",
+          href: "/project/calendar",
+          icon: <LAYOUT_ICONS.calendar className="w-4 h-4" />,
+        },
+        {
+          label: "Dashboard",
+          href: "/project/dashboard",
+          icon: <LAYOUT_ICONS.timeline className="w-4 h-4" />,
+        },
+        {
+          label: "File",
+          href: "/project/file",
+          icon: <FILE_ICONS.document className="w-4 h-4" />,
+        },
+      ],
+      actions: [],
+      headerInfo: {
+        avatar: (
+          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+            <USER_ICONS.user className="w-6 h-6" />
+          </div>
+        ),
+      },
+      showTabsPlus: false,
+    };
+  }
+
+  // Owner/Members Navigation
+  if (pathname.startsWith("/owner")) {
+    return {
+      title: "My Project",
+      navItems: [
+        {
+          label: "Overview",
+          href: "/owner/project",
+          icon: <LAYOUT_ICONS.grid className="w-4 h-4" />,
+        },
+        {
+          label: "Members",
+          href: "/owner/Members/allMembers",
+          icon: <LAYOUT_ICONS.list className="w-4 h-4" />,
+        },
+      ],
+      actions: [],
+      headerInfo: {
+        avatar: (
+          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+            <USER_ICONS.user className="w-6 h-6" />
+          </div>
+        ),
+      },
+      showTabsPlus: false,
     };
   }
 
@@ -117,6 +314,32 @@ export const usePageNavigation = (): PageNavigationConfig | null => {
     };
   }
 
+  // Portfolios Navigation
+  if (pathname.startsWith("/portfolios")) {
+    return {
+      title: "Portfolios",
+      navItems: [
+        {
+          label: "Recent and starred",
+          href: "/portfolios",
+        },
+        {
+          label: "Browse all", 
+          href: "/portfolios/browse-all",
+        },
+      ],
+      actions: [],
+      headerInfo: {
+        avatar: (
+          <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center">
+            <PROJECT_ICONS.star className="w-6 h-6 text-white" />
+          </div>
+        ),
+      },
+      showTabsPlus: false,
+    };
+  }
+
   // Teams Navigation
   if (pathname.startsWith("/teams")) {
     return {
@@ -125,22 +348,27 @@ export const usePageNavigation = (): PageNavigationConfig | null => {
         {
           label: "Overview",
           href: "/teams",
+          icon: <LAYOUT_ICONS.grid className="w-4 h-4" />,
         },
         {
           label: "All work",
           href: "/teams/all-work",
+          icon: <LAYOUT_ICONS.list className="w-4 h-4" />,
         },
         {
           label: "Messages",
           href: "/teams/messages",
+          icon: <COMMUNICATION_ICONS.message className="w-4 h-4" />,
         },
         {
           label: "Calendar",
           href: "/teams/calendar",
+          icon: <LAYOUT_ICONS.calendar className="w-4 h-4" />,
         },
         {
           label: "Knowledge",
           href: "/teams/knowledge",
+          icon: <FILE_ICONS.document className="w-4 h-4" />,
         },
       ],
       actions: [],

@@ -20,9 +20,10 @@ interface UserFormData {
 }
 
 const roles = [
-  { id: 1, name: "Project Manager", description: "Project Manager" },
-  { id: 2, name: "Leader", description: "Leader" },
-  { id: 3, name: "Member", description: "Member" },
+  { id: 1, name: "Quản trị viên", description: "Toàn quyền truy cập hệ thống" },
+  { id: 2, name: "Quản lý dự án", description: "Quản lý dự án và thành viên" },
+  { id: 3, name: "Thành viên", description: "Thành viên tham gia dự án" },
+  { id: 4, name: "Khách", description: "Chỉ xem thông tin cơ bản" },
 ];
 
 const organizations = [
@@ -82,14 +83,14 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (validateForm()) {
       const userData = {
         ...formData,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-
+      
       onSubmit(userData);
       onClose();
       // Reset form
@@ -115,13 +116,15 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
   if (!isOpen) return null;
 
   return (
-    <div
-      className={`fixed inset-0 backdrop-blur-sm flex items-center justify-center z-[70] p-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+    <div 
+      className={`fixed inset-0 backdrop-blur-sm flex items-center justify-center z-[70] p-4 transition-opacity duration-300 ${
+        isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
       onClick={handleBackdropClick}
     >
-      <div className={`bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 transform transition-all duration-300 ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-        }`}>
+      <div className={`bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 transform transition-all duration-300 ${
+        isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+      }`}>
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
           <h2 className="text-2xl font-bold text-gray-900">Invite Member</h2>
@@ -135,7 +138,7 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-
+        
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -146,56 +149,38 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              className={`w-full px-4 py-3 border rounded-lg  focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent ${errors.email ? "border-red-500" : "border-gray-300"
-                }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              }`}
               placeholder="example@company.com"
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Lock className="w-4 h-4 inline mr-2" />
-              Mật khẩu *
-            </label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleInputChange("password", e.target.value)}
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent ${errors.password ? "border-red-500" : "border-gray-300"
-                }`}
-              placeholder="********"
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
-          </div>
 
-
-
+        
           {/* Role */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Shield className="w-4 h-4 inline mr-2" />
-              Role
+              Vai trò
             </label>
             <select
               value={formData.roleId}
               onChange={(e) => handleInputChange("roleId", parseInt(e.target.value))}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               {roles.map((role) => (
-                <option key={role.id} value={role.id} className="text-gray-700 text-sm font-medium hover:bg-gray-100">
-                  {role.name} 
+                <option key={role.id} value={role.id}>
+                  {role.name} - {role.description}
                 </option>
               ))}
             </select>
           </div>
 
           {/* Organization */}
-          {/* <div>
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Building className="w-4 h-4 inline mr-2" />
               Tổ chức
@@ -211,12 +196,12 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
                 </option>
               ))}
             </select>
-          </div> */}
+          </div>
 
           {/* Status */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Status
+              Trạng thái
             </label>
             <div className="flex gap-4">
               <label className="flex items-center">
@@ -227,7 +212,7 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
                   onChange={(e) => handleInputChange("status", e.target.value as 'active' | 'inactive')}
                   className="mr-2 text-purple-600 focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-700">Active</span>
+                <span className="text-sm text-gray-700">Hoạt động</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -237,7 +222,7 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
                   onChange={(e) => handleInputChange("status", e.target.value as 'active' | 'inactive')}
                   className="mr-2 text-purple-600 focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-700">Inactive</span>
+                <span className="text-sm text-gray-700">Không hoạt động</span>
               </label>
             </div>
           </div>
@@ -249,13 +234,13 @@ export default function AddUserModal({ isOpen, onClose, onSubmit }: AddUserModal
               onClick={onClose}
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              Hủy
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
             >
-              Add Member
+              Thêm người dùng
             </button>
           </div>
         </form>
