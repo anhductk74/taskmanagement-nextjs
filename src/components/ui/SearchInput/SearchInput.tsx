@@ -49,18 +49,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
     lg: "left-3.5",
   };
 
-  // Variant styles
-  const variantClasses = {
-    default: "bg-gray-50 border border-gray-300 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20",
-    minimal: "bg-transparent border-0 focus:bg-gray-50 focus:ring-2 focus:ring-blue-500/20",
-    bordered: "bg-white border-2 border-gray-200 focus:border-blue-500 focus:ring-0",
-  };
 
-  // Dark theme variants
-  const darkVariantClasses = {
-    default: "dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-700 dark:focus:border-blue-400",
-    minimal: "dark:bg-transparent dark:text-white dark:placeholder-gray-400 dark:focus:bg-gray-800",
-    bordered: "dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-400",
+  // Variant styles with integrated dark mode
+  const variantClasses = {
+    default: "bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:bg-white dark:focus:bg-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20",
+    minimal: "bg-transparent dark:bg-transparent text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 border-0 focus:bg-gray-50 dark:focus:bg-gray-800 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20",
+    bordered: "bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-0"
   };
 
   return (
@@ -84,10 +78,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         className={`
           w-full rounded-full transition-all duration-200 outline-none
           ${sizeClasses[size]}
-          ${variantClasses[variant]}
-          ${darkVariantClasses[variant]}
-          placeholder:text-gray-500 dark:placeholder:text-gray-400
-        `}
+          ${variantClasses[variant]}`}
       />
 
       {/* Right Side Actions */}

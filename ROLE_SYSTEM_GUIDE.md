@@ -8,7 +8,11 @@ Hệ thống RBAC hoàn chỉnh với 5 roles: **Admin**, **Owner**, **Project M
 
 ### 1. **Truy cập Role Demo**
 ```
+<<<<<<< HEAD
 http://localhost:3000/role-demo
+=======
+http://localhost:3001/role-demo
+>>>>>>> origin/anhduc
 ```
 
 ### 2. **Sử dụng DevRoleSwitcher**
@@ -162,6 +166,7 @@ switchRole('project_manager');
 switchUser('2'); // Switch to Owner user
 ```
 
+<<<<<<< HEAD
 ## 📋 **Sidebar Menu Structure by Role**
 
 ### **Owner Role**
@@ -272,6 +277,8 @@ switchUser('2'); // Switch to Owner user
 | ├── Team Scope | Toàn org | Dự án/team | Tham gia | Tham gia |
 | └── Team Actions | Full CRUD | Manage assigned | View only | View only |
 
+=======
+>>>>>>> origin/anhduc
 ## 📊 **Permission Matrix**
 
 | Feature | Admin | Owner | PM | Leader | Member |
@@ -443,6 +450,7 @@ export const authService = {
 ✅ **Production-ready** architecture  
 ✅ **Zero backend dependency** for development  
 
+<<<<<<< HEAD
 ## 🚨 **Recent Changes & Important Notes**
 
 ### **⚠️ Removed Features (Tách riêng quản lý)**
@@ -514,6 +522,8 @@ src/hooks/usePermissions.ts        // Permission checking
 - [ ] Implement user menu for Profile & Settings
 - [ ] Replace MockAuthProvider with real authentication
 
+=======
+>>>>>>> origin/anhduc
 ## 🔗 **Key Files**
 
 - `src/types/roles.ts` - Role definitions and permissions
@@ -524,7 +534,10 @@ src/hooks/usePermissions.ts        // Permission checking
 - `src/components/dev/DevRoleSwitcher.tsx` - Development role switcher
 - `src/utils/roleUtils.ts` - Role utility functions
 - `src/app/(dashboard)/role-demo/page.tsx` - Demo page
+<<<<<<< HEAD
 - `src/config/navigation.tsx` - **Sidebar menu structure**
 - `src/layouts/private/components/PrivateSidebar.tsx` - **Sidebar implementation**
+=======
+>>>>>>> origin/anhduc
 
 **Ready to use! 🚀 Visit `/role-demo` to see it in action!**

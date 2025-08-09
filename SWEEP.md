@@ -48,6 +48,7 @@ rm -rf .next && npm run build
 
 This clears corrupted Next.js cache and rebuilds the application. The issue commonly occurs after making significant changes to components or when switching between development and production builds.
 
+<<<<<<< HEAD
 ### CSS Synchronization Between Machines
 To ensure 100% CSS consistency across different development machines:
 
@@ -84,6 +85,8 @@ npm run dev
 3. Verify Tailwind v4 syntax is used (`@import "tailwindcss"`)
 4. Ensure CSS is organized in proper `@layer` structure
 
+=======
+>>>>>>> origin/anhduc
 ### Fix Runtime Reference Errors
 When encountering runtime errors like `ReferenceError: [Component] is not defined`:
 

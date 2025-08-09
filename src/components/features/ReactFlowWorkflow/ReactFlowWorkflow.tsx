@@ -40,7 +40,11 @@ interface ReactFlowWorkflowProps {
   sections: WorkflowSection[];
   onTaskUpdate?: (taskId: string, updates: Partial<WorkflowTask>) => void;
   onTaskClick?: (task: WorkflowTask) => void;
+<<<<<<< HEAD
   onDependencyChange?: (dependencies: { fromTaskId: string; toTaskId: string; type: 'finish-to-start' | 'start-to-start' | 'finish-to-finish' | 'start-to-finish' }[]) => void;
+=======
+  onDependencyChange?: (dependencies: { fromTaskId: string; toTaskId: string; type: any }[]) => void;
+>>>>>>> origin/anhduc
   className?: string;
   height?: string;
   showMiniMap?: boolean;

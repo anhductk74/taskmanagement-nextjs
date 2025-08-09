@@ -86,8 +86,13 @@ export const RealAuthProvider: React.FC<RealAuthProviderProps> = ({ children }) 
           setError(null);
           
           // Clear URL parameters and redirect
+<<<<<<< HEAD
           window.history.replaceState({}, document.title, '/home');
           router.push('/home');
+=======
+          window.history.replaceState({}, document.title, '/dashboard');
+          router.push('/dashboard');
+>>>>>>> origin/anhduc
         } catch (error: any) {
           setError(error.response?.data?.message || 'Login failed');
           router.push('/login');

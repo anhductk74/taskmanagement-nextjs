@@ -486,11 +486,8 @@ const Calendar: React.FC<AsanaCalendarProps> = ({
                     {/* Add Task Button */}
                     <button 
                       className="absolute bottom-2 right-2 w-6 h-6 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200"
-                      onClick={() => onEventCreate && onEventCreate({ 
-                        start: date, 
-                        end: new Date(date.getTime() + 24 * 60 * 60 * 1000), // Next day
-                        allDay: true 
-                      })}
+
+                      onClick={() => onEventCreate && onEventCreate({ date: date.toISOString(), allDay: true })}
                     >
                       <Plus className="w-3 h-3 text-gray-300" />
                     </button>

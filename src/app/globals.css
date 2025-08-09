@@ -1,38 +1,34 @@
 @import "tailwindcss";
 
-@layer base {
-  /* Prevent elastic/bounce scrolling and overscroll behavior */
-  html, body {
-    overscroll-behavior: none !important;
-    overscroll-behavior-x: none !important;
-    overscroll-behavior-y: none !important;
-    
-    /* Prevent pull-to-refresh and elastic scrolling on iOS/macOS */
-    -webkit-overflow-scrolling: touch !important;
-    overflow-anchor: none !important;
-    
-    /* Ensure no white space appears */
-    background-color: #0f172a !important;
-    min-height: 100vh !important;
-    height: 100% !important;
-  }
 
-  /* Prevent overscroll on all scrollable elements */
-  * {
-    overscroll-behavior: none !important;
-    overscroll-behavior-x: none !important;
-    overscroll-behavior-y: none !important;
-  }
+/* Base styles and theme variables */
+:root {
+  --background: white;
+  --text-primary: #213547;
+  --text-secondary: #64748b;
+}
 
-  /* Specific fixes for main scroll containers */
-  [class*="overflow-auto"], 
-  [class*="overflow-scroll"],
-  [class*="overflow-y-auto"],
-  [class*="overflow-x-auto"] {
-    overscroll-behavior: none !important;
-    overscroll-behavior-x: none !important;
-    overscroll-behavior-y: none !important;
-  }
+:root[class="dark"] {
+  --background: #0f172a;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+}
+
+/* Prevent elastic/bounce scrolling and overscroll behavior */
+html, body {
+  overscroll-behavior: none !important;
+  overscroll-behavior-x: none !important;
+  overscroll-behavior-y: none !important;
+  
+  /* Prevent pull-to-refresh and elastic scrolling on iOS/macOS */
+  -webkit-overflow-scrolling: touch !important;
+  overflow-anchor: none !important;
+  
+  /* Theme-aware background and text colors */
+  background-color: var(--background) !important;
+  color: var(--text-primary) !important;
+  min-height: 100vh !important;
+  height: 100% !important;
 }
 
 @layer utilities {

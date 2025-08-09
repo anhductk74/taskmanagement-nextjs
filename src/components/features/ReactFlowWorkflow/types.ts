@@ -12,6 +12,7 @@ export interface TaskNode extends Node {
 }
 
 export interface DependencyEdge extends Edge {
+<<<<<<< HEAD
   id: string;
   source: string;
   target: string;
@@ -20,6 +21,13 @@ export interface DependencyEdge extends Edge {
     dependencyType: DependencyType;
     lag?: number; // Days
     onEdgeUpdate?: (edgeId: string, updates: Partial<Edge>) => void;
+=======
+  type: 'dependencyEdge';
+  data?: {
+    dependencyType: DependencyType;
+    lag?: number; // Days
+    onEdgeUpdate?: (edgeId: string, updates: Partial<DependencyEdge>) => void;
+>>>>>>> origin/anhduc
     onEdgeDelete?: (edgeId: string) => void;
   };
 }

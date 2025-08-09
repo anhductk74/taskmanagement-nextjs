@@ -37,6 +37,7 @@ const GoalsContent: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     if (React.isValidElement(child) && typeof child.type !== 'string') {
       try {
         return React.cloneElement(child as React.ReactElement<any>, { timeframe });
+
       } catch (error) {
         console.warn('Failed to clone element:', error);
         return child;

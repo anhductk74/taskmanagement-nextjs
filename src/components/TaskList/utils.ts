@@ -102,7 +102,8 @@ export const getStatusConfig = (status: TaskStatus) => {
   return STATUS_CONFIG[status] || STATUS_CONFIG.todo;
 };
 
-export const formatDate = (dateString: string | Date): string => {
+
+export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   const now = new Date();
   const diffTime = date.getTime() - now.getTime();
@@ -120,13 +121,8 @@ export const formatDate = (dateString: string | Date): string => {
   });
 };
 
-export const formatTaskDate = (task: {
-  dueDate?: string | Date | null;
-  startDate?: string | Date | null;
-  endDate?: string | Date | null;
-  startTime?: string;
-  endTime?: string;
-}): string => {
+
+export const formatTaskDate = (task: any): string => {
   // Check if task has start/end dates and times from enhanced calendar
   if (task.startDate && task.endDate) {
     const startDate = new Date(task.startDate);
@@ -195,7 +191,8 @@ export const formatTaskDate = (task: {
       return `${date.getDate()} ${date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase()}`;
     }
     // If date parsing fails, use original formatDate function
-    return formatDate(task.dueDate as string | Date);
+
+    return formatDate(task.dueDate);
   }
   
   return '-';
@@ -345,8 +342,9 @@ export const groupTasks = (tasks: TaskListItem[], groupBy: TaskGroupBy): TaskSec
 
 export const sortTasks = (tasks: TaskListItem[], field: keyof TaskListItem, direction: 'asc' | 'desc'): TaskListItem[] => {
   return [...tasks].sort((a, b) => {
-    let aValue: string | number = '';
-    let bValue: string | number = '';
+
+    let aValue = a[field];
+    let bValue = b[field];
 
     // Handle special cases
     if (field === 'priority') {
@@ -358,26 +356,7 @@ export const sortTasks = (tasks: TaskListItem[], field: keyof TaskListItem, dire
     } else if (field === 'dueDate') {
       aValue = a.dueDate ? new Date(a.dueDate).getTime() : 0;
       bValue = b.dueDate ? new Date(b.dueDate).getTime() : 0;
-    } else {
-      // Handle other field types safely
-      const aFieldValue = a[field];
-      const bFieldValue = b[field];
-      
-      if (typeof aFieldValue === 'string') {
-        aValue = aFieldValue;
-      } else if (typeof aFieldValue === 'number') {
-        aValue = aFieldValue;
-      } else {
-        aValue = String(aFieldValue || '');
-      }
-      
-      if (typeof bFieldValue === 'string') {
-        bValue = bFieldValue;
-      } else if (typeof bFieldValue === 'number') {
-        bValue = bFieldValue;
-      } else {
-        bValue = String(bFieldValue || '');
-      }
+
     }
 
     if (aValue < bValue) return direction === 'asc' ? -1 : 1;

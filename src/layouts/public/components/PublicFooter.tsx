@@ -10,10 +10,12 @@ export default function PublicFooter() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-sm">TM</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
               </div>
-              <span className="font-bold text-xl">TaskManager</span>
+              <span className="font-bold text-xl text-white">TaskManager</span>
             </div>
             <p className="text-gray-400 text-sm">
               Streamline your project management with our powerful task

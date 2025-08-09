@@ -50,7 +50,8 @@ export const DevRoleSwitcher: React.FC<DevRoleSwitcherProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className="mb-2 shadow-lg"
         style={{ backgroundColor: getRoleColor(user.role) }}
-        size={compact ? "sm" : "md"}
+
+        size={compact ? "sm" : "default"}
       >
         {getRoleIcon(user.role)} {compact ? '' : getRoleDisplayName(user.role)}
       </Button>

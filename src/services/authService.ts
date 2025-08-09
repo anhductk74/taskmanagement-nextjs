@@ -25,13 +25,26 @@ export const authService = {
     
     const { accessToken, refreshToken } = response.data;
     
+<<<<<<< HEAD
     // Store tokens
+=======
+    // Store tokens in both localStorage and cookies
+>>>>>>> origin/anhduc
     localStorage.setItem('access_token', accessToken);
     localStorage.setItem('refresh_token', refreshToken);
     localStorage.setItem('token_expires_at', 
       (Date.now() + response.data.expiresIn * 1000).toString()
     );
     
+<<<<<<< HEAD
+=======
+    // Set cookies for SSR
+    document.cookie = `token=${accessToken}; path=/; max-age=${response.data.expiresIn}`;
+    document.cookie = `refreshToken=${refreshToken}; path=/; max-age=${response.data.expiresIn * 2}`;
+    document.cookie = `userId=${response.data.user.id}; path=/; max-age=${response.data.expiresIn}`;
+    document.cookie = `userRole=${response.data.user.role}; path=/; max-age=${response.data.expiresIn}`;
+    
+>>>>>>> origin/anhduc
     return response.data;
   },
 
@@ -72,10 +85,23 @@ export const authService = {
         await api.post('/auth/logout', { refreshToken });
       }
     } finally {
+<<<<<<< HEAD
       // Always clear local storage
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('token_expires_at');
+=======
+      // Clear local storage
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('token_expires_at');
+      
+      // Clear cookies
+      document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+      document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+      document.cookie = 'userId=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+      document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+>>>>>>> origin/anhduc
     }
   },
 
