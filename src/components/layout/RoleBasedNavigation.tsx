@@ -60,7 +60,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   },
   {
     label: 'Role Demo',
-    href: '/role-demo',
+
     icon: '🔧',
   },
   {

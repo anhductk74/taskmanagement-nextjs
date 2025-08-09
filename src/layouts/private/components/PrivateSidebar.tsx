@@ -60,13 +60,13 @@ export default function PrivateSidebar({
     // Always include basic permissions
     "basic",
     
-    // Role-based permissions
+    // Role-based permissions using backend roles
     ...(is.owner ? ["project_management", "team_management", "user_management"] : []),
-    ...(is.projectManager ? ["project_management", "team_management", "user_management"] : []),
+    ...(is.projectManager ? ["project_management", "team_management", "user_management"] : []), // PM from backend
     ...(is.leader ? ["team_management"] : []),
     
     // Legacy admin permission for backward compatibility
-    ...(is.owner ? ["admin"] : []),
+    ...(is.owner || is.admin ? ["admin"] : []),
   ];
 
   // Get visible sections based on permissions and merge with dynamic data

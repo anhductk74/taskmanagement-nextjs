@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { UserRole } from "@/types/auth";
-import { useMockAuth } from "@/providers/MockAuthProvider";
+import { authService } from "@/services/authService";
 import {
   LayoutContextValue,
   LayoutActions,
@@ -15,7 +15,43 @@ import {
 export function usePrivateLayout() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user: authUser, logout } = useMockAuth();
+  // Get real user data using authService
+  const getUserFromStorage = () => {
+    try {
+      const userData = authService.getUserInfo();
+      
+      if (!userData) {
+        return null;
+      }
+      
+      return {
+        id: userData.id?.toString() || '1',
+        name: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.email,
+        email: userData.email || '',
+        role: userData.roles?.[0]?.toLowerCase() || 'member',
+        avatar: userData.avatarUrl,
+        firstName: userData.firstName,
+        lastName: userData.lastName
+      };
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      return null;
+    }
+  };
+
+  const authUser = getUserFromStorage();
+  
+  const logout = async () => {
+    try {
+      // Use authService logout method (clears cookies and localStorage)
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      // Always redirect to login
+      router.push('/login');
+    }
+  };
 
   // Layout state
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

@@ -3,7 +3,8 @@
 
 import React, { useState } from 'react';
 import { UserRole } from '@/types/roles';
-import { useMockAuth, MOCK_USERS } from '@/providers/MockAuthProvider';
+// TODO: Replace with real auth when backend is ready
+// import { useAuth } from '@/hooks/useAuth';
 import { getRoleDisplayName, getRoleColor, getRoleIcon } from '@/utils/roleUtils';
 import { Button } from '@/components/ui';
 
@@ -16,7 +17,10 @@ export const DevRoleSwitcher: React.FC<DevRoleSwitcherProps> = ({
   position = 'bottom-right',
   compact = false
 }) => {
-  const { user, switchRole, switchUser } = useMockAuth();
+  // TODO: Replace with real auth
+  const user = { id: '1', name: 'Dev User', email: 'dev@company.com', role: 'member' };
+  const switchRole = (role: UserRole) => console.log('Switch role to:', role);
+  const switchUser = (userId: string) => console.log('Switch user to:', userId);
   const [isOpen, setIsOpen] = useState(false);
 
   // Only show in development
@@ -95,7 +99,8 @@ export const DevRoleSwitcher: React.FC<DevRoleSwitcherProps> = ({
               Switch User:
             </h4>
             <div className="space-y-1 max-h-32 overflow-y-auto">
-              {MOCK_USERS.map((mockUser) => (
+              {/* TODO: Replace with real users from backend */}
+              {[].map((mockUser: any) => (
                 <button
                   key={mockUser.id}
                   onClick={() => handleUserSwitch(mockUser.id)}
@@ -142,7 +147,8 @@ export const DevRoleSwitcherCompact: React.FC = () => (
 
 // Role indicator (always visible)
 export const DevRoleIndicator: React.FC = () => {
-  const { user } = useMockAuth();
+  // TODO: Replace with real auth
+  const user = { id: '1', name: 'Dev User', email: 'dev@company.com', role: 'member' };
 
   if (process.env.NODE_ENV !== 'development' || !user) {
     return null;

@@ -3,12 +3,11 @@
 
 import React from 'react';
 import { LoginForm } from '@/features/auth/components/LoginForm';
-import { BackendTestPanel } from '@/components/dev/BackendTestPanel';
-import { ApiDebugger } from '@/components/dev/ApiDebugger';
-import { useMockAuth } from '@/providers/MockAuthProvider';
+// Dev components removed - using real backend
 
 export default function LoginPage() {
-  const { error } = useMockAuth();
+  // TODO: Replace with real auth
+  const error = null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -34,8 +33,7 @@ export default function LoginPage() {
       </div>
       
       {/* Development Test Panel */}
-      <BackendTestPanel />
-      <ApiDebugger />
+      {/* Dev components removed - using real backend */}
     </div>
   );
 }

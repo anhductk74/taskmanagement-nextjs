@@ -2,7 +2,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useMockAuth } from '@/providers/MockAuthProvider';
+// TODO: Replace with real auth when backend is ready
+// import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui';
 import type { LoginCredentials } from '@/types';
 
@@ -13,7 +14,9 @@ export const LoginForm: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login, error } = useMockAuth();
+  // TODO: Replace with real auth
+  const login = async (email: string, password: string) => console.log('Login:', email);
+  const error = null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

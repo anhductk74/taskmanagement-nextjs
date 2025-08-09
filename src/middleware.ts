@@ -13,7 +13,7 @@ const protectedRoutes = [
   '/goals',
   '/reporting',
   '/admin',
-  '/role-demo'
+
 ];
 
 // Routes that should redirect to dashboard if authenticated
@@ -21,8 +21,13 @@ const authRoutes = ['/login', '/register'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const accessToken = request.cookies.get('access_token')?.value;
-  const isAuthenticated = !!accessToken;
+  
+  // Check for token in cookies (for httpOnly cookies) or Authorization header
+  const cookieToken = request.cookies.get('access_token')?.value;
+  const authHeader = request.headers.get('authorization');
+  const headerToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  
+  const isAuthenticated = !!(cookieToken || headerToken);
 
   // Check if route is protected
   const isProtectedRoute = protectedRoutes.some(route => 
@@ -34,11 +39,12 @@ export function middleware(request: NextRequest) {
     pathname.startsWith(route)
   );
 
-  // Redirect unauthenticated users from protected routes
+  // For protected routes, let client-side handle auth check
+  // Middleware can't access localStorage, so we'll rely on client-side routing
   if (isProtectedRoute && !isAuthenticated) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
+    // Don't redirect here - let client-side handle it
+    // This allows localStorage-based auth to work
+    return NextResponse.next();
   }
 
   // Redirect authenticated users from auth routes

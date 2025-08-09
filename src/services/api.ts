@@ -16,11 +16,9 @@ const apiClient: AxiosInstance = axios.create({
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    // Add JWT token if available
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // With httpOnly cookies, tokens are automatically sent
+    // No need to manually add Authorization header
+    // The browser will automatically include httpOnly cookies
     return config;
   },
   (error) => {
@@ -41,32 +39,20 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // Try to refresh token
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-            refreshToken
-          });
-
-          const { accessToken, refreshToken: newRefreshToken, expiresIn } = response.data;
-          
-          // Update tokens
-          localStorage.setItem('access_token', accessToken);
-          localStorage.setItem('refresh_token', newRefreshToken);
-          localStorage.setItem('token_expires_at', 
-            (Date.now() + expiresIn * 1000).toString()
-          );
-
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return apiClient(originalRequest);
-        }
+        // Try to refresh token via API call (cookies handled server-side)
+        const response = await axios.post(`${API_BASE_URL}/auth/refresh`);
+        
+        // Cookies are updated server-side automatically
+        // Retry original request
+        return apiClient(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('token_expires_at');
-        window.location.href = '/login';
+        // Refresh failed, clear client-side data and redirect to login
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('userInfo');
+          // Clear non-httpOnly cookies
+          document.cookie = 'user_info=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=strict; Secure';
+          window.location.href = '/login';
+        }
       }
     }
 

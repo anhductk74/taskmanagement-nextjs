@@ -6,10 +6,7 @@ Hệ thống RBAC hoàn chỉnh với 5 roles: **Admin**, **Owner**, **Project M
 
 ## 🎯 **Quick Start**
 
-### 1. **Truy cập Role Demo**
-```
-http://localhost:3001/role-demo
-```
+
 
 ### 2. **Sử dụng DevRoleSwitcher**
 - Component xuất hiện ở góc bottom-right trong development mode
@@ -123,43 +120,15 @@ import { ProtectedRoute, AdminRoute, ManagerRoute } from '@/components/auth/Prot
 </ManagerRoute>
 ```
 
-## 🧪 **Mock Authentication System**
-
-### **Mock Users Available**
-```typescript
-1. Admin User (admin@company.com) - Admin role
-2. John Owner (owner@company.com) - Owner role  
-3. Sarah Manager (pm@company.com) - Project Manager role
-4. Mike Leader (leader@company.com) - Leader role
-5. Anna Member (member@company.com) - Member role
-```
+## 🔗 **Backend Integration Ready**
 
 ### **Development Features**
 ```tsx
-// Auto-login in development
-<MockAuthProvider defaultRole="member" enableDevMode={true}>
-  <App />
-</MockAuthProvider>
-
-// Role switcher component
+// Role switcher component (still available for testing)
 <DevRoleSwitcher position="bottom-right" />
 
 // Role indicator
 <DevRoleIndicator />
-```
-
-### **API Simulation**
-```tsx
-const { login, logout, switchRole, switchUser } = useMockAuth();
-
-// Login with specific role
-await login('test@example.com', 'password', 'admin');
-
-// Quick role switch (dev only)
-switchRole('project_manager');
-
-// Switch to different user
-switchUser('2'); // Switch to Owner user
 ```
 
 ## 📋 **Sidebar Menu Structure by Role**
@@ -314,10 +283,9 @@ const roleIcon = getRoleIcon('leader'); // "👥"
 ## 🔧 **Development Workflow**
 
 ### **1. Test Different Roles**
-1. Go to `/role-demo`
-2. Use DevRoleSwitcher to change roles
-3. See how UI changes instantly
-4. Test all permission combinations
+1. Use DevRoleSwitcher (bottom-right corner) to change roles
+2. See how UI changes instantly
+3. Test all permission combinations
 
 ### **2. Add New Permissions**
 ```typescript
@@ -359,18 +327,18 @@ export const CanManageNewResource: React.FC<{ children: React.ReactNode }> = ({
 
 ## 🚀 **Production Migration**
 
-### **When Backend is Ready**
+### **Backend Integration**
 ```typescript
-// 1. Replace MockAuthProvider with real AuthProvider
-<AuthProvider> // Instead of MockAuthProvider
+// 1. Use real AuthProvider
+<AuthProvider>
   <App />
 </AuthProvider>
 
-// 2. Update usePermissions hook
-const { user } = useAuthContext(); // Instead of useMockAuth()
+// 2. Use real auth hook
+const { user } = useAuth(); // Real backend auth
 
 // 3. All role guards and permissions work the same!
-// No changes needed to components using RoleGuard, usePermissions, etc.
+// No changes needed to components using RoleGuard, etc.
 ```
 
 ### **API Integration**
@@ -503,7 +471,7 @@ src/hooks/usePermissions.ts        // Permission checking
 <MockAuthProvider enableDevMode={true}>
 
 # 2. Use DevRoleSwitcher (bottom-right corner)
-# 3. Or visit http://localhost:3001/role-demo
+
 ```
 
 ### **🎯 TODO for Production**
@@ -512,7 +480,7 @@ src/hooks/usePermissions.ts        // Permission checking
 - [ ] Create Billing management interface (separate)
 - [ ] Create Organization Settings interface (separate)
 - [ ] Implement user menu for Profile & Settings
-- [ ] Replace MockAuthProvider with real authentication
+- [x] Removed MockAuthProvider - Ready for real backend
 
 ## 🔗 **Key Files**
 
@@ -520,11 +488,11 @@ src/hooks/usePermissions.ts        // Permission checking
 - `src/hooks/usePermissions.ts` - Permission management hook
 - `src/components/auth/RoleGuard.tsx` - Component-level guards
 - `src/components/auth/ProtectedRoute.tsx` - Route-level protection
-- `src/providers/MockAuthProvider.tsx` - Mock authentication
+
 - `src/components/dev/DevRoleSwitcher.tsx` - Development role switcher
 - `src/utils/roleUtils.ts` - Role utility functions
-- `src/app/(dashboard)/role-demo/page.tsx` - Demo page
+
 - `src/config/navigation.tsx` - **Sidebar menu structure**
 - `src/layouts/private/components/PrivateSidebar.tsx` - **Sidebar implementation**
 
-**Ready to use! 🚀 Visit `/role-demo` to see it in action!**
+**Ready to use! 🚀 Use DevRoleSwitcher to test different roles!**
