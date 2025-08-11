@@ -24,11 +24,8 @@
     "@fullcalendar/resource-timeline": "^6.1.18",
     "@fullcalendar/timegrid": "^6.1.18",
     "@fullcalendar/timeline": "^6.1.18",
-<<<<<<< HEAD
     "@radix-ui/react-slot": "^1.2.3",
-=======
     "@hookform/resolvers": "^5.2.1",
->>>>>>> d1d89456fef6613b064af36789695f7d8f213495
     "@types/jsonwebtoken": "^9.0.10",
     "antd": "^5.26.7",
     "axios": "^1.11.0",
@@ -41,11 +38,8 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.525.0",
     "next": "15.4.2",
-<<<<<<< HEAD
     "next-auth": "^5.0.0-beta.29",
-=======
-    "next-auth": "^4.24.11",
->>>>>>> d1d89456fef6613b064af36789695f7d8f213495
+
     "react": "19.1.0",
     "react-apexcharts": "^1.7.0",
     "react-datepicker": "^8.4.0",
@@ -55,13 +49,9 @@
     "react-icons": "^5.5.0",
     "reactflow": "^11.11.4",
     "recharts": "^3.1.0",
-<<<<<<< HEAD
     "swr": "^2.3.5",
-    "tailwind-merge": "^3.3.1"
-=======
     "tailwind-merge": "^3.3.1",
     "yup": "^1.7.0"
->>>>>>> d1d89456fef6613b064af36789695f7d8f213495
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
