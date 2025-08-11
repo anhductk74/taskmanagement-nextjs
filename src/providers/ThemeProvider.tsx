@@ -2,7 +2,8 @@
 'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useTheme } from '@/layouts/hooks/useTheme';
+
+import { useTheme } from '@/hooks/useTheme';
 
 interface ThemeContextValue {
   theme: 'light' | 'dark';
@@ -23,11 +24,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   defaultTheme = 'dark',
   storageKey = 'theme'
 }) => {
-  const themeHook = useTheme();
+
+  const { theme, setTheme, toggleTheme } = useTheme(storageKey, defaultTheme);
 
   return (
-    <ThemeContext.Provider value={themeHook}>
-      {children}
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+      <div className={theme}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 };

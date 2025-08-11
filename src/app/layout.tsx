@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/layouts/hooks/useTheme";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
 import { DetailPanelProvider } from "@/contexts/DetailPanelContext";
 import { AppProvider } from "@/contexts/AppProvider";
 import { NextAuthProvider } from "@/providers";
 import { Geist, Geist_Mono } from "next/font/google";
-
+import SessionProviderWrapper from "./SessionProviderWrapper";
 const geistSans = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
@@ -30,8 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
       >
+<<<<<<< HEAD
         <NextAuthProvider>
           <ThemeProvider defaultTheme="dark" storageKey="taskmanagement-theme">
             <AppProvider>
@@ -41,6 +42,20 @@ export default function RootLayout({
             </AppProvider>
           </ThemeProvider>
         </NextAuthProvider>
+=======
+
+        <SessionProviderWrapper>
+          <ThemeProvider defaultTheme="dark" storageKey="taskmanagement-theme">
+            <AppProvider>
+              <DetailPanelProvider>
+                <MockAuthProvider defaultRole="member" enableDevMode={false}>
+                  {children}
+                </MockAuthProvider>
+              </DetailPanelProvider>
+            </AppProvider>
+          </ThemeProvider>
+        </SessionProviderWrapper>
+>>>>>>> d1d89456fef6613b064af36789695f7d8f213495
       </body>
     </html>
   );
