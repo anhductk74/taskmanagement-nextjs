@@ -1,6 +1,7 @@
 // Task Service - Task-related API operations with SWR integration
 import { api } from './api';
 import type { Task, CreateTaskDTO, UpdateTaskDTO } from '@/types';
+import {TaskStatus} from '@/types/task';
 
 // Mock data for development
 const MOCK_TASKS: Task[] = [
@@ -12,7 +13,7 @@ const MOCK_TASKS: Task[] = [
     dueDateISO: new Date(),
     completed: false,
     priority: 'High',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 1,
     createdAt: new Date('2024-01-20'),
@@ -26,7 +27,7 @@ const MOCK_TASKS: Task[] = [
     dueDateISO: new Date(),
     completed: false,
     priority: 'medium',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 1,
     createdAt: new Date('2024-01-19'),
@@ -40,7 +41,7 @@ const MOCK_TASKS: Task[] = [
     dueDateISO: new Date(Date.now() + 24 * 60 * 60 * 1000),
     completed: false,
     priority: 'low',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 2,
     createdAt: new Date('2024-01-18'),
@@ -54,7 +55,7 @@ const MOCK_TASKS: Task[] = [
     dueDateISO: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
     completed: false,
     priority: 'high',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 3,
     createdAt: new Date('2024-01-16'),

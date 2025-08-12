@@ -54,7 +54,8 @@ export const useTaskActions = ({ taskActions }: UseTaskActionsProps): TaskListAc
 
     // Create task with enhanced calendar data
     const newTaskData = {
-      name: taskName,
+      name: taskName, // cho frontend
+      title: taskName, // cho backend
       description: "",
       assignees: [],
       dueDate: taskDueDate,

@@ -1,8 +1,7 @@
 import { TaskListItem, TaskListActions, TaskStatus } from "@/components/TaskList";
-
 interface UseTaskActionsProps {
   onTaskClick: (task: TaskListItem) => void;
-  onCreateTask: (taskData: string | {
+  onCreateTask: (taskData?: string | {
     name: string;
     dueDate?: string;
     startDate?: string;
@@ -93,7 +92,7 @@ export const useTaskActions = ({
     onTaskDelete: handleTaskDelete,
     onTaskStatusChange: handleTaskStatusChange,
     onTaskAssign: handleTaskAssign,
-    // onCreateTask,
+    onCreateTask,
     onBulkAction: handleBulkAction,
   };
 };

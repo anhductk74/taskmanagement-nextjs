@@ -25,13 +25,18 @@ interface RoleChecks {
  */
 export function isItemActive(item: NavigationItem, pathname: string): boolean {
   if (item.href === pathname) return true;
-  
+
+  // Highlight My Task for all /my-tasks/** subroutes
+  if (item.href === '/my-tasks' && pathname.startsWith('/my-tasks')) {
+    return true;
+  }
+
   // Check for dynamic project routes
   if (item.href.includes('/projects/') && pathname.includes('/projects/')) {
     const projectId = item.href.split('/projects/')[1];
     return pathname.includes(`/projects/${projectId}`);
   }
-  
+
   return false;
 }
 
