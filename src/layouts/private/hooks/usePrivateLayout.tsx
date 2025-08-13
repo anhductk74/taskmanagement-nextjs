@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { UserRole } from "@/types/auth";
+import { useAuth } from "@/hooks/use-auth";
+import { useUserData } from "@/hooks/useUserData";
 import {
   LayoutContextValue,
   LayoutActions,
@@ -13,9 +15,12 @@ import {
 
 export function usePrivateLayout() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user: authUser, logout } = useAuth();
+  const { user: backendUser, isLoading: userDataLoading } = useUserData();
 
   // Layout state
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,21 +29,31 @@ export function usePrivateLayout() {
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mock user data
-  const user = useMemo(
-    () => ({
-      id: "1",
-      name: "John Doe",
-      email: "john@example.com",
-      role: UserRole.OWNER,
+  // Use user data with priority: backend -> auth context -> null
+  const user = useMemo(() => {
+    // Prioritize backend user data if available
+    if (backendUser) {
+      return backendUser;
+    }
+    
+    // Use auth user (includes OAuth data)
+    if (!authUser) return null;
+    
+    // Convert authUser to User format for compatibility
+    const userData = {
+      id: authUser.id,
+      name: authUser.name,
+      email: authUser.email,
+      role: authUser.role as UserRole,
       permissions: [],
-      avatar: "",
+      avatar: authUser.avatar || "",
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date(),
-    }),
-    []
-  );
+    };
+    
+    return userData;
+  }, [backendUser, authUser]);
 
   // Mock navigation
   const navigation = useMemo(
@@ -49,9 +64,9 @@ export function usePrivateLayout() {
         icon: "home",
         items: [
           {
-            key: "dashboard",
-            title: "Dashboard",
-            href: "/dashboard",
+            key: "home",
+            title: "Home",
+            href: "/home",
             icon: "home",
           },
         ],
@@ -188,16 +203,22 @@ export function usePrivateLayout() {
     setBreadcrumbs(newBreadcrumbs);
   }, []);
 
-  const signOut = useCallback(() => {
-    console.log("Signing out...");
-  }, []);
+  const signOut = useCallback(async () => {
+    try {
+      await logout();
+      // Redirect to login page after successful logout
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }, [logout, router]);
 
   // Auto-generate breadcrumbs
   useEffect(() => {
     const generateBreadcrumbs = (): BreadcrumbItem[] => {
       const segments = pathname.split("/").filter(Boolean);
       const breadcrumbs: BreadcrumbItem[] = [
-        { title: "Dashboard", href: "/dashboard", icon: "home" },
+        { title: "Home", href: "/home", icon: "home" },
       ];
 
       let currentPath = "";
