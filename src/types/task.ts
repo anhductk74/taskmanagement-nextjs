@@ -8,16 +8,18 @@ export enum TaskStatus {
 }
 
 export interface Task {
-  id: string
-  name: string
-  assignee: string[]
-  dueDate: string
+  id: number
+  title: string
+  description?: string
+  dueDateISO?: string;
   priority: 'Low' | 'Medium' | 'High'
   status: TaskStatus
+  assignee: string[]
+  dueDate: string
 }
 
 export interface EditableTask extends Omit<Task, 'status'> {
-  id: string
+  id: number
   status: TaskStatus
   isEditing?: {
     name?: boolean

@@ -45,20 +45,18 @@ export const useTaskManagement = (initialTasks: TaskListItem[] = []): TaskManage
   const [error, setError] = useState<string | null>(null);
 
   // Task CRUD Operations
-  const addTask = useCallback((newTaskData: Omit<TaskListItem, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const addTask = useCallback(async (newTaskData: Omit<TaskListItem, 'id' | 'createdAt' | 'updatedAt'>) => {
     const newTask: TaskListItem = {
       ...newTaskData,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
     setTasks(prevTasks => [...prevTasks, newTask]);
-    
-    // Log for debugging in development
     if (process.env.NODE_ENV === 'development') {
       console.log('Task added:', newTask);
     }
+    return;
   }, []);
 
   const updateTask = useCallback((taskId: string, updates: Partial<TaskListItem>) => {
