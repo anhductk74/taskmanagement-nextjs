@@ -3,7 +3,7 @@
  * Tách logic phức tạp ra khỏi component chính
  */
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import { useRBAC } from '@/hooks/useRBAC';
 import { useProjectsContext } from '@/contexts';
 import { useTaskStats } from '@/hooks/useTasks';
@@ -35,6 +35,25 @@ export function useSidebarNavigation() {
   // Use SWR hook for task stats instead of context
   const { stats: taskStats } = useTaskStats();
 
+  // Debug: Track when taskStats changes
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔄 Sidebar Navigation - taskStats changed:', taskStats);
+      console.log('🔄 Sidebar Navigation - byStatus changed:', taskStats?.byStatus);
+      console.log('🔄 Sidebar Navigation - TO_DO count changed to:', taskStats?.byStatus?.TO_DO);
+      console.log('🔄 Sidebar Navigation - Component re-rendering due to taskStats change');
+      
+      // Add test button to console for manual testing
+      console.log('🧪 Test: To manually test revalidateTaskStats, run: window.testRevalidateStats()');
+      (window as any).testRevalidateStats = () => {
+        console.log('🧪 Manual test: Calling revalidateTaskStats');
+        import('@/hooks/useTasks').then(({ revalidateTaskStats }) => {
+          revalidateTaskStats();
+        });
+      };
+    }
+  }, [taskStats]);
+
   // Create role checks object (memoized)
   const roleChecks = useMemo(() => createRoleChecks(rbac), [rbac]);
 
@@ -45,6 +64,15 @@ export function useSidebarNavigation() {
 
   // Process navigation sections with dynamic data
   const navigationSections = useMemo(() => {
+    // Debug: Log taskStats to see what's available
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔄 Sidebar Navigation - navigationSections memo recalculating');
+      console.log('🔄 Sidebar Navigation - taskStats:', taskStats);
+      console.log('🔄 Sidebar Navigation - byStatus:', taskStats?.byStatus);
+      console.log('🔄 Sidebar Navigation - TO_DO count:', taskStats?.byStatus?.TO_DO);
+      console.log('🔄 Sidebar Navigation - Dependencies changed, recalculating...');
+    }
+    
     return baseNavigationSections.map(section => {
       // Update My Tasks with real task count
       if (section.id === NAV_SECTIONS.MAIN) {
@@ -52,10 +80,20 @@ export function useSidebarNavigation() {
           ...section,
           items: section.items.map(item => {
             if (item.id === "my-tasks") {
+              // Use the correct TaskStatus enum value 'TO_DO'
+              const todoCount = taskStats?.byStatus?.TO_DO || 0;
+              
+              // Debug: Log badge count calculation
+              if (process.env.NODE_ENV === 'development') {
+                console.log('🔄 My Tasks Badge - TO_DO count:', todoCount);
+                console.log('🔄 My Tasks Badge - all byStatus keys:', Object.keys(taskStats?.byStatus || {}));
+                console.log('🔄 My Tasks Badge - byStatus values:', taskStats?.byStatus);
+              }
+              
               return {
                 ...item,
                 badge: {
-                  count: taskStats?.byStatus?.TO_DO || 0,
+                  count: todoCount,
                   color: "default" as const,
                 }
               };
@@ -98,7 +136,7 @@ export function useSidebarNavigation() {
       
       return section;
     });
-  }, [baseNavigationSections, roleChecks, taskStats?.byStatus?.pending, projects]);
+  }, [baseNavigationSections, roleChecks, taskStats?.byStatus?.TO_DO, projects]);
 
   // Check if item is active (memoized with useCallback)
   const checkItemActive = useCallback((item: any, pathname: string) => {

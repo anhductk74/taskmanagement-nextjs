@@ -11,7 +11,7 @@ const MOCK_TASKS: Task[] = [
     description: "Finalize Q1 project proposal document",
     dueDate: "Today",
     dueDateISO: new Date(),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'High',
     status: TaskStatus.TO_DO,
     hasTag: false,
@@ -25,7 +25,7 @@ const MOCK_TASKS: Task[] = [
     description: "Review and provide feedback on new design mockups",
     dueDate: "Today",
     dueDateISO: new Date(),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'medium',
     status: TaskStatus.TO_DO,
     hasTag: false,
@@ -39,7 +39,7 @@ const MOCK_TASKS: Task[] = [
     description: "Update technical documentation for the project",
     dueDate: "Tomorrow",
     dueDateISO: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'low',
     status: TaskStatus.TO_DO,
     hasTag: false,
@@ -53,7 +53,7 @@ const MOCK_TASKS: Task[] = [
     description: "Create slides for client presentation",
     dueDate: "Thursday",
     dueDateISO: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'high',
     status: TaskStatus.TO_DO,
     hasTag: false,
@@ -207,9 +207,9 @@ export const taskService = {
         description: data.description || '',
         dueDate: data.dueDate || 'Today',
         dueDateISO: data.dueDateISO || new Date(),
-        completed: false,
+        pending: data.status ? (data.status === TaskStatus.DONE ? false : true) : true, // Auto-set pending based on status
         priority: data.priority || 'medium',
-        status: data.status || 'pending',
+        status: data.status || TaskStatus.TO_DO,
         hasTag: false,
         projectId: data.projectId,
         assigneeId: data.assigneeId,
@@ -365,7 +365,7 @@ export const taskService = {
           return acc;
         }, {} as Record<string, number>),
         overdue: tasks.filter(task => 
-          task.dueDateISO && task.dueDateISO < new Date() && !task.completed
+          task.dueDateISO && task.dueDateISO < new Date() && task.pending
         ).length,
         dueToday: tasks.filter(task => 
           task.dueDateISO?.toDateString() === today

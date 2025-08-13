@@ -183,7 +183,7 @@ export const STATUS_ICONS = {
   warning: AlertTriangle,
   error: XCircle,
   info: Info,
-  pending: Clock,
+  TO_DO: Clock,
   alert: AlertCircle,
 } as const;
 

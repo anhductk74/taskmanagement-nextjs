@@ -39,13 +39,14 @@ const transformTasksToTaskListItems = (tasks: Task[]): TaskListItem[] => {
     hasEndTime: false,
     priority: task.priority,
     status:
-      task.status === "completed"
-        ? "done"
-        : task.status === "in-progress"
-        ? "in_progress"
-        : task.status === "pending"
-        ? "todo"
-        : "todo",
+      task.status === "DONE"
+        ? "DONE"
+        : task.status === "IN_PROGRESS"
+        ? "IN_PROGRESS"
+        : task.status === "TO_DO"
+        ? "TO_DO"
+        : "TO_DO",
+    pending: task.pending, // Use the pending field from Task
     tags: task.tags || [],
     project: task.hasTag && task.tagText ? task.tagText : "Default Project",
     createdAt: task.createdAt.toISOString(),
@@ -83,17 +84,17 @@ const MyTaskListPage: React.FC<MyTaskListPageProps> = ({ searchValue = "" }) => 
     updates: Partial<TaskListItem>
   ) => {
     const newStatus =
-      updates.status === "done"
-        ? "completed"
-        : updates.status === "in_progress"
-        ? "in-progress"
-        : updates.status === "todo"
-        ? "pending"
-        : "pending";
+      updates.status === "DONE"
+        ? "DONE"
+        : updates.status === "IN_PROGRESS"
+        ? "IN_PROGRESS"
+        : updates.status === "TO_DO"
+        ? "TO_DO"
+        : "TO_DO";
 
     const updateData: Partial<Task> = {
       status: newStatus,
-      completed: newStatus === "completed"
+      pending: newStatus !== "DONE" // pending = true for TO_DO/in-progress, false for DONE
     };
 
     if (updates.name !== undefined) updateData.title = updates.name;

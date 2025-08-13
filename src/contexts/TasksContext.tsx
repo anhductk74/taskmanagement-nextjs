@@ -24,9 +24,9 @@ export interface Task {
   description?: string;
   dueDate: string; // 'Today', 'Tomorrow', 'Thursday', etc.
   dueDateISO?: Date; // Actual date for sorting/filtering
-  completed: boolean;
+  pending: boolean; // true for TO_DO and IN_PROGRESS, false for DONE
   priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  status: 'TO_DO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED';
   projectId?: number;
   assigneeId?: string;
   createdAt: Date;

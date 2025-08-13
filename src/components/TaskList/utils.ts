@@ -26,27 +26,27 @@ export const PRIORITY_CONFIG = {
 
 // Status configuration
 export const STATUS_CONFIG = {
-  todo: {
+  TO_DO: {
     label: 'To Do',
     color: 'bg-gray-100 text-gray-800',
     order: 1,
   },
-  in_progress: {
+  IN_PROGRESS: {
     label: 'In Progress',
     color: 'bg-blue-100 text-blue-800',
     order: 2,
   },
-  review: {
+  REVIEW: {
     label: 'Review',
     color: 'bg-purple-100 text-purple-800',
     order: 3,
   },
-  done: {
+  DONE: {
     label: 'Done',
     color: 'bg-green-100 text-green-800',
     order: 4,
   },
-  cancelled: {
+  CANCELLED: {
     label: 'Cancelled',
     color: 'bg-red-100 text-red-800',
     order: 5,

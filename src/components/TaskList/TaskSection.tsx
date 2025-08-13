@@ -34,7 +34,7 @@ const TaskSection: React.FC<TaskSectionProps> = ({
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskDueDate, setNewTaskDueDate] = useState('');
   const [newTaskProject, setNewTaskProject] = useState('');
-  const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>('todo');
+  const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>('TO_DO');
   const [isEnhancedCalendarOpen, setIsEnhancedCalendarOpen] = useState(false);
   const [enhancedDateData, setEnhancedDateData] = useState<{
     startDate?: string;
@@ -270,40 +270,31 @@ const TaskSection: React.FC<TaskSectionProps> = ({
       }}
     >
       <option
-        value="todo"
+        value="TO_DO"
         style={{
           color: theme.text.primary,
           backgroundColor: theme.background.secondary,
         }}
       >
-        To Do
+        TO_DO
       </option>
       <option
-        value="in_progress"
+        value="IN_PROGRESS"
         style={{
           color: theme.text.primary,
           backgroundColor: theme.background.secondary,
         }}
       >
-        In Progress
+        IN_PROGRESS
       </option>
       <option
-        value="review"
+        value="DONE"
         style={{
           color: theme.text.primary,
           backgroundColor: theme.background.secondary,
         }}
       >
-        Review
-      </option>
-      <option
-        value="done"
-        style={{
-          color: theme.text.primary,
-          backgroundColor: theme.background.secondary,
-        }}
-      >
-        Done
+        DONE
       </option>
     </select>
   )}
@@ -362,7 +353,7 @@ const TaskSection: React.FC<TaskSectionProps> = ({
                               setNewTaskName('');
                               setNewTaskDueDate('');
                               setNewTaskProject('');
-                              setNewTaskStatus('todo');
+                              setNewTaskStatus('TO_DO');
                               setEnhancedDateData({});
                             }}
                             className="text-xs px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -375,7 +366,7 @@ const TaskSection: React.FC<TaskSectionProps> = ({
                               setNewTaskName('');
                               setNewTaskDueDate('');
                               setNewTaskProject('');
-                              setNewTaskStatus('todo');
+                              setNewTaskStatus('TO_DO');
                             }}
                             className="text-xs px-2 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
                           >

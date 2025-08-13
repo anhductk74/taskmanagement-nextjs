@@ -14,6 +14,7 @@ export interface Task {
   dueDateISO?: string;
   priority: 'Low' | 'Medium' | 'High'
   status: TaskStatus
+  pending: boolean // true for TO_DO and IN_PROGRESS, false for DONE
   assignee: string[]
   dueDate: string
 }
@@ -43,6 +44,7 @@ export interface CreateTaskDTO {
   projectId?: string;
   tags?: string[];
   estimatedHours?: number;
+  pending?: boolean;
 }
 
 export interface UpdateTaskDTO {
@@ -58,6 +60,7 @@ export interface UpdateTaskDTO {
   tags?: string[];
   estimatedHours?: number;
   completedAt?: string | Date;
+  pending?: boolean;
 }
 
 export interface Assignee {
