@@ -134,7 +134,7 @@ const MyTaskCalendarPage: React.FC<MyTaskCalendarPageProps> = ({
       dueDate: dateStr,
       startDate: dateStr,
       project: '',
-      status: 'todo' as const
+      status: 'TO_DO' as const
     };
     
     console.log('Task data being created:', taskData);
@@ -203,7 +203,7 @@ const MyTaskCalendarPage: React.FC<MyTaskCalendarPageProps> = ({
       dueDate: endDate,
       startDate: startDate,
       project: '',
-      status: 'todo'
+      status: 'TO_DO'
     });
     console.log('Created test multi-day task:', startDate, 'to', endDate);
   };

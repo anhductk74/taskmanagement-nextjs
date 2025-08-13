@@ -8,16 +8,19 @@ export enum TaskStatus {
 }
 
 export interface Task {
-  id: string
-  name: string
-  assignee: string[]
-  dueDate: string
+  id: number
+  title: string
+  description?: string
+  dueDateISO?: string;
   priority: 'Low' | 'Medium' | 'High'
   status: TaskStatus
+  pending: boolean // true for TO_DO and IN_PROGRESS, false for DONE
+  assignee: string[]
+  dueDate: string
 }
 
 export interface EditableTask extends Omit<Task, 'status'> {
-  id: string
+  id: number
   status: TaskStatus
   isEditing?: {
     name?: boolean
@@ -41,6 +44,7 @@ export interface CreateTaskDTO {
   projectId?: string;
   tags?: string[];
   estimatedHours?: number;
+  pending?: boolean;
 }
 
 export interface UpdateTaskDTO {
@@ -56,6 +60,7 @@ export interface UpdateTaskDTO {
   tags?: string[];
   estimatedHours?: number;
   completedAt?: string | Date;
+  pending?: boolean;
 }
 
 export interface Assignee {

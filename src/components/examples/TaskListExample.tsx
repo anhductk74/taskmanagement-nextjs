@@ -31,7 +31,7 @@ export const TaskListExample: React.FC = () => {
         title: 'New Task',
         description: 'Task description',
         priority: 'medium',
-        status: 'todo'
+        status: 'TO_DO'
       });
       // SWR automatically revalidates cache
     } catch (error) {
@@ -118,9 +118,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
           disabled={isUpdating}
           onClick={(e) => e.stopPropagation()}
         >
-          <option value="todo">Todo</option>
-          <option value="in_progress">In Progress</option>
-          <option value="done">Done</option>
+          <option value="TO_DO">To do</option>
+          <option value="IN_PROGRESS">In progress</option>
+          <option value="DONE">Done</option>
         </select>
       </div>
     </div>

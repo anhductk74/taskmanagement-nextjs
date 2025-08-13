@@ -32,6 +32,7 @@ export interface TaskListItem {
   hasEndTime?: boolean; // Whether end time is enabled
   priority: TaskPriority;
   status: TaskStatus;
+  pending: boolean; // true for todo/in_progress, false for done
   tags?: string[];
   project?: string;
   createdAt: string;
@@ -46,7 +47,7 @@ export interface TaskAssignee {
 }
 
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
-export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled';
+export type TaskStatus = 'TO_DO' | 'IN_PROGRESS' | 'REVIEW' | 'DONE' | 'CANCELLED';
 export type TaskGroupBy = 'status' | 'priority' | 'assignee' | 'project' | 'dueDate' | 'assignmentDate';
 
 export interface TaskSection {

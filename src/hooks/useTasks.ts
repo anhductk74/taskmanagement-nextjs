@@ -118,6 +118,10 @@ export const useCreateTask = () => {
       // Revalidate all task lists
       mutate((key) => Array.isArray(key) && key[0] === 'tasks');
       
+      // Also revalidate stats cache to ensure count consistency
+      // This is crucial when new tasks affect task counts in sidebar
+      mutate((key) => Array.isArray(key) && key[0] === 'tasks' && key[1] === 'stats');
+      
       return newTask;
     }
   );
@@ -142,6 +146,10 @@ export const useUpdateTask = () => {
       
       // Revalidate all task lists
       mutate((key) => Array.isArray(key) && key[0] === 'tasks' && key[1] === 'list');
+      
+      // Also revalidate stats cache to ensure count consistency
+      // This is crucial when status changes affect task counts in sidebar
+      mutate((key) => Array.isArray(key) && key[0] === 'tasks' && key[1] === 'stats');
       
       return updatedTask;
     }
@@ -191,6 +199,10 @@ export const useUpdateTaskStatus = () => {
       
       // Revalidate task lists and stats
       mutate((key) => Array.isArray(key) && key[0] === 'tasks');
+      
+      // Explicitly revalidate stats cache to ensure count consistency
+      // This is crucial for maintaining accurate task counts by status in sidebar
+      mutate((key) => Array.isArray(key) && key[0] === 'tasks' && key[1] === 'stats');
       
       return updatedTask;
     }
@@ -296,4 +308,25 @@ export const optimisticUpdateTask = (id: string, updates: Partial<Task>) => {
       currentTask ? { ...currentTask, ...updates } : undefined,
     false
   );
+};
+
+// Utility function to revalidate stats cache for sidebar badge count updates
+export const revalidateTaskStats = () => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔄 revalidateTaskStats called');
+  }
+  
+  // taskKeys.stats() returns ['tasks', 'stats', filter]
+  // So we need to match key[1] === 'stats', not key[2]
+  const matchedKeys = mutate((key) => {
+    const isMatch = Array.isArray(key) && key[0] === 'tasks' && key[1] === 'stats';
+    if (process.env.NODE_ENV === 'development' && isMatch) {
+      console.log('🔄 revalidateTaskStats matched key:', key);
+    }
+    return isMatch;
+  });
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔄 revalidateTaskStats result:', matchedKeys);
+  }
 };

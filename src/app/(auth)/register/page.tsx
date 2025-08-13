@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 // import { RegisterForm } from '@/features/auth/components/RegisterForm'; // Legacy removed
-=======
->>>>>>> d1d89456fef6613b064af36789695f7d8f213495
 
 'use client'
 import { useState } from "react";
@@ -253,7 +250,6 @@ export default function RegisterForm() {
             © 2025 TaskManager. By Manakai Team.
           </p>
         </div>
-<<<<<<< HEAD
         <div className="text-center">
           <p className="text-muted-foreground">Registration coming soon...</p>
           <p className="text-sm mt-2">
@@ -262,8 +258,7 @@ export default function RegisterForm() {
             </a>
           </p>
         </div>
-=======
->>>>>>> d1d89456fef6613b064af36789695f7d8f213495
+
       </div>
     </div>
   );

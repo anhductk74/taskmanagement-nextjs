@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { TaskListItem, TaskListActions, TaskStatus } from "@/components/TaskList";
 import { TaskManagementActions } from "./useTaskManagement";
+import { revalidateTaskStats } from "@/hooks/useTasks";
 
 interface UseTaskActionsProps {
   taskActions: TaskManagementActions;
@@ -35,7 +36,7 @@ export const useTaskActions = ({ taskActions }: UseTaskActionsProps): TaskListAc
     let hasStartTime: boolean = false;
     let hasEndTime: boolean = false;
     let taskProject: string | undefined;
-    let taskStatus: TaskStatus = "todo";
+    let taskStatus: TaskStatus = "TO_DO";
 
     if (typeof taskData === 'string') {
       taskName = taskData;
@@ -49,12 +50,13 @@ export const useTaskActions = ({ taskActions }: UseTaskActionsProps): TaskListAc
       hasStartTime = taskData.hasStartTime || false;
       hasEndTime = taskData.hasEndTime || false;
       taskProject = taskData.project;
-      taskStatus = taskData.status || "todo";
+      taskStatus = taskData.status || "TO_DO";
     }
 
     // Create task with enhanced calendar data
     const newTaskData = {
-      name: taskName,
+      name: taskName, // cho frontend
+      title: taskName, // cho backend
       description: "",
       assignees: [],
       dueDate: taskDueDate,
@@ -103,13 +105,16 @@ export const useTaskActions = ({ taskActions }: UseTaskActionsProps): TaskListAc
       console.log("Change task status:", taskId, status);
     }
     try {
-      // Update both status and completed for proper synchronization
+      // Update both status and pending for proper synchronization
       await taskActions.updateTask(taskId, { 
         status,
-        // Set completed field based on status for home page sync
-        ...(status === 'done' && { completed: true }),
-        ...(status !== 'done' && { completed: false })
+        // Set pending field based on status for proper sync
+        pending: status !== 'DONE'
       });
+      
+      // Revalidate stats cache to update sidebar badge count
+      revalidateTaskStats();
+      
       console.log('✅ Task status updated successfully');
     } catch (error) {
       console.error('❌ Failed to update task status:', error);

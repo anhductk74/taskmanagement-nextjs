@@ -5,6 +5,7 @@ import { CheckCircle, User, Calendar, Flag, MoreHorizontal } from 'lucide-react'
 import { useTheme } from '@/layouts/hooks/useTheme';
 import { TaskListItem, TaskListActions } from './types';
 import { getPriorityConfig, getStatusConfig, formatDate, isOverdue } from './utils';
+import { revalidateTaskStats } from '@/hooks/useTasks';
 
 interface TaskCardProps {
   task: TaskListItem;
@@ -35,10 +36,21 @@ const TaskCard: React.FC<TaskCardProps> = ({
     onSelect?.(task.id);
   };
 
-  const handleStatusChange = (e: React.MouseEvent) => {
+  const handleStatusChange = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const nextStatus = task.status === 'done' ? 'todo' : 'done';
-    actions?.onTaskStatusChange?.(task.id, nextStatus);
+    const nextStatus = task.status === 'DONE' ? 'TO_DO' : 'DONE';
+
+    if (actions?.onTaskStatusChange) {
+      try {
+        await actions.onTaskStatusChange(task.id, nextStatus);
+        
+        // Revalidate stats cache to update sidebar badge count
+        revalidateTaskStats();
+        console.log('✅ Task status updated and stats cache revalidated');
+      } catch (error) {
+        console.error('❌ Error updating task status:', error);
+      }
+    }
   };
 
   return (

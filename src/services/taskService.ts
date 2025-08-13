@@ -1,6 +1,7 @@
 // Task Service - Task-related API operations with SWR integration
 import { api } from './api';
 import type { Task, CreateTaskDTO, UpdateTaskDTO } from '@/types';
+import {TaskStatus} from '@/types/task';
 
 // Mock data for development
 const MOCK_TASKS: Task[] = [
@@ -10,9 +11,9 @@ const MOCK_TASKS: Task[] = [
     description: "Finalize Q1 project proposal document",
     dueDate: "Today",
     dueDateISO: new Date(),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'High',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 1,
     createdAt: new Date('2024-01-20'),
@@ -24,9 +25,9 @@ const MOCK_TASKS: Task[] = [
     description: "Review and provide feedback on new design mockups",
     dueDate: "Today",
     dueDateISO: new Date(),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'medium',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 1,
     createdAt: new Date('2024-01-19'),
@@ -38,9 +39,9 @@ const MOCK_TASKS: Task[] = [
     description: "Update technical documentation for the project",
     dueDate: "Tomorrow",
     dueDateISO: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'low',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 2,
     createdAt: new Date('2024-01-18'),
@@ -52,9 +53,9 @@ const MOCK_TASKS: Task[] = [
     description: "Create slides for client presentation",
     dueDate: "Thursday",
     dueDateISO: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-    completed: false,
+    pending: true, // TO_DO status = pending true
     priority: 'high',
-    status: 'pending',
+    status: TaskStatus.TO_DO,
     hasTag: false,
     projectId: 3,
     createdAt: new Date('2024-01-16'),
@@ -206,9 +207,9 @@ export const taskService = {
         description: data.description || '',
         dueDate: data.dueDate || 'Today',
         dueDateISO: data.dueDateISO || new Date(),
-        completed: false,
+        pending: data.status ? (data.status === TaskStatus.DONE ? false : true) : true, // Auto-set pending based on status
         priority: data.priority || 'medium',
-        status: data.status || 'pending',
+        status: data.status || TaskStatus.TO_DO,
         hasTag: false,
         projectId: data.projectId,
         assigneeId: data.assigneeId,
@@ -364,7 +365,7 @@ export const taskService = {
           return acc;
         }, {} as Record<string, number>),
         overdue: tasks.filter(task => 
-          task.dueDateISO && task.dueDateISO < new Date() && !task.completed
+          task.dueDateISO && task.dueDateISO < new Date() && task.pending
         ).length,
         dueToday: tasks.filter(task => 
           task.dueDateISO?.toDateString() === today

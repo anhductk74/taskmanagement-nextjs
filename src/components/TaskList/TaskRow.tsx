@@ -1,10 +1,13 @@
 "use client";
 
 import React from 'react';
+import { taskKeys, useTaskStats, revalidateTaskStats } from '@/hooks/useTasks';
 import { CheckCircle, User, MoreHorizontal } from 'lucide-react';
 import { useTheme } from '@/layouts/hooks/useTheme';
 import { TaskListItem, TaskListActions } from './types';
+import useSWR, { mutate } from 'swr';
 import { getPriorityConfig, getStatusConfig, formatDate, formatTaskDate, isOverdue } from './utils';
+import { taskService } from '@/services/taskService';
 
 interface TaskRowProps {
   task: TaskListItem;
@@ -13,6 +16,7 @@ interface TaskRowProps {
   onSelect?: (taskId: string) => void;
   className?: string;
 }
+
 
 const TaskRow: React.FC<TaskRowProps> = ({
   task,
@@ -25,6 +29,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
   const priorityConfig = getPriorityConfig(task.priority);
   const statusConfig = getStatusConfig(task.status);
   const overdueDate = task.dueDate && isOverdue(task.dueDate);
+  const { revalidate } = useTaskStats();
 
   const handleRowClick = () => {
     actions?.onTaskClick?.(task);
@@ -35,10 +40,31 @@ const TaskRow: React.FC<TaskRowProps> = ({
     onSelect?.(task.id);
   };
 
-  const handleStatusChange = (e: React.MouseEvent) => {
+  //button change status 
+  const handleStatusChange = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const nextStatus = task.status === 'done' ? 'todo' : 'done';
-    actions?.onTaskStatusChange?.(task.id, nextStatus);
+    let nextStatus: TaskListItem["status"];
+    if (task.status === 'TO_DO') {
+      nextStatus = 'IN_PROGRESS';
+    } else if (task.status === 'IN_PROGRESS') {
+      nextStatus = 'DONE';
+    } else {
+      nextStatus = 'TO_DO';
+    }
+    
+    console.log(`🔄 Changing task "${task.name}" status from ${task.status} to ${nextStatus}`);
+    
+    if (actions?.onTaskStatusChange) {
+      try {
+        await actions.onTaskStatusChange(task.id, nextStatus);
+        
+        // Revalidate stats cache to update sidebar badge count
+        revalidateTaskStats();
+        console.log('✅ Task status updated and stats cache revalidated');
+      } catch (error) {
+        console.error('❌ Error updating task status:', error);
+      }
+    }
   };
 
   return (
@@ -59,7 +85,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
             >
               <CheckCircle
                 className={`w-5 h-5 ${
-                  task.status === 'done' 
+                  task.status === 'DONE' 
                     ? 'text-green-500 fill-current' 
                     : 'text-gray-400 hover:text-gray-600'
                 }`}
@@ -69,9 +95,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
           <div className="min-w-0 flex-1">
             <div 
               className={`font-medium truncate ${
-                task.status === 'done' ? 'line-through text-gray-500' : ''
+                task.status === 'DONE' ? 'line-through text-gray-500' : ''
               }`}
-              style={{ color: task.status === 'done' ? theme.text.secondary : theme.text.primary }}
+              style={{ color: task.status === 'DONE' ? theme.text.secondary : theme.text.primary }}
             >
               {task.name}
             </div>

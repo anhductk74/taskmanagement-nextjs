@@ -34,7 +34,7 @@ const TaskSection: React.FC<TaskSectionProps> = ({
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskDueDate, setNewTaskDueDate] = useState('');
   const [newTaskProject, setNewTaskProject] = useState('');
-  const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>('todo');
+  const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>('TO_DO');
   const [isEnhancedCalendarOpen, setIsEnhancedCalendarOpen] = useState(false);
   const [enhancedDateData, setEnhancedDateData] = useState<{
     startDate?: string;
@@ -256,20 +256,50 @@ const TaskSection: React.FC<TaskSectionProps> = ({
                     </td>
 
                     {/* Task Visibility (Status) */}
-                    <td className="w-[140px] py-3 px-2">
-                      {isAddingTask && (
-                        <select
-                          value={newTaskStatus}
-                          onChange={(e) => setNewTaskStatus(e.target.value as TaskStatus)}
-                          className="text-xs bg-gray-100 border border-gray-300 rounded px-2 py-1"
-                        >
-                          <option value="todo">To Do</option>
-                          <option value="in_progress">In Progress</option>
-                          <option value="review">Review</option>
-                          <option value="done">Done</option>
-                        </select>
-                      )}
-                    </td>
+<td className="w-[140px] py-3 px-2">
+  {isAddingTask && (
+    <select
+      value={newTaskStatus}
+      onChange={(e) => setNewTaskStatus(e.target.value as TaskStatus)}
+      className="text-xs rounded-lg px-3 py-1.5 border shadow-sm transition-colors focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none"
+      style={{
+        color: theme.text.primary,
+        minWidth: 120,
+        backgroundColor: theme.background.primary,
+        borderColor: theme.text?.primary || '#ccc',
+      }}
+    >
+      <option
+        value="TO_DO"
+        style={{
+          color: theme.text.primary,
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        TO_DO
+      </option>
+      <option
+        value="IN_PROGRESS"
+        style={{
+          color: theme.text.primary,
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        IN_PROGRESS
+      </option>
+      <option
+        value="DONE"
+        style={{
+          color: theme.text.primary,
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        DONE
+      </option>
+    </select>
+  )}
+</td>
+
 
                     {/* Actions */}
                     <td className="w-[50px] py-3 px-2">
@@ -323,7 +353,7 @@ const TaskSection: React.FC<TaskSectionProps> = ({
                               setNewTaskName('');
                               setNewTaskDueDate('');
                               setNewTaskProject('');
-                              setNewTaskStatus('todo');
+                              setNewTaskStatus('TO_DO');
                               setEnhancedDateData({});
                             }}
                             className="text-xs px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -336,7 +366,7 @@ const TaskSection: React.FC<TaskSectionProps> = ({
                               setNewTaskName('');
                               setNewTaskDueDate('');
                               setNewTaskProject('');
-                              setNewTaskStatus('todo');
+                              setNewTaskStatus('TO_DO');
                             }}
                             className="text-xs px-2 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
                           >

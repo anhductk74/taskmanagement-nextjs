@@ -44,15 +44,15 @@ const MyTasksCard = () => {
 
     // Filter by active tab
     if (activeTab === "completed") {
-      filteredTasks = tasks.filter(task => task.completed || task.status === 'completed' || taskStates[task.id]);
+      filteredTasks = tasks.filter(task => !task.pending || task.status === 'completed');
     } else if (activeTab === "overdue") {
       filteredTasks = tasks.filter(task => {
-        const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed' && !taskStates[task.id];
+        const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && task.pending;
         return isOverdue;
       });
     } else {
       // upcoming
-      filteredTasks = tasks.filter(task => !task.completed && task.status !== 'completed' && !taskStates[task.id]);
+      filteredTasks = tasks.filter(task => task.pending && task.status !== 'completed');
     }
 
     // Limit display if not showing all
@@ -62,32 +62,32 @@ const MyTasksCard = () => {
   const taskStats = React.useMemo(() => {
     if (!tasks || !Array.isArray(tasks)) return { completed: 0, overdue: 0, total: 0 };
 
-    const completed = tasks.filter(task => task.completed || task.status === 'completed' || taskStates[task.id]).length;
+    const completed = tasks.filter(task => !task.pending || task.status === 'completed').length;
     const overdue = tasks.filter(task => {
-      const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed' && !taskStates[task.id];
+      const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && task.pending;
       return isOverdue;
     }).length;
 
     return { completed, overdue, total: tasks.length };
-  }, [tasks, taskStates]);
+  }, [tasks]);
 
   const hasMoreTasks = React.useMemo(() => {
     if (!tasks || !Array.isArray(tasks)) return false;
 
     let filteredCount = 0;
     if (activeTab === "completed") {
-      filteredCount = tasks.filter(task => task.completed || task.status === 'completed' || taskStates[task.id]).length;
+      filteredCount = tasks.filter(task => !task.pending || task.status === 'completed').length;
     } else if (activeTab === "overdue") {
       filteredCount = tasks.filter(task => {
-        const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed' && !taskStates[task.id];
+        const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && task.pending;
         return isOverdue;
       }).length;
     } else {
-      filteredCount = tasks.filter(task => !task.completed && task.status !== 'completed' && !taskStates[task.id]).length;
+      filteredCount = tasks.filter(task => task.pending && task.status !== 'completed').length;
     }
 
     return filteredCount > 4;
-  }, [tasks, activeTab, taskStates]);
+  }, [tasks, activeTab]);
 
   // Helper functions
   const toggleShowAll = () => setShowAllTasks(!showAllTasks);
@@ -101,12 +101,12 @@ const MyTasksCard = () => {
     try {
       const task = tasks.find(t => t.id === numericId);
       if (task) {
-        const newCompleted = !task.completed;
-        const newStatus = newCompleted ? 'completed' : 'pending';
+        const newPending = !task.pending;
+        const newStatus = newPending ? 'TO_DO' : 'completed';
         await updateTask({
           id: task.id.toString(),
           data: {
-            completed: newCompleted,
+            pending: newPending,
             status: newStatus
           }
         });
@@ -139,7 +139,7 @@ const MyTasksCard = () => {
   // Business Logic
   const getDueDateColor = (task: Task): string => {
     // Check if task is overdue
-    const isTaskOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed';
+    const isTaskOverdue = task.dueDateISO && task.dueDateISO < new Date() && task.pending;
 
     if (isTaskOverdue) {
       return '#dc2626'; // Red for overdue
@@ -158,8 +158,8 @@ const MyTasksCard = () => {
 
   // Task Item Component
   const TaskItem = ({ task }: { task: Task }) => {
-    // Check both completion mechanisms for proper synchronization
-    const isCompleted = taskStates[task.id] || task.completed || task.status === 'completed';
+    // Check both pending and status for proper synchronization
+    const isCompleted = !task.pending || task.status === 'completed';
 
     return (
       <div
@@ -213,7 +213,7 @@ const MyTasksCard = () => {
             {/* Due Date */}
             <span
               className={`text-sm font-medium ${
-                task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed' 
+                task.dueDateISO && task.dueDateISO < new Date() && task.pending
                   ? 'font-semibold' 
                   : ''
               }`}
@@ -232,9 +232,9 @@ const MyTasksCard = () => {
     handleAddTask({
       title: "New task",
       dueDate: "Today",
-      completed: false,
+      pending: true, // New tasks are pending by default
       priority: 'medium',
-      status: 'pending',
+      status: 'TO_DO',
       hasTag: false
     });
   };
