@@ -21,6 +21,7 @@ apiClient.interceptors.request.use(async (config) => {
 
 export default apiClient;
 
+
 // Shared headers for client-side fetch calls to same-origin APIs
 export const clientJsonHeaders: Record<string, string> = {
   'Content-Type': 'application/json',
@@ -35,3 +36,4 @@ export async function buildClientAuthHeaders(): Promise<Record<string, string>> 
   }
   return headers;
 }
+
