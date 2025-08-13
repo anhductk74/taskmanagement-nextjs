@@ -8,6 +8,8 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   inputSize?: "sm" | "md" | "lg";
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  onLeftIconClick?: () => void;
+  onRightIconClick?: () => void;
   error?: boolean;
   helperText?: string;
 }
@@ -19,6 +21,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       inputSize = "md",
       leftIcon,
       rightIcon,
+      onLeftIconClick,
+      onRightIconClick,
       error = false,
       helperText,
       className,
@@ -43,8 +47,21 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="w-full">
         <div className="relative">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <div className="h-5 w-5 text-gray-400">{leftIcon}</div>
+            <div
+              className={cn(
+                "absolute inset-y-0 left-0 pl-3 flex items-center",
+                onLeftIconClick ? "cursor-pointer" : "pointer-events-none"
+              )}
+              onClick={onLeftIconClick}
+            >
+              <div
+                className={cn(
+                  "h-5 w-5 text-gray-400",
+                  onLeftIconClick && "hover:text-gray-600 transition-colors"
+                )}
+              >
+                {leftIcon}
+              </div>
             </div>
           )}
 
@@ -66,8 +83,21 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
 
           {rightIcon && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-              <div className="h-5 w-5 text-gray-400">{rightIcon}</div>
+            <div
+              className={cn(
+                "absolute inset-y-0 right-0 pr-3 flex items-center",
+                onRightIconClick ? "cursor-pointer" : "pointer-events-none"
+              )}
+              onClick={onRightIconClick}
+            >
+              <div
+                className={cn(
+                  "h-5 w-5 text-gray-400",
+                  onRightIconClick && "hover:text-gray-600 transition-colors"
+                )}
+              >
+                {rightIcon}
+              </div>
             </div>
           )}
         </div>

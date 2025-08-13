@@ -1,4 +1,4 @@
-import { ReactNode, MouseEvent } from 'react';
+import { ReactNode, MouseEvent } from "react";
 
 // Common UI props
 export interface BaseProps {
@@ -7,71 +7,73 @@ export interface BaseProps {
 }
 
 // Button variants and sizes
-export type ButtonVariant = 
+export type ButtonVariant =
   // Primary variants
-  | 'primary' 
-  | 'primary-gradient'
-  // Secondary variants  
-  | 'secondary'
-  | 'secondary-solid'
+  | "primary"
+  | "primary-gradient"
+  // Secondary variants
+  | "secondary"
+  | "secondary-solid"
   // Color variants
-  | 'success'
-  | 'success-gradient'
-  | 'danger'
-  | 'destructive'
-  | 'danger-gradient'
-  | 'warning'
-  | 'warning-gradient'
-  | 'info'
-  | 'info-gradient'
+  | "success"
+  | "success-gradient"
+  | "danger"
+  | "destructive"
+  | "danger-gradient"
+  | "warning"
+  | "warning-gradient"
+  | "info"
+  | "info-gradient"
   // Ghost variants
-  | 'ghost'
-  | 'ghost-colored'
+  | "ghost"
+  | "ghost-colored"
   // Outline variants
-  | 'outline'
-  | 'outline-primary'
-  | 'outline-success'
-  | 'outline-danger'
-  | 'outline-warning'
+  | "outline"
+  | "outline-primary"
+  | "outline-success"
+  | "outline-danger"
+  | "outline-warning"
   // Soft variants
-  | 'soft-primary'
-  | 'soft-success'
-  | 'soft-danger'
-  | 'soft-warning'
+  | "soft-primary"
+  | "soft-success"
+  | "soft-danger"
+  | "soft-warning"
   // Special variants
-  | 'link';
+  | "link";
 
-export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type ButtonShape = 'default' | 'rounded' | 'square' | 'pill';
-export type ButtonState = 'default' | 'selected' | 'active' | 'loading';
+export type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+export type ButtonShape = "default" | "rounded" | "square" | "pill";
+export type ButtonState = "default" | "selected" | "active" | "loading";
 
-export interface ButtonProps extends BaseProps {
+export interface ButtonProps
+  extends BaseProps,
+    React.ButtonHTMLAttributes<HTMLButtonElement> {
   // Core button props
   variant?: ButtonVariant;
   size?: ButtonSize;
   shape?: ButtonShape;
   state?: ButtonState;
-  
+
   // Behavior props
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
-  
+
   // Event handlers
   onClick?: (event?: MouseEvent<HTMLButtonElement>) => void;
-  
+
   // Button attributes
-  type?: 'button' | 'submit' | 'reset';
-  
+  type?: "button" | "submit" | "reset";
+
   // Icon props
-  icon?: ReactNode;          // Legacy support
-  leftIcon?: ReactNode;      // Left side icon
-  rightIcon?: ReactNode;     // Right side icon
+  icon?: ReactNode; // Legacy support
+  leftIcon?: ReactNode; // Left side icon
+  rightIcon?: ReactNode; // Right side icon
 }
 
 // Input types
 export interface InputProps extends BaseProps {
-  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
+  type?: "text" | "email" | "password" | "number" | "tel" | "url";
   placeholder?: string;
   value?: string;
   defaultValue?: string;
@@ -89,7 +91,7 @@ export interface ModalProps extends BaseProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  size?: "sm" | "md" | "lg" | "xl" | "full";
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;
 }
@@ -124,7 +126,7 @@ export interface TableColumn<T = any> {
   render?: (value: any, record: T, index: number) => ReactNode;
   sortable?: boolean;
   width?: string | number;
-  align?: 'left' | 'center' | 'right';
+  align?: "left" | "center" | "right";
 }
 
 export interface TableProps<T = any> extends BaseProps {
@@ -135,4 +137,4 @@ export interface TableProps<T = any> extends BaseProps {
   selectedRowKeys?: string[];
   onRowSelect?: (selectedKeys: string[]) => void;
   onRowClick?: (record: T, index: number) => void;
-} 
+}

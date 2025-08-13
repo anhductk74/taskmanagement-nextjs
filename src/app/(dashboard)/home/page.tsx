@@ -3,28 +3,18 @@
 import React, { useState } from "react";
 import { PrivateLayout } from "@/layouts";
 import { useTheme } from "@/layouts/hooks/useTheme";
-import { 
-  FaPlus, 
-  FaCheckCircle, 
-  FaUsers, 
+import {
+  FaPlus,
+  FaCheckCircle,
+  FaUsers,
   FaChevronDown,
-  FaEllipsisV
+  FaEllipsisV,
 } from "react-icons/fa";
-import { 
-  MdKeyboardArrowDown,
-  MdMoreHoriz
-} from "react-icons/md";
-import { 
-  HiSparkles 
-} from "react-icons/hi";
-import { 
-  IoCheckbox,
-  IoCheckboxOutline 
-} from "react-icons/io5";
-import { 
-  BsCircle,
-  BsCheckCircle 
-} from "react-icons/bs";
+import { MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md";
+import { HiSparkles } from "react-icons/hi";
+import { IoCheckbox, IoCheckboxOutline } from "react-icons/io5";
+import { BsCircle, BsCheckCircle } from "react-icons/bs";
+import { useAuth } from "@/hooks/use-auth";
 
 // Import Refactored Cards using BaseCard
 import RefactoredMyTasksCard from "./components/Cards/MyTasksCard";
@@ -80,13 +70,13 @@ const BaseCard = ({
 }: BaseCardProps) => {
   const { theme } = useTheme();
 
-  const TabButton = ({ 
-    tab, 
-    isActive, 
-    onClick 
-  }: { 
-    tab: TabConfig; 
-    isActive: boolean; 
+  const TabButton = ({
+    tab,
+    isActive,
+    onClick,
+  }: {
+    tab: TabConfig;
+    isActive: boolean;
     onClick: () => void;
   }) => (
     <button
@@ -103,16 +93,16 @@ const BaseCard = ({
         )}
       </span>
       {isActive && (
-        <div 
+        <div
           className="absolute bottom-0 left-0 right-6 h-0.5 bg-orange-500"
-          style={{ borderRadius: '2px' }}
+          style={{ borderRadius: "2px" }}
         />
       )}
     </button>
   );
 
   return (
-    <div 
+    <div
       className={`rounded-2xl border h-full flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 ${className}`}
       style={{
         backgroundColor: theme.background.primary,
@@ -124,27 +114,23 @@ const BaseCard = ({
         <div className="flex items-center gap-3">
           {/* Avatar or Icon */}
           {avatar && (
-            <div 
+            <div
               className="w-10 h-10 rounded-full border-2 border-dashed flex items-center justify-center"
-              style={{ borderColor: theme.text.secondary + '60' }}
+              style={{ borderColor: theme.text.secondary + "60" }}
             >
-              <div 
+              <div
                 className="w-7 h-7 rounded-full flex items-center justify-center text-sm"
-                style={{ backgroundColor: theme.text.secondary + '20' }}
+                style={{ backgroundColor: theme.text.secondary + "20" }}
               >
                 {avatar}
               </div>
             </div>
           )}
-          {icon && !avatar && (
-            <div className="flex-shrink-0">
-              {icon}
-            </div>
-          )}
-          
+          {icon && !avatar && <div className="flex-shrink-0">{icon}</div>}
+
           {/* Title Section */}
           <div className="flex items-center gap-2">
-            <h3 
+            <h3
               className="text-lg font-semibold"
               style={{ color: theme.text.primary }}
             >
@@ -154,16 +140,16 @@ const BaseCard = ({
         </div>
 
         {/* Actions Menu */}
-        <button 
+        <button
           className="p-2 rounded-lg transition-colors duration-200"
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = theme.background.secondary;
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.backgroundColor = "transparent";
           }}
         >
-          <MdMoreHoriz 
+          <MdMoreHoriz
             className="w-5 h-5"
             style={{ color: theme.text.secondary }}
           />
@@ -173,7 +159,7 @@ const BaseCard = ({
       {/* Navigation Tabs */}
       {tabs && tabs.length > 0 && (
         <div className="px-6">
-          <div 
+          <div
             className="flex border-b"
             style={{ borderBottomColor: theme.border.default }}
           >
@@ -193,15 +179,16 @@ const BaseCard = ({
       <div className="flex-1 flex flex-col px-6 py-4 min-h-0">
         {/* Create/Add Action */}
         {createAction && (
-          <button 
+          <button
             onClick={createAction.onClick}
             className="flex items-center gap-3 text-sm py-2 px-2 -mx-2 rounded-lg transition-colors duration-200 mb-3 flex-shrink-0"
             style={{ color: theme.text.secondary }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = theme.background.secondary;
+              e.currentTarget.style.backgroundColor =
+                theme.background.secondary;
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.backgroundColor = "transparent";
             }}
           >
             <createAction.icon className="w-4 h-4" />
@@ -210,27 +197,29 @@ const BaseCard = ({
         )}
 
         {/* Dynamic Content */}
-        <div className="flex-1 overflow-y-auto min-h-0 mb-3">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto min-h-0 mb-3">{children}</div>
 
         {/* Show More Action - Conditional */}
         {showMoreButton?.show && (
-          <div className="flex-shrink-0 border-t pt-3" style={{ borderColor: theme.border.default }}>
-            <button 
+          <div
+            className="flex-shrink-0 border-t pt-3"
+            style={{ borderColor: theme.border.default }}
+          >
+            <button
               onClick={showMoreButton.onClick}
               className="text-sm py-2 px-2 -mx-2 text-left rounded-lg transition-colors duration-200 w-full"
-              style={{ 
+              style={{
                 color: theme.text.secondary,
-                fontSize: '14px',
-                fontWeight: '400'
+                fontSize: "14px",
+                fontWeight: "400",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = theme.background.secondary;
+                e.currentTarget.style.backgroundColor =
+                  theme.background.secondary;
                 e.currentTarget.style.color = theme.text.primary;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.backgroundColor = "transparent";
                 e.currentTarget.style.color = theme.text.secondary;
               }}
             >
@@ -253,10 +242,10 @@ const getGreeting = (): string => {
 // Header Component
 const HomeHeader = () => {
   const { theme } = useTheme();
-  
+
   return (
     <div className="mb-8">
-      <h1 
+      <h1
         className="text-2xl font-semibold mb-6"
         style={{ color: theme.text.primary }}
       >
@@ -269,25 +258,25 @@ const HomeHeader = () => {
 // Greeting Section
 const GreetingSection = () => {
   const { theme } = useTheme();
+  const { user } = useAuth();
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
   });
+  const displayName =
+    user?.name || (user?.email ? user.email.split("@")[0] : "there");
 
   return (
     <div className="text-center mb-8">
-      <p 
-        className="text-sm mb-2"
-        style={{ color: theme.text.secondary }}
-      >
+      <p className="text-sm mb-2" style={{ color: theme.text.secondary }}>
         {today}
       </p>
-      <h2 
+      <h2
         className="text-2xl font-semibold"
         style={{ color: theme.text.primary }}
       >
-        {getGreeting()}, levancuong
+        {getGreeting()}, {displayName}
       </h2>
     </div>
   );
@@ -296,13 +285,13 @@ const GreetingSection = () => {
 // Achievements Widget (Summary Bar) - Dynamic with Real Data
 const AchievementsWidget = () => {
   const { theme } = useTheme();
-  
+
   // Use global context for real-time task statistics
   const { stats: taskStats } = useTaskStats();
-  
+
   return (
     <div className="flex justify-center mb-8">
-      <div 
+      <div
         className="flex items-center gap-8 px-8 py-4 rounded-2xl border"
         style={{
           backgroundColor: theme.background.primary,
@@ -311,7 +300,7 @@ const AchievementsWidget = () => {
       >
         {/* My Week */}
         <div className="flex items-center gap-2">
-          <button 
+          <button
             className="flex items-center gap-2 text-sm font-medium"
             style={{ color: theme.text.primary }}
           >
@@ -322,28 +311,20 @@ const AchievementsWidget = () => {
 
         {/* Task Completed - Dynamic from Global Context */}
         <div className="flex items-center gap-2">
-          <FaCheckCircle 
-            className="w-4 h-4"
-            style={{ color: "#10b981" }}
-          />
-          <span 
-            className="text-sm"
-            style={{ color: theme.text.primary }}
-          >
-            {taskStats?.byStatus?.completed || 0} task{(taskStats?.byStatus?.completed || 0) !== 1 ? 's' : ''} completed
+          <FaCheckCircle className="w-4 h-4" style={{ color: "#10b981" }} />
+          <span className="text-sm" style={{ color: theme.text.primary }}>
+            {taskStats?.byStatus?.completed || 0} task
+            {(taskStats?.byStatus?.completed || 0) !== 1 ? "s" : ""} completed
           </span>
         </div>
 
         {/* Collaborators - Could be dynamic in future */}
         <div className="flex items-center gap-2">
-          <FaUsers 
+          <FaUsers
             className="w-4 h-4"
             style={{ color: theme.text.secondary }}
           />
-          <span 
-            className="text-sm"
-            style={{ color: theme.text.primary }}
-          >
+          <span className="text-sm" style={{ color: theme.text.primary }}>
             0 collaborators
           </span>
         </div>
@@ -352,68 +333,60 @@ const AchievementsWidget = () => {
   );
 };
 
-
-
-
-
-
-
-
-
 export default function HomeDashboard() {
   const { theme } = useTheme();
 
   return (
     <PrivateLayout>
-        <div
-          className="min-h-screen px-8 py-6"
-          style={{
-            backgroundColor: theme.background.secondary,
-          }}
-        >
-          {/* Header */}
-          <HomeHeader />
+      <div
+        className="min-h-screen px-8 py-6"
+        style={{
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        {/* Header */}
+        <HomeHeader />
 
-          {/* Greeting Section */}
-          <GreetingSection />
+        {/* Greeting Section */}
+        <GreetingSection />
 
-          {/* Achievements Widget (Summary Bar) with Customize Button */}
-          <div className="relative">
-            <AchievementsWidget />
-            
-            {/* Customize Button - Positioned at top right */}
-            <button 
-              className="absolute top-0 right-8 flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl border"
-              style={{
-                backgroundColor: theme.background.primary,
-                borderColor: theme.border.default,
-                color: theme.text.primary,
-              }}
-            >
-              <HiSparkles className="w-4 h-4" />
-              Customize
-            </button>
+        {/* Achievements Widget (Summary Bar) with Customize Button */}
+        <div className="relative">
+          <AchievementsWidget />
+
+          {/* Customize Button - Positioned at top right */}
+          <button
+            className="absolute top-0 right-8 flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl border"
+            style={{
+              backgroundColor: theme.background.primary,
+              borderColor: theme.border.default,
+              color: theme.text.primary,
+            }}
+          >
+            <HiSparkles className="w-4 h-4" />
+            Customize
+          </button>
+        </div>
+
+        {/* Main Dashboard Grid - Using Refactored BaseCard Components */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-7xl mx-auto">
+          {/* Top Row */}
+          <div className="h-[400px]">
+            <RefactoredMyTasksCard />
+          </div>
+          <div className="h-[400px]">
+            <RefactoredProjectsCard />
           </div>
 
-          {/* Main Dashboard Grid - Using Refactored BaseCard Components */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-7xl mx-auto">
-            {/* Top Row */}
-            <div className="h-[400px]">
-              <RefactoredMyTasksCard />
-            </div>
-            <div className="h-[400px]">
-              <RefactoredProjectsCard />
-            </div>
-            
-            {/* Bottom Row */}
-            <div className="h-[400px]">
-              <RefactoredTasksAssignedCard />
-            </div>
-            <div className="h-[400px]">
-              <RefactoredGoalsCard />
-            </div>
+          {/* Bottom Row */}
+          <div className="h-[400px]">
+            <RefactoredTasksAssignedCard />
+          </div>
+          <div className="h-[400px]">
+            <RefactoredGoalsCard />
           </div>
         </div>
-      </PrivateLayout>
+      </div>
+    </PrivateLayout>
   );
 }

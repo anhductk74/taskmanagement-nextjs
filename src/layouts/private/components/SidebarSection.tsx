@@ -75,7 +75,7 @@ export default function SidebarSection({
             showFallback={false}
           >
             <button
-              onClick={() => router.push("/projects/create")}
+              onClick={() => router.push("/projects/create-project")}
               className={SIDEBAR_CLASSES.CREATE_BUTTON}
             >
               <Plus size={16} />
