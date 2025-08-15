@@ -155,9 +155,9 @@ const SearchDropdown = ({
 
   return (
     <div
-      className={`absolute top-full ${positionClasses[position]} mt-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-[100] ${className}`}
+
+      className={`absolute top-full ${positionClasses[position]} mt-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg dark:shadow-gray-900/50 overflow-hidden z-[100] ${className}`}
       style={{
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
         minWidth: "600px",
         maxWidth: "90vw",
       }}

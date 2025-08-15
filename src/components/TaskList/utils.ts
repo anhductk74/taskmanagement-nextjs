@@ -102,7 +102,8 @@ export const getStatusConfig = (status: TaskStatus) => {
   return STATUS_CONFIG[status] || STATUS_CONFIG.todo;
 };
 
-export const formatDate = (dateString: string | Date): string => {
+
+export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   const now = new Date();
   const diffTime = date.getTime() - now.getTime();
@@ -120,6 +121,7 @@ export const formatDate = (dateString: string | Date): string => {
   });
 };
 
+<<<<<<< HEAD
 export const formatTaskDate = (task: {
   dueDate?: string | Date | null;
   deadline?: string | Date | null;
@@ -132,6 +134,12 @@ export const formatTaskDate = (task: {
   // Use correct backend fields: startDate and deadline
   const taskEndDate = task.deadline || task.endDate;
   if (task.startDate && taskEndDate) {
+=======
+
+export const formatTaskDate = (task: any): string => {
+  // Check if task has start/end dates and times from enhanced calendar
+  if (task.startDate && task.endDate) {
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
     const startDate = new Date(task.startDate);
     const endDate = new Date(taskEndDate);
     
@@ -199,7 +207,12 @@ export const formatTaskDate = (task: {
       return `${date.getDate()} ${date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase()}`;
     }
     // If date parsing fails, use original formatDate function
+<<<<<<< HEAD
     return formatDate(fallbackDate as string | Date);
+=======
+
+    return formatDate(task.dueDate);
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
   }
   
   return '-';
@@ -349,8 +362,9 @@ export const groupTasks = (tasks: TaskListItem[], groupBy: TaskGroupBy): TaskSec
 
 export const sortTasks = (tasks: TaskListItem[], field: keyof TaskListItem, direction: 'asc' | 'desc'): TaskListItem[] => {
   return [...tasks].sort((a, b) => {
-    let aValue: string | number = '';
-    let bValue: string | number = '';
+
+    let aValue = a[field];
+    let bValue = b[field];
 
     // Handle special cases
     if (field === 'priority') {
@@ -362,26 +376,7 @@ export const sortTasks = (tasks: TaskListItem[], field: keyof TaskListItem, dire
     } else if (field === 'dueDate') {
       aValue = a.dueDate ? new Date(a.dueDate).getTime() : 0;
       bValue = b.dueDate ? new Date(b.dueDate).getTime() : 0;
-    } else {
-      // Handle other field types safely
-      const aFieldValue = a[field];
-      const bFieldValue = b[field];
-      
-      if (typeof aFieldValue === 'string') {
-        aValue = aFieldValue;
-      } else if (typeof aFieldValue === 'number') {
-        aValue = aFieldValue;
-      } else {
-        aValue = String(aFieldValue || '');
-      }
-      
-      if (typeof bFieldValue === 'string') {
-        bValue = bFieldValue;
-      } else if (typeof bFieldValue === 'number') {
-        bValue = bFieldValue;
-      } else {
-        bValue = String(bFieldValue || '');
-      }
+
     }
 
     if (aValue < bValue) return direction === 'asc' ? -1 : 1;

@@ -256,20 +256,59 @@ const TaskSection = ({
                     </td>
 
                     {/* Task Visibility (Status) */}
-                    <td className="w-[140px] py-3 px-2">
-                      {isAddingTask && (
-                        <select
-                          value={newTaskStatus}
-                          onChange={(e) => setNewTaskStatus(e.target.value as TaskStatus)}
-                          className="text-xs bg-gray-100 border border-gray-300 rounded px-2 py-1"
-                        >
-                          <option value="todo">To Do</option>
-                          <option value="in_progress">In Progress</option>
-                          <option value="review">Review</option>
-                          <option value="done">Done</option>
-                        </select>
-                      )}
-                    </td>
+<td className="w-[140px] py-3 px-2">
+  {isAddingTask && (
+    <select
+      value={newTaskStatus}
+      onChange={(e) => setNewTaskStatus(e.target.value as TaskStatus)}
+      className="text-xs rounded-lg px-3 py-1.5 border shadow-sm transition-colors focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none"
+      style={{
+        color: theme.text.primary,
+        minWidth: 120,
+        backgroundColor: theme.background.primary,
+        borderColor: theme.text?.primary || '#ccc',
+      }}
+    >
+      <option
+        value="todo"
+        style={{
+          color: theme.text.primary,
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        To Do
+      </option>
+      <option
+        value="in_progress"
+        style={{
+          color: theme.text.primary,
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        In Progress
+      </option>
+      <option
+        value="review"
+        style={{
+          color: theme.text.primary,
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        Review
+      </option>
+      <option
+        value="done"
+        style={{
+          color: theme.text.primary,
+          backgroundColor: theme.background.secondary,
+        }}
+      >
+        Done
+      </option>
+    </select>
+  )}
+</td>
+
 
                     {/* Actions */}
                     <td className="w-[50px] py-3 px-2">

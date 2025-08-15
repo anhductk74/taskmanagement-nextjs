@@ -34,7 +34,8 @@ export interface ShareButtonProps {
   loading?: boolean;
   disabled?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "primary" | "secondary" | "outline" | "outline-primary";
+
+  variant?: "primary" | "secondary" | "outline";
   count?: number;
 }
 
@@ -64,7 +65,8 @@ export interface DeleteButtonProps {
   loading?: boolean;
   disabled?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "danger" | "outline-danger" | "ghost" | "secondary";
+
+  variant?: "danger" | "outline-danger" | "ghost";
   count?: number;
   confirmText?: string;
 }
@@ -107,7 +109,8 @@ export interface ClearButtonProps {
   loading?: boolean;
   disabled?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "ghost" | "outline" | "secondary" | "outline-primary";
+
+  variant?: "ghost" | "outline" | "secondary";
 }
 
 export const ClearButton = ({ 
@@ -134,7 +137,8 @@ export interface DownloadButtonProps {
   loading?: boolean;
   disabled?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "secondary" | "outline" | "ghost" | "outline-primary";
+
+  variant?: "secondary" | "outline" | "ghost";
 }
 
 export const DownloadButton = ({ 

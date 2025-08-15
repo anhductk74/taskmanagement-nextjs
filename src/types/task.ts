@@ -1,9 +1,38 @@
 // Task Domain Types - Clean Type Definitions
 
+<<<<<<< HEAD
 // Backend Task interface (matches Spring Boot exactly)
 export interface BackendTask {
   id: number;
   title: string;
+=======
+export interface Task {
+  id: number
+  title: string
+  description?: string
+  dueDateISO?: string;
+  priority: 'Low' | 'Medium' | 'High'
+  status: TaskStatus
+  assignee: string[]
+  dueDate: string
+}
+
+export interface EditableTask extends Omit<Task, 'status'> {
+  id: number
+  status: TaskStatus
+  isEditing?: {
+    name?: boolean
+    assignee?: boolean
+    dueDate?: boolean
+    priority?: boolean
+    status?: boolean
+  }
+}
+
+// DTO interfaces for API operations
+export interface CreateTaskDTO {
+  name: string;
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
   description?: string;
   status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'TESTING' | 'BLOCKED' | 'REVIEW';
   priority: 'LOW' | 'MEDIUM' | 'HIGH';

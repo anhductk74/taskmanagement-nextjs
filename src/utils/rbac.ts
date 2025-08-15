@@ -44,11 +44,13 @@ export function normalizeRole(roleString: string): UserRole {
     return UserRole.MEMBER;
   }
 
+
   // console.log('🔍 Normalizing role:', roleString); // Disabled to prevent spam
   
   // Try direct match first (uppercase)
   if (Object.values(UserRole).includes(roleString as UserRole)) {
     // console.log('✅ Direct role match:', roleString); // Disabled to prevent spam
+
     return roleString as UserRole;
   }
   

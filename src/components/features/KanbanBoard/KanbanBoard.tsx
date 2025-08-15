@@ -228,8 +228,9 @@ const KanbanBoard = ({
     repeatDays: string[];
   }) => {
     // Convert dd/mm/yy format to proper date
-    const parseDate = (dateStr: string): string | undefined => {
-      if (!dateStr) return undefined;
+
+    const parseDate = (dateStr: string) => {
+      if (!dateStr) return null;
       const [day, month, year] = dateStr.split('/');
       return `20${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     };
@@ -267,9 +268,10 @@ const KanbanBoard = ({
     // Create enhanced task data
     const enhancedTaskData = {
       name: 'New Task',
-      dueDate: defaultDueDate || undefined,
-      startDate: startDateFormatted || undefined,
-      endDate: endDateFormatted || undefined,
+
+      dueDate: defaultDueDate,
+      startDate: startDateFormatted,
+      endDate: endDateFormatted,
       startTime: data.startTime,
       endTime: data.endTime,
       hasStartTime: !!data.startTime,
@@ -342,7 +344,9 @@ const KanbanBoard = ({
       {!hasSearchResults && searchValue.trim() ? (
         <EmptySearchState
           searchQuery={searchValue}
-          onReset={handleClearSearch}
+
+          onClearSearch={handleClearSearch}
+          onAdvancedSearch={() => {/* Handle advanced search */}}
         />
       ) : (
         <DragAndDropContext

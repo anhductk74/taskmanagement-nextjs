@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/layouts/hooks/useTheme";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
 import { DetailPanelProvider } from "@/contexts/DetailPanelContext";
 import { AppProvider } from "@/contexts/AppProvider";
 import { NextAuthProvider } from "@/providers";
+<<<<<<< HEAD
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 const inter = Inter({
+=======
+import { Geist, Geist_Mono } from "next/font/google";
+const geistSans = Geist({
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
   subsets: ["latin"],
   variable: "--font-inter",
 });
@@ -30,7 +35,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
+<<<<<<< HEAD
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+=======
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
       >
         <NextAuthProvider>
           <ThemeProvider defaultTheme="dark" storageKey="taskmanagement-theme">
@@ -39,6 +48,7 @@ export default function RootLayout({
             </AppProvider>
           </ThemeProvider>
         </NextAuthProvider>
+
       </body>
     </html>
   );

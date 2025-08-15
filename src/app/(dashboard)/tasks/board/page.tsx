@@ -16,10 +16,14 @@ export default function TasksBoardPage() {
         </p>
       </div>
 
+<<<<<<< HEAD
         <KanbanBoard
             tasks={[]}
             tasksByAssignmentDate={{}}
         />
+=======
+      <KanbanBoard />
+>>>>>>> origin/anhduc
     </div>
   );
 }

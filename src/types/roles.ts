@@ -221,18 +221,6 @@ export const ROLE_CONFIGS: Record<UserRole, RoleConfig> = {
   }
 };
 
-// Base User interface
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-  permissions?: Permission[];
-  avatar?: string;
-  isActive?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
 
 // User with role context
 export interface UserWithRole {

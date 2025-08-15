@@ -1,85 +1,58 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { Calendar, Clock, FileText, Mail, User } from "lucide-react";
-import { useEffect } from "react";
+import { useCreateProjectForm } from "../hooks/useCreateProjectForm";
 
-export type FormData = {
-  name: string;
-  description: string;
-  startDate: string;
-  endDate?: string;
-  pmEmail: string;
-  status: string;
-};
+import { CreateProjectFormData } from "@/types/project";
+import { createProject } from "../services";
 
 interface Props {
   onNameChange: (name: string) => void;
 }
+
 export default function CreateProjectForm({ onNameChange }: Props) {
-  const router = useRouter();
   const {
     register,
     handleSubmit,
+    onSubmit,
+    errors,
+    isSubmitting,
     reset,
-    watch,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    defaultValues: {
-      name: "",
-      description: "",
-      startDate: "",
-      endDate: "",
-      pmEmail: "",
-      status: "Planned",
-    },
-  });
-
-  const name = watch("name");
-
-  useEffect(() => {
-    onNameChange(name);
-  }, [name, onNameChange]);
-
-  const today = new Date().toISOString().split("T")[0];
-  const startDateValue = watch("startDate");
-
-  const onSubmit = async (data: FormData) => {
-    if (data.endDate) {
-      if (data.endDate < today) {
-        setError("endDate", { message: "End date cannot be in the past" });
-        return;
-      }
-      if (data.endDate < data.startDate) {
-        setError("endDate", {
-          message: "End date must be after or equal to start date",
-        });
-        return;
-      }
+    today,
+    startDateValue,
+  } = useCreateProjectForm(onNameChange);
+  const handleCreateProject = async (data: CreateProjectFormData) => {
+    try {
+      const response = await createProject(data);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
     }
+<<<<<<< HEAD
 
     console.log("Creating projects:", data);
     await new Promise((res) => setTimeout(res, 1000));
     alert(`Project "${data.name}" created`);
     router.push("/project/list"); // Updated path - removed /owner
     reset();
+=======
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
   };
 
   return (
-    <div className="w-full max-w-2xl  h-fit bg-white rounded-lg p-10">
+    <div className="w-full max-w-2xl h-fit bg-white rounded-lg p-10">
       <h1 className="text-3xl font-bold mb-1">Create New Project</h1>
       <p className="text-gray-600 mb-6">
         Set up a new project with all the essential details to get started.
       </p>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+
+      <form onSubmit={handleSubmit(handleCreateProject)} className="space-y-10">
         <div>
           <label className="font-medium flex items-center gap-1 mb-1">
             <FileText className="w-4 h-4" /> Project Name *
           </label>
           <input
-            {...register("name", { required: "Project name is required" })}
+            {...register("name")}
             className="w-full border border-gray-300 rounded px-3 py-2"
             placeholder="Enter project name"
           />
@@ -106,13 +79,10 @@ export default function CreateProjectForm({ onNameChange }: Props) {
               <Calendar className="w-4 h-4" /> Start Date *
             </label>
             <input
-              {...register("startDate", {
-                required: "Start date is required",
-                validate: (value) =>
-                  value >= today || "Start date cannot be in the past",
-              })}
+              {...register("startDate")}
               type="date"
               className="w-full border border-gray-300 rounded px-3 py-2"
+              min={today}
             />
             {errors.startDate && (
               <p className="text-red-500 text-sm">{errors.startDate.message}</p>
@@ -140,13 +110,7 @@ export default function CreateProjectForm({ onNameChange }: Props) {
               <Mail className="w-4 h-4" /> Project Manager Email *
             </label>
             <input
-              {...register("pmEmail", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email format",
-                },
-              })}
+              {...register("pmEmail")}
               type="email"
               className="w-full border border-gray-300 rounded px-3 py-2"
               placeholder="pm@company.com"
@@ -177,7 +141,7 @@ export default function CreateProjectForm({ onNameChange }: Props) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+            className="bg-red-500 text-white px-5 py-2 rounded hover:bg-red-500 disabled:opacity-50"
           >
             {isSubmitting ? "Creating..." : "Create Project"}
           </button>
