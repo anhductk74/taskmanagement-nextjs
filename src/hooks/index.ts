@@ -6,6 +6,7 @@ export { useProjects } from "./useProjects"
 export { useTasks } from "./useTasks"
 export { useUserData } from "./useUserData"
 export { usePortfolios } from "./usePortfolios"
+export { useCreateProjectForm } from "./useCreateProjectForm"
 
 // Re-export types
 export type { UseAuthReturn, AuthUser } from "./use-auth"

@@ -71,8 +71,8 @@ export function ProjectStatus() {
                                 <button
                                     key={option.value}
                                     onClick={() => handleStatusChange(option.value as any)}
-                                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors hover:bg-gray-100 ${
-                                        option.value === data.projectStatus ? 'bg-gray-100' : ''
+                                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-color hover:bg-gray-700 hover:text-white ${
+                                        option.value === data.projectStatus ? 'bg-gray-700 text-white' : ''
                                     }`}
                                 >
                                     <div className="flex items-center gap-2">

@@ -5,6 +5,7 @@
 export * from './tasks';
 export * from './users';
 export * from './teams';
+export * from './projects/projectService';
 
 // Export common utilities
 export { api, ApiClient } from '@/lib/api';

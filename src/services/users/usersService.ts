@@ -101,7 +101,7 @@ export const usersService = {
     try {
       console.log('🔄 Fetching current user...');
       const response = await api.get('/api/auth/me');
-      return transformUser(response.data);
+      return transformUser(response.data as Record<string, unknown>);
     } catch (error) {
       console.error('❌ Failed to fetch current user:', error);
       throw error;
@@ -113,7 +113,7 @@ export const usersService = {
     try {
       console.log('🔄 Creating user:', data.email);
       const response = await api.post('/api/users', data);
-      return transformUser(response.data);
+      return transformUser(response.data as Record<string, unknown>);
     } catch (error) {
       console.error('❌ Failed to create user:', error);
       throw error;
@@ -125,7 +125,7 @@ export const usersService = {
     try {
       console.log('🔄 Updating user:', id);
       const response = await api.put(`/api/users/${id}`, data);
-      return transformUser(response.data);
+      return transformUser(response.data as Record<string, unknown>);
     } catch (error) {
       console.error('❌ Failed to update user:', error);
       throw error;
@@ -145,13 +145,13 @@ export const usersService = {
   },
 
   // Search users
-  searchUsers: async (query: string): Promise<User[]> => {
+  getUserByEmail: async (email: string): Promise<User> => {
     try {
-      console.log('🔄 Searching users:', query);
-      const response = await api.get('/api/users/search', {
-        params: { q: query }
+      console.log('🔄 Searching users:', email);
+      const response = await api.get('/api/users/by-email', {
+        params: { email }
       });
-      return response.data.map(transformUser);
+      return transformUser(response.data);
     } catch (error) {
       console.error('❌ Failed to search users:', error);
       throw error;

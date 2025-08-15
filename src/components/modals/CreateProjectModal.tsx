@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { yupResolver } from "@hookform/resolvers/yup";
 import "@/app/globals.css";
 import {
   Calendar,
@@ -26,16 +27,14 @@ import {
 import { useTheme } from "@/layouts/hooks/useTheme";
 import { useProjects } from "@/hooks";
 import { GrProjects } from "react-icons/gr";
+import { createProjectSchema, CreateProjectFormData } from "./validator/createProjectSchema";
+import { projectService } from "@/services/projects/projectService";
+import { useSession } from "next-auth/react";
+import toast from 'react-hot-toast';
+
 
 /* ===================== Types ===================== */
-export type FormData = {
-  name: string;
-  description: string;
-  startDate: string; // YYYY-MM-DD (native date input)
-  endDate?: string;
-  pmEmail: string;
-  status: string;
-};
+// Using the imported CreateProjectFormData type from the schema
 
 interface Props {
   isOpen: boolean;
@@ -199,16 +198,16 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
   const router = useRouter();
   const { theme } = useTheme();
   const { addProject } = useProjects();
+    // console.log("Role: ",useSession().data?.user?.role);
 
   const {
     register,
     handleSubmit,
     reset,
     watch,
-    setError,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
+  } = useForm<CreateProjectFormData>({
     defaultValues: {
       name: "",
       description: "",
@@ -217,6 +216,8 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
       pmEmail: "",
       status: "Planned",
     },
+    resolver: yupResolver(createProjectSchema),
+    mode: "onSubmit",
   });
 
   const today = useMemo(() => formatYMD(new Date()), []);
@@ -228,31 +229,40 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
   const [isEndCalOpen, setIsEndCalOpen] = useState(false);
   const [startMonth, setStartMonth] = useState<Date>(new Date());
   const [endMonth, setEndMonth] = useState<Date>(new Date());
-  // Colors are assigned randomly on submit; no UI selection needed
 
   const handleStatusChange = (status: string) => {
     setValue("status", status, { shouldDirty: true });
     setIsStatusOpen(false);
   };
-
-  const onSubmit = async (data: FormData) => {
-    if (data.endDate) {
-      if (data.endDate < today) {
-        setError("endDate", { message: "End date cannot be in the past" });
-        return;
-      }
-      if (data.endDate < data.startDate) {
-        setError("endDate", {
-          message: "End date must be after or equal to start date",
-        });
-        return;
-      }
-    }
-
+  
+  const onSubmit = async (data: CreateProjectFormData) => {
     try {
-      // Create projects using global projects system
-      const randomColor =
-        PROJECT_COLORS[Math.floor(Math.random() * PROJECT_COLORS.length)];
+      // Get user context and PM ID
+      const [userContext] = await Promise.all([
+        projectService.getUserContext(),
+       
+      ]);
+
+      // Transform form data to API format
+      const apiData = {
+        name: data.name,
+        description: data.description,
+        startDate: data.startDate,
+        endDate: data.endDate || undefined,
+        ownerId: userContext.ownerId,
+        emailPm: data.pmEmail,
+        organizationId: userContext.organizationId,
+      };
+
+      console.log("🚀 Creating project with API:", apiData);
+      
+      // Call project service
+      const response = await projectService.createProject(apiData);
+      
+     alert(`Project created successfully!`);
+
+      // Add to global projects system for UI consistency
+      const randomColor = PROJECT_COLORS[Math.floor(Math.random() * PROJECT_COLORS.length)];
       const newProject = {
         name: data.name,
         description: data.description,
@@ -274,17 +284,15 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
         tasksDue: 0,
       };
 
-      // Add to global projects system
       addProject(newProject);
-
-      console.log("Creating projects:", newProject);
-      await new Promise((res) => setTimeout(res, 300));
 
       reset();
       onClose();
       router.refresh();
-    } catch (error) {
-      console.error("Failed to create projects:", error);
+    } catch (error: any) {
+      console.error("Failed to create project:", error);
+      // You can add toast notification here
+      alert(`Failed to create project: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -315,7 +323,7 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Name */}
+          {/* Name */} 
           <div>
             <label className="font-medium flex items-center gap-1 mb-1">
               <FileText className="w-4 h-4" /> Project Name *
@@ -323,8 +331,8 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
             <Input
               leftIcon={<FileText className="w-4 h-4" />}
               error={!!errors.name}
-              helperText={errors.name?.message}
-              {...register("name", { required: "Project name is required" })}
+              helperText={errors.name?.message?.toString()}
+              {...register("name")}
               placeholder="Enter project name"
             />
           </div>
@@ -341,27 +349,7 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
             />
           </div>
 
-          {/* Project Color */}
-          {/* <div>
-            <label className="font-medium flex items-center gap-1 mb-1">
-              <FileText className="w-4 h-4" /> Project Color
-            </label>
-            <div className="flex gap-2 flex-wrap">
-              {PROJECT_COLORS.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  onClick={() => setSelectedColor(color)}
-                  className={`w-8 h-8 rounded-lg border-2 transition-all ${
-                    selectedColor === color
-                      ? "border-gray-800 scale-110"
-                      : "border-gray-300 hover:scale-105"
-                  }`}
-                  style={{ backgroundColor: color }}
-                />
-              ))}
-            </div>
-          </div> */}
+
 
           {/* Dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -399,16 +387,12 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
                   type="date"
                   min={today} // native guard
                   leftIcon={<Calendar className="w-4 h-4" />}
-                  onLeftIconClick={() => setIsStartCalOpen(true)}
+                  onClick={() => setIsStartCalOpen(true)}
                   className="pl-10 custom-date"
                   // placeholder="YYYY-MM-DD"
                   error={!!errors.startDate}
-                  helperText={errors.startDate?.message}
-                  {...register("startDate", {
-                    required: "Start date is required",
-                    validate: (value) =>
-                      value >= today || "Start date cannot be in the past",
-                  })}
+                  helperText={errors.startDate?.message?.toString()}
+                  {...register("startDate")}
                 />
               </div>
             </div>
@@ -449,11 +433,11 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
                   type="date"
                   min={startDateValue || today} // native guard
                   leftIcon={<Calendar className="w-4 h-4" />}
-                  onLeftIconClick={() => setIsEndCalOpen(true)}
+                  onClick={() => setIsEndCalOpen(true)} 
                   className="pl-10 custom-date"
                   // placeholder="YYYY-MM-DD"
                   error={!!errors.endDate}
-                  helperText={errors.endDate?.message}
+                  helperText={errors.endDate?.message?.toString()}
                   {...register("endDate")}
                 />
               </div>
@@ -471,14 +455,8 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
                 type="email"
                 leftIcon={<Mail className="w-4 h-4" />}
                 error={!!errors.pmEmail}
-                helperText={errors.pmEmail?.message}
-                {...register("pmEmail", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Invalid email format",
-                  },
-                })}
+                helperText={errors.pmEmail?.message?.toString()}
+                {...register("pmEmail")}
                 placeholder="pm@company.com"
               />
             </div>
@@ -490,10 +468,10 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
               </label>
               <Dropdown
                 trigger={
-                  <Button variant="outline" className="w-full justify-between">
+                  <Button variant="outline" className="w-full justify-between text-white">
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4" />
-                      <span>{statusValue || "Select status"}</span>
+                      <span className="text-white">{statusValue || "Select status"}</span>
                     </div>
                     <ChevronDown className="w-4 h-4" />
                   </Button>
@@ -532,6 +510,7 @@ export default function CreateProjectModal({ isOpen, onClose }: Props) {
               {isSubmitting ? "Creating..." : "Create Project"}
             </Button>
             <Button
+            className="text-white"
               type="button"
               onClick={() => {
                 reset();
