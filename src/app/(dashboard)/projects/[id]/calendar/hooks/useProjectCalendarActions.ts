@@ -45,7 +45,7 @@ export function useProjectCalendarActions(): TaskListActions {
 
     onCreateTask: async (taskData?: string | { 
       name: string; 
-      dueDate?: string; 
+      deadline?: string; 
       startDate?: string;
       endDate?: string;
       startTime?: string;
@@ -66,7 +66,7 @@ export function useProjectCalendarActions(): TaskListActions {
           tags: [],
           startDate: new Date().toISOString().split('T')[0],
           endDate: new Date().toISOString().split('T')[0],
-          dueDate: new Date().toISOString().split('T')[0],
+          deadline: new Date().toISOString().split('T')[0],
         });
       } else if (taskData) {
         // Enhanced task creation with all details
@@ -77,7 +77,7 @@ export function useProjectCalendarActions(): TaskListActions {
           priority: 'MEDIUM',
           status: taskData.status || 'TODO',
           tags: [],
-          dueDate: taskData.dueDate,
+          deadline: taskData.deadline,
           startDate: taskData.startDate,
           endDate: taskData.endDate,
           startTime: taskData.startTime,
@@ -98,7 +98,7 @@ export function useProjectCalendarActions(): TaskListActions {
           tags: [],
           startDate: today,
           endDate: today,
-          dueDate: today,
+          deadline: today,
         });
       }
     },

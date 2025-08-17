@@ -109,7 +109,7 @@ const SortableTaskCard = ({
 
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-2 flex-wrap">
-            {task.dueDate && (
+            {task.deadline && (
               <span 
                 className="px-2 py-1 rounded text-xs whitespace-nowrap"
                 style={{ 

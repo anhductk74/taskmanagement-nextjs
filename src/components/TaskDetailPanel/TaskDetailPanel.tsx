@@ -46,10 +46,10 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
         if (!isNaN(taskStartDate.getTime())) {
           setStartDate(taskStartDate);
         }
-      } else if (task.dueDate) {
-        const dueDate = new Date(task.dueDate);
-        if (!isNaN(dueDate.getTime())) {
-          setStartDate(dueDate);
+      } else if (task.deadline) {
+        const deadline = new Date(task.deadline);
+        if (!isNaN(deadline.getTime())) {
+          setStartDate(deadline);
         }
       }
       
@@ -58,10 +58,10 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
         if (!isNaN(taskEndDate.getTime())) {
           setEndDate(taskEndDate);
         }
-      } else if (task.dueDate) {
-        const dueDate = new Date(task.dueDate);
-        if (!isNaN(dueDate.getTime())) {
-          setEndDate(dueDate);
+      } else if (task.deadline) {
+        const deadline = new Date(task.deadline);
+        if (!isNaN(deadline.getTime())) {
+          setEndDate(deadline);
         }
       }
       
@@ -327,9 +327,9 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                     }
                   }
                   
-                  // Fallback to task.dueDate with time if available
-                  if (task?.dueDate) {
-                    let display = formatDateRange(task.dueDate, task.dueDate);
+                  // Fallback to task.deadline with time if available
+                  if (task?.deadline) {
+                    let display = formatDateRange(task.deadline, task.deadline);
                     if (hasStartTime && (startTime || endTime)) {
                       const timeStr = [];
                       if (startTime) timeStr.push(startTime);

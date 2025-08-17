@@ -52,8 +52,8 @@ const MyTasksCard = () => {
     total: tasks.length,
     byStatus: getTaskCountsByGroup(tasks),
     overdue: tasks.filter(t => {
-      // Calculate overdue from dueDateISO since isOverdue might not be available
-      return t.dueDateISO && t.dueDateISO < new Date() && !t.completed && t.status !== 'completed';
+      // Calculate overdue from deadlineISO since isOverdue might not be available
+      return t.deadlineISO && t.deadlineISO < new Date() && !t.completed && t.status !== 'completed';
     }).length,
     byPriority: {
       HIGH: tasks.filter(t => t.priority === 'HIGH').length,
@@ -95,7 +95,7 @@ const MyTasksCard = () => {
       filteredTasks = tasks.filter(task => isTaskCompleted(task));
     } else if (activeTab === "overdue") {
       filteredTasks = tasks.filter(task => {
-        const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !isTaskCompleted(task);
+        const isOverdue = task.deadlineISO && task.deadlineISO < new Date() && !isTaskCompleted(task);
         return isOverdue;
       });
     } else {
@@ -112,7 +112,7 @@ const MyTasksCard = () => {
 
     const completed = tasks.filter(task => task.completed || task.status === 'completed' || taskStates[task.id]).length;
     const overdue = tasks.filter(task => {
-      const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed' && !taskStates[task.id];
+      const isOverdue = task.deadlineISO && task.deadlineISO < new Date() && !task.completed && task.status !== 'completed' && !taskStates[task.id];
       return isOverdue;
     }).length;
 
@@ -127,7 +127,7 @@ const MyTasksCard = () => {
       filteredCount = tasks.filter(task => task.completed || task.status === 'completed' || taskStates[task.id]).length;
     } else if (activeTab === "overdue") {
       filteredCount = tasks.filter(task => {
-        const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed' && !taskStates[task.id];
+        const isOverdue = task.deadlineISO && task.deadlineISO < new Date() && !task.completed && task.status !== 'completed' && !taskStates[task.id];
         return isOverdue;
       }).length;
     } else {
@@ -185,20 +185,20 @@ const MyTasksCard = () => {
   // });
 
   // Business Logic
-  const getDueDateColor = (task: Task): string => {
+  const getdeadlineColor = (task: Task): string => {
     // Check if task is overdue
-    const isTaskOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed';
+    const isTaskOverdue = task.deadlineISO && task.deadlineISO < new Date() && !task.completed && task.status !== 'completed';
 
     if (isTaskOverdue) {
       return '#dc2626'; // Red for overdue
     }
 
-    // Handle undefined, null, or non-string dueDate
-    if (!task.dueDate || typeof task.dueDate !== 'string') {
+    // Handle undefined, null, or non-string deadline
+    if (!task.deadline || typeof task.deadline !== 'string') {
       return theme.text.secondary;
     }
 
-    const normalizedDate = task.dueDate.toLowerCase();
+    const normalizedDate = task.deadline.toLowerCase();
     return ['today', 'tomorrow', 'thursday'].includes(normalizedDate)
       ? '#10b981'
       : theme.text.secondary;
@@ -294,13 +294,13 @@ const MyTasksCard = () => {
             <span
               className={`text-sm font-medium ${
                 task.isOverdue ? 'text-red-600 font-bold' : 
-                task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed' 
+                task.deadlineISO && task.deadlineISO < new Date() && !task.completed && task.status !== 'completed' 
                   ? 'font-semibold' 
                   : ''
               }`}
-              style={{ color: task.isOverdue ? '#dc2626' : getDueDateColor(task) }}
+              style={{ color: task.isOverdue ? '#dc2626' : getdeadlineColor(task) }}
             >
-              {task.dueDate || 'No due date'}
+              {task.deadline || 'No due date'}
               {task.isOverdue && ' (Overdue)'}
             </span>
 
@@ -320,7 +320,7 @@ const MyTasksCard = () => {
   const handleCreateTask = () => {
     handleAddTask({
       title: "New task",
-      dueDate: "Today",
+      deadline: "Today",
       completed: false,
       priority: 'MEDIUM',
       status: 'TODO',

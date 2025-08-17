@@ -45,7 +45,7 @@ export function useProjectTimelineActions(): TaskListActions {
 
     onCreateTask: async (taskData?: string | { 
       name: string; 
-      dueDate?: string; 
+      deadline?: string; 
       startDate?: string;
       endDate?: string;
       startTime?: string;
@@ -69,7 +69,7 @@ export function useProjectTimelineActions(): TaskListActions {
           tags: [],
           startDate: today,
           endDate: nextWeek,
-          dueDate: nextWeek,
+          deadline: nextWeek,
         });
       } else if (taskData) {
         // Enhanced task creation with all details
@@ -80,9 +80,9 @@ export function useProjectTimelineActions(): TaskListActions {
           priority: 'medium',
           status: taskData.status || 'todo',
           tags: [],
-          dueDate: taskData.dueDate || taskData.endDate || nextWeek,
+          deadline: taskData.deadline || taskData.endDate || nextWeek,
           startDate: taskData.startDate || today,
-          endDate: taskData.endDate || taskData.dueDate || nextWeek,
+          endDate: taskData.endDate || taskData.deadline || nextWeek,
           startTime: taskData.startTime,
           endTime: taskData.endTime,
           hasStartTime: taskData.hasStartTime,
@@ -100,7 +100,7 @@ export function useProjectTimelineActions(): TaskListActions {
           tags: [],
           startDate: today,
           endDate: nextWeek,
-          dueDate: nextWeek,
+          deadline: nextWeek,
         });
       }
     },

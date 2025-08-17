@@ -70,8 +70,8 @@ const convertToCalendarTask = (task: TaskListItem): CalendarTask => {
     return new Date(); // Default to today
   };
 
-  const startDate = getTaskDate(task.startDate || task.dueDate);
-  const endDate = getTaskDate(task.endDate || task.dueDate);
+  const startDate = getTaskDate(task.startDate || task.deadline);
+  const endDate = getTaskDate(task.endDate || task.deadline);
 
   return {
     id: task.id,
@@ -90,7 +90,7 @@ const convertFromCalendarTask = (calendarTask: CalendarTask, originalTask: TaskL
     name: calendarTask.title,
     startDate: calendarTask.startDate.toISOString().split('T')[0],
     endDate: calendarTask.endDate.toISOString().split('T')[0],
-    dueDate: calendarTask.endDate.toISOString().split('T')[0],
+    deadline: calendarTask.endDate.toISOString().split('T')[0],
   };
 };
 
@@ -105,7 +105,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'sarah.wilson', name: 'Sarah Wilson', avatar: 'SW' }],
     startDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     tags: ['design', 'frontend', 'ui'],
     project: projectName,
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
@@ -120,7 +120,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'john.doe', name: 'John Doe', avatar: 'JD' }],
     startDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     tags: ['backend', 'integration', 'api'],
     project: projectName,
     createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
@@ -135,7 +135,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'mike.chen', name: 'Mike Chen', avatar: 'MC' }],
     startDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     endDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     tags: ['testing', 'quality', 'automation'],
     project: projectName,
     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -150,7 +150,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'emma.davis', name: 'Emma Davis', avatar: 'ED' }],
     startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     tags: ['documentation', 'writing'],
     project: projectName,
     createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
@@ -165,7 +165,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'alex.taylor', name: 'Alex Taylor', avatar: 'AT' }],
     startDate: new Date(Date.now() + 0 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     endDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     tags: ['performance', 'optimization', 'frontend'],
     project: projectName,
     createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),

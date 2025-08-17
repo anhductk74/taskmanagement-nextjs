@@ -25,22 +25,22 @@ import type {
 // Transform backend task to frontend format
 export const transformBackendTask = (backendTask: BackendTask): Task => {
   // Use startDate as primary field (REQUIRED)
-  let dueDateString = 'No date';
-  let dueDateISO = new Date();
+  let deadlineString = 'No date';
+  let deadlineISO = new Date();
   
   // Priority: startDate > deadline > fallback
   const dateSource = backendTask.startDate || backendTask.deadline;
   if (dateSource) {
-    dueDateISO = safeParseDate(dateSource);
-    dueDateString = formatDateString(dateSource);
+    deadlineISO = safeParseDate(dateSource);
+    deadlineString = formatDateString(dateSource);
   }
 
   return {
     id: backendTask.id,
     title: backendTask.title,
     description: backendTask.description || '',
-    dueDate: dueDateString,
-    dueDateISO: dueDateISO,
+    deadline: deadlineString,
+    deadlineISO: deadlineISO,
     completed: backendTask.status === 'DONE',
     priority: normalizePriority(backendTask.priority),
     status: normalizeStatus(backendTask.status),
@@ -50,8 +50,8 @@ export const transformBackendTask = (backendTask: BackendTask): Task => {
     createdAt: safeParseDate(backendTask.createdAt),
     updatedAt: safeParseDate(backendTask.updatedAt),
     // Multi-day task support
-    startDate: dueDateISO,
-    endDate: dueDateISO,
+    startDate: deadlineISO,
+    endDate: deadlineISO,
   };
 };
 
@@ -60,14 +60,14 @@ export const transformMyTasksSummary = (item: MyTasksSummaryItem): Task => {
   const taskStartDate = safeParseDate(item.startDate);
   const taskEndDate = safeParseDate(item.deadline);
   const displayDate = item.startDate || item.deadline;
-  const taskDueDateISO = safeParseDate(displayDate);
+  const taskdeadlineISO = safeParseDate(displayDate);
 
   return {
     id: item.id,
     title: item.title,
     description: item.description || '',
-    dueDate: displayDate,
-    dueDateISO: taskDueDateISO,
+    deadline: displayDate,
+    deadlineISO: taskdeadlineISO,
     completed: item.status === 'DONE',
     priority: normalizePriority(item.priority),
     status: normalizeStatus(item.status),
@@ -92,14 +92,14 @@ export const transformMyTasksSummary = (item: MyTasksSummaryItem): Task => {
 
 // Transform My Tasks Full Item to Task format  
 export const transformMyTasksFull = (item: MyTasksFullItem): Task => {
-  const taskDueDateISO = item.deadline ? safeParseDate(item.deadline) : new Date();
+  const taskdeadlineISO = item.deadline ? safeParseDate(item.deadline) : new Date();
 
   return {
     id: item.id,
     title: item.title,
     description: item.description || '',
-    dueDate: item.deadline || 'No deadline',
-    dueDateISO: taskDueDateISO,
+    deadline: item.deadline || 'No deadline',
+    deadlineISO: taskdeadlineISO,
     completed: item.status === 'DONE',
     priority: normalizePriority(item.priority),
     status: normalizeStatus(item.status),
@@ -109,8 +109,8 @@ export const transformMyTasksFull = (item: MyTasksFullItem): Task => {
     createdAt: safeParseDate(item.createdAt),
     updatedAt: safeParseDate(item.updatedAt),
     // Multi-day task support
-    startDate: taskDueDateISO,
-    endDate: taskDueDateISO,
+    startDate: taskdeadlineISO,
+    endDate: taskdeadlineISO,
   };
 };
 
@@ -143,8 +143,8 @@ export const tasksService = {
       let startDate: string;
       let deadline = data.deadline || null;
       
-      if (data.dueDateISO) {
-        startDate = formatDateString(data.dueDateISO);
+      if (data.deadlineISO) {
+        startDate = formatDateString(data.deadlineISO);
       } else if (data.startDate) {
         startDate = data.startDate;
       } else {
@@ -191,18 +191,12 @@ export const tasksService = {
       if (data.priority !== undefined) backendData.priority = toBackendPriority(data.priority);
       
       // Handle date fields for different scenarios
-      if (data.startDate !== undefined && data.deadline !== undefined) {
-        backendData.startDate = data.startDate;
-        backendData.deadline = data.deadline;
-      } else if (data.deadline !== undefined) {
-        backendData.deadline = data.deadline;
-        backendData.startDate = data.deadline;
-      } else if (data.startDate !== undefined) {
-        backendData.startDate = data.startDate;
-      } else if (data.dueDate !== undefined) {
-        backendData.deadline = data.dueDate;
-        backendData.startDate = data.dueDate;
-      }
+      if (data.startDate !== undefined) {
+  backendData.startDate = data.startDate;
+}
+if (data.deadline !== undefined) {
+  backendData.deadline = data.deadline;
+}
 
       const response = await api.put<BackendTask>(`/api/tasks/${id}`, backendData);
       return transformBackendTask(response.data);

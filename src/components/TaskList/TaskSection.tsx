@@ -6,7 +6,7 @@ import { useTheme } from '@/layouts/hooks/useTheme';
 import { TaskSection as TaskSectionType, TaskListItem, TaskListActions, TaskStatus } from './types';
 import TaskRow from './TaskRow';
 import TaskCard from './TaskCard';
-import DueDatePicker from '@/app/projects/list/components/DueDatePicker';
+import deadlinePicker from '@/app/projects/list/components/deadlinePicker';
 import { EnhancedCalendar } from '@/components/features/EnhancedCalendar';
 
 interface TaskSectionProps {
@@ -32,7 +32,7 @@ const TaskSection = ({
   const [isCollapsed, setIsCollapsed] = useState(section.collapsed || false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskName, setNewTaskName] = useState('');
-  const [newTaskDueDate, setNewTaskDueDate] = useState('');
+  const [newTaskdeadline, setNewTaskdeadline] = useState('');
   const [newTaskProject, setNewTaskProject] = useState('');
   const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>('TODO');
   const [isEnhancedCalendarOpen, setIsEnhancedCalendarOpen] = useState(false);
@@ -113,7 +113,7 @@ const TaskSection = ({
       }
     }
 
-    setNewTaskDueDate(dateDisplay);
+    setNewTaskdeadline(dateDisplay);
     setEnhancedDateData({
       startDate: data.startDate,
       endDate: data.endDate,
@@ -222,7 +222,7 @@ const TaskSection = ({
                         >
                           <Calendar className="w-3 h-3" />
                           <span className="truncate">
-                            {newTaskDueDate || 'Set date'}
+                            {newTaskdeadline || 'Set date'}
                           </span>
                         </button>
                       )}
@@ -279,8 +279,8 @@ const TaskSection = ({
                             onClick={() => {
                               if (newTaskName.trim()) {
                                 // Determine appropriate due date based on section
-                                let defaultDueDate = newTaskDueDate;
-                                if (!defaultDueDate && !enhancedDateData.startDate) {
+                                let defaultdeadline = newTaskdeadline;
+                                if (!defaultdeadline && !enhancedDateData.startDate) {
                                   const today = new Date();
                                   const tomorrow = new Date(today);
                                   tomorrow.setDate(today.getDate() + 1);
@@ -289,15 +289,15 @@ const TaskSection = ({
 
                                   switch (section.id) {
                                     case 'do-today':
-                                      defaultDueDate = today.toISOString().split('T')[0];
+                                      defaultdeadline = today.toISOString().split('T')[0];
                                       break;
                                     case 'do-next-week':
-                                      defaultDueDate = nextWeek.toISOString().split('T')[0];
+                                      defaultdeadline = nextWeek.toISOString().split('T')[0];
                                       break;
                                     case 'do-later':
                                       const laterDate = new Date(today);
                                       laterDate.setDate(today.getDate() + 14); // 2 weeks later
-                                      defaultDueDate = laterDate.toISOString().split('T')[0];
+                                      defaultdeadline = laterDate.toISOString().split('T')[0];
                                       break;
                                     // 'recently-assigned' gets no default due date
                                   }
@@ -306,7 +306,7 @@ const TaskSection = ({
                                 // Create task with enhanced calendar data
                                 const taskData = {
                                   name: newTaskName.trim(),
-                                  dueDate: defaultDueDate || undefined,
+                                  deadline: defaultdeadline || undefined,
                                   startDate: enhancedDateData.startDate,
                                   endDate: enhancedDateData.endDate,
                                   startTime: enhancedDateData.startTime,
@@ -321,7 +321,7 @@ const TaskSection = ({
                               // Reset form
                               setIsAddingTask(false);
                               setNewTaskName('');
-                              setNewTaskDueDate('');
+                              setNewTaskdeadline('');
                               setNewTaskProject('');
                               setNewTaskStatus('todo');
                               setEnhancedDateData({});
@@ -334,7 +334,7 @@ const TaskSection = ({
                             onClick={() => {
                               setIsAddingTask(false);
                               setNewTaskName('');
-                              setNewTaskDueDate('');
+                              setNewTaskdeadline('');
                               setNewTaskProject('');
                               setNewTaskStatus('todo');
                             }}

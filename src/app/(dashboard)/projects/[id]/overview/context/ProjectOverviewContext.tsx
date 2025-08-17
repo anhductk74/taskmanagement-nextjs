@@ -16,7 +16,7 @@ interface Goal {
   title: string;
   description?: string;
   progress: number;
-  dueDate?: Date;
+  deadline?: Date;
   status: 'not_started' | 'in_progress' | 'completed';
 }
 

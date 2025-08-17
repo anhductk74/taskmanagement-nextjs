@@ -57,24 +57,24 @@ const createDefaultSections = (tasks: TaskListItem[]): TaskSectionType[] => {
   });
 
   const doToday = tasks.filter(task => {
-    if (!task.dueDate) return false;
-    const dueDate = new Date(task.dueDate);
-    dueDate.setHours(0, 0, 0, 0);
-    return dueDate.getTime() === today.getTime();
+    if (!task.deadline) return false;
+    const deadline = new Date(task.deadline);
+    deadline.setHours(0, 0, 0, 0);
+    return deadline.getTime() === today.getTime();
   });
 
   const doNextWeek = tasks.filter(task => {
-    if (!task.dueDate) return false;
-    const dueDate = new Date(task.dueDate);
-    dueDate.setHours(0, 0, 0, 0);
-    return dueDate > today && dueDate <= nextWeek;
+    if (!task.deadline) return false;
+    const deadline = new Date(task.deadline);
+    deadline.setHours(0, 0, 0, 0);
+    return deadline > today && deadline <= nextWeek;
   });
 
   const doLater = tasks.filter(task => {
-    if (!task.dueDate) return true; // Tasks without due date go to "Do later"
-    const dueDate = new Date(task.dueDate);
-    dueDate.setHours(0, 0, 0, 0);
-    return dueDate > nextWeek;
+    if (!task.deadline) return true; // Tasks without due date go to "Do later"
+    const deadline = new Date(task.deadline);
+    deadline.setHours(0, 0, 0, 0);
+    return deadline > nextWeek;
   });
 
   return [
@@ -233,7 +233,7 @@ const GroupedTaskList = ({
       priority: 'NORMAL',
       startDate: startDateFormatted || new Date().toISOString().split('T')[0],
       deadline: endDateFormatted || startDateFormatted || new Date().toISOString().split('T')[0],
-      dueDate: startDateFormatted || new Date().toISOString().split('T')[0],
+      deadline: startDateFormatted || new Date().toISOString().split('T')[0],
       creatorId: '',
       assignedToIds: [],
       tags: [],

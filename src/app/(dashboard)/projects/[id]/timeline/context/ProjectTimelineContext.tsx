@@ -56,14 +56,14 @@ const convertToGanttTask = (task: TaskListItem): GanttTask => {
     return new Date(2025, 6, 28); // Default to July 28, 2025
   };
 
-  const startDate = getTaskDate(task.startDate || task.dueDate);
-  const endDate = getTaskDate(task.endDate || task.dueDate);
+  const startDate = getTaskDate(task.startDate || task.deadline);
+  const endDate = getTaskDate(task.endDate || task.deadline);
 
   // Determine section based on status
   let section = 'todo';
   if (task.status === 'in_progress') section = 'in_progress';
   else if (task.status === 'done' || task.status === 'review') section = 'done';
-  else if (!task.dueDate) section = 'later';
+  else if (!task.deadline) section = 'later';
 
   return {
     id: task.id,
@@ -108,7 +108,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'vl', name: 'VL', avatar: 'VL' }],
     startDate: '2025-08-05', // W32: 4-10
     endDate: '2025-08-08',
-    dueDate: '2025-08-08',
+    deadline: '2025-08-08',
     tags: ['kickoff', 'meeting'],
     project: projectName,
     createdAt: new Date().toISOString(),
@@ -123,7 +123,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'team', name: 'Team', avatar: 'T' }],
     startDate: '2025-08-12', // W33: 11-17
     endDate: '2025-08-16',
-    dueDate: '2025-08-16',
+    deadline: '2025-08-16',
     tags: ['timeline', 'communication'],
     project: projectName,
     createdAt: new Date().toISOString(),
@@ -138,7 +138,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'dev1', name: 'Developer 1', avatar: 'D1' }],
     startDate: '2025-07-15',
     endDate: '2025-07-25',
-    dueDate: '2025-07-25',
+    deadline: '2025-07-25',
     tags: ['frontend', 'development'],
     project: projectName,
     createdAt: new Date().toISOString(),
@@ -153,7 +153,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'be1', name: 'Backend Dev', avatar: 'BE' }],
     startDate: '2025-09-02', // W36: 1-7
     endDate: '2025-09-05',
-    dueDate: '2025-09-05',
+    deadline: '2025-09-05',
     tags: ['backend', 'api'],
     project: projectName,
     createdAt: new Date().toISOString(),
@@ -168,7 +168,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     assignees: [{ id: 'qa1', name: 'QA Tester', avatar: 'QA' }],
     startDate: '2025-09-10',
     endDate: '2025-09-20',
-    dueDate: '2025-09-20',
+    deadline: '2025-09-20',
     tags: ['testing', 'qa'],
     project: projectName,
     createdAt: new Date().toISOString(),
@@ -324,25 +324,25 @@ export function ProjectTimelineProvider({ children }: ProjectTimelineProviderPro
       const later = new Date(today);
       later.setDate(today.getDate() + 14);
 
-      let newDueDate: string | undefined;
+      let newdeadline: string | undefined;
       
       switch (sectionId) {
         case 'do-today':
-          newDueDate = today.toISOString().split('T')[0];
+          newdeadline = today.toISOString().split('T')[0];
           break;
         case 'do-next-week':
-          newDueDate = nextWeek.toISOString().split('T')[0];
+          newdeadline = nextWeek.toISOString().split('T')[0];
           break;
         case 'do-later':
-          newDueDate = later.toISOString().split('T')[0];
+          newdeadline = later.toISOString().split('T')[0];
           break;
         case 'recently-assigned':
-          newDueDate = undefined; // Remove due date
+          newdeadline = undefined; // Remove due date
           break;
       }
 
       // Update task with new due date
-      await updateTask(taskId, { dueDate: newDueDate });
+      await updateTask(taskId, { deadline: newdeadline });
       
     } catch (err) {
       setError('Failed to move task');
@@ -365,7 +365,7 @@ export function ProjectTimelineProvider({ children }: ProjectTimelineProviderPro
     await updateTask(taskId, { 
       startDate: startDateStr,
       endDate: endDateStr,
-      dueDate: endDateStr
+      deadline: endDateStr
     });
   };
 

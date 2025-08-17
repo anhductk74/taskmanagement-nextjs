@@ -17,7 +17,7 @@ export interface TaskDetailData extends BaseDetailData {
   type: 'task';
   status: string;
   priority: string;
-  dueDate: string;
+  deadline: string;
   description?: string;
   assignee?: string[];
   project?: string;

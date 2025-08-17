@@ -123,7 +123,7 @@ export function TasksProvider({
     const completed = tasks.filter(task => task.status === 'done').length;
     const inProgress = tasks.filter(task => task.status === 'in_progress').length;
     const overdue = tasks.filter(task => 
-      task.dueDateISO && task.dueDateISO < new Date() && task.status !== 'done'
+      task.deadlineISO && task.deadlineISO < new Date() && task.status !== 'done'
     ).length;
 
     const byPriority = tasks.reduce((acc, task) => {

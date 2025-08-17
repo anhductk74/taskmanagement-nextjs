@@ -9,7 +9,7 @@ export interface Project {
   priority: 'low' | 'medium' | 'high' | 'urgent';
   startDate?: Date | string;
   endDate?: Date | string;
-  dueDate?: Date | string;
+  deadline?: Date | string;
   progress: number; // 0-100
   budget?: number;
   currency?: string;
@@ -31,7 +31,7 @@ export interface CreateProjectDTO {
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   startDate?: Date | string;
   endDate?: Date | string;
-  dueDate?: Date | string;
+  deadline?: Date | string;
   budget?: number;
   currency?: string;
   teamId?: string;
@@ -47,7 +47,7 @@ export interface UpdateProjectDTO {
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   startDate?: Date | string;
   endDate?: Date | string;
-  dueDate?: Date | string;
+  deadline?: Date | string;
   progress?: number;
   budget?: number;
   currency?: string;

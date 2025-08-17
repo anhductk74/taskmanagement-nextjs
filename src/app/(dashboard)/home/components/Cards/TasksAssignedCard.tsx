@@ -60,7 +60,7 @@ const TasksAssignedCard = () => {
         return tasks.filter(task => !task.completed && task.status !== 'completed');
       case "overdue":
         return tasks.filter(task => {
-          const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !task.completed && task.status !== 'completed';
+          const isOverdue = task.deadlineISO && task.deadlineISO < new Date() && !task.completed && task.status !== 'completed';
           return isOverdue;
         });
       case "completed":
@@ -71,12 +71,12 @@ const TasksAssignedCard = () => {
   }, [tasks, activeTab]);
 
   // Business Logic - Safe date handling
-  const getDueDateColor = (dueDate?: string): string => {
-    if (!dueDate || typeof dueDate !== 'string') {
+  const getdeadlineColor = (deadline?: string): string => {
+    if (!deadline || typeof deadline !== 'string') {
       return theme.text.secondary;
     }
     
-    const normalizedDate = dueDate.toLowerCase();
+    const normalizedDate = deadline.toLowerCase();
     return ['today', 'tomorrow'].includes(normalizedDate) 
       ? '#10b981' 
       : theme.text.secondary;
@@ -176,9 +176,9 @@ const TasksAssignedCard = () => {
             {/* Due Date with overdue styling */}
             <span 
               className={`text-sm font-medium ${task.isOverdue ? 'text-red-600 font-bold' : ''}`}
-              style={{ color: task.isOverdue ? '#dc2626' : getDueDateColor(task.dueDate) }}
+              style={{ color: task.isOverdue ? '#dc2626' : getdeadlineColor(task.deadline) }}
             >
-              {task.dueDate}
+              {task.deadline}
               {task.isOverdue && ' ⚠️'}
             </span>
 

@@ -24,7 +24,7 @@ const TaskCard = ({
   const { theme } = useTheme();
   const priorityConfig = getPriorityConfig(task.priority);
   const statusConfig = getStatusConfig(task.status);
-  const overdueDate = task.dueDate && isOverdue(task.dueDate);
+  const overdeadline = task.deadline && isOverdue(task.deadline);
 
   const handleCardClick = () => {
     actions?.onTaskClick?.(task);
@@ -120,14 +120,14 @@ const TaskCard = ({
         )}
 
         {/* Due Date */}
-        {task.dueDate && (
+        {task.deadline && (
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 flex-shrink-0" style={{ color: theme.text.secondary }} />
             <span 
-              className={`text-sm ${overdueDate ? 'text-red-600 font-medium' : ''}`}
-              style={{ color: overdueDate ? '#dc2626' : theme.text.primary }}
+              className={`text-sm ${overdeadline ? 'text-red-600 font-medium' : ''}`}
+              style={{ color: overdeadline ? '#dc2626' : theme.text.primary }}
             >
-              {formatDate(task.dueDate)}
+              {formatDate(task.deadline)}
             </span>
           </div>
         )}

@@ -61,12 +61,12 @@ const convertTasksToEvents = (tasks: Task[], getTaskColorsFunc: (task: Task) => 
           const day = String(date.getDate()).padStart(2, '0');
           startDate = `${year}-${month}-${day}`;
         }
-      } else if (task.dueDate) {
-        if (Array.isArray(task.dueDate) && task.dueDate.length >= 3) {
-          const [year, month, day] = task.dueDate.map(Number);
+      } else if (task.deadline) {
+        if (Array.isArray(task.deadline) && task.deadline.length >= 3) {
+          const [year, month, day] = task.deadline.map(Number);
           startDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        } else if (task.dueDate !== 'No deadline') {
-          const date = new Date(task.dueDate);
+        } else if (task.deadline !== 'No deadline') {
+          const date = new Date(task.deadline);
           const year = date.getFullYear();
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const day = String(date.getDate()).padStart(2, '0');
@@ -113,7 +113,7 @@ const convertTasksToEvents = (tasks: Task[], getTaskColorsFunc: (task: Task) => 
       
       // Check task status
       const isCompleted = task.completed || task.status === 'completed' || task.status === 'DONE';
-      const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !isCompleted;
+      const isOverdue = task.deadlineISO && task.deadlineISO < new Date() && !isCompleted;
       const isMultiDay = !!endDate && endDate !== startDate;
 
 
@@ -159,7 +159,7 @@ export const FullCalendarView = ({
   // Simple local color function (no backend dependency)
   const getTaskColors = (task: Task) => {
     const isCompleted = task.completed || task.status === 'completed' || task.status === 'DONE';
-    const isOverdue = task.dueDateISO && task.dueDateISO < new Date() && !isCompleted;
+    const isOverdue = task.deadlineISO && task.deadlineISO < new Date() && !isCompleted;
     
     // Priority: completed > overdue > status > priority > default
     if (isCompleted) {

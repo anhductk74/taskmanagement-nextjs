@@ -47,7 +47,7 @@ const DragOverlayCard = ({ task }: DragOverlayCardProps) => {
 
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
-          {task.dueDate && (
+          {task.deadline && (
             <span 
               className="px-2 py-1 rounded text-xs"
               style={{ 

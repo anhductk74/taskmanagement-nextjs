@@ -18,7 +18,7 @@ const mockProjects = [
     status: 'active',
     progress: 75,
     teamMembers: 8,
-    dueDate: '2024-02-15',
+    deadline: '2024-02-15',
     priority: 'high'
   },
   {
@@ -28,7 +28,7 @@ const mockProjects = [
     status: 'active',
     progress: 45,
     teamMembers: 12,
-    dueDate: '2024-03-30',
+    deadline: '2024-03-30',
     priority: 'high'
   },
   {
@@ -38,7 +38,7 @@ const mockProjects = [
     status: 'planning',
     progress: 15,
     teamMembers: 5,
-    dueDate: '2024-04-20',
+    deadline: '2024-04-20',
     priority: 'medium'
   },
   {
@@ -48,7 +48,7 @@ const mockProjects = [
     status: 'completed',
     progress: 100,
     teamMembers: 6,
-    dueDate: '2024-01-31',
+    deadline: '2024-01-31',
     priority: 'low'
   }
 ];
@@ -352,7 +352,7 @@ const ProjectsPage = ({ searchValue = "" }: ProjectsPageProps) => {
                       className="text-sm"
                       style={{ color: theme.text.primary }}
                     >
-                      {new Date(project.dueDate).toLocaleDateString()}
+                      {new Date(project.deadline).toLocaleDateString()}
                     </span>
                   </td>
                   <td className="py-4 px-6">

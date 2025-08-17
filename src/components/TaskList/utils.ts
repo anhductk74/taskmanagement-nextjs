@@ -26,31 +26,22 @@ export const PRIORITY_CONFIG = {
 
 // Status configuration
 export const STATUS_CONFIG = {
-  todo: {
+  TODO: {
     label: 'To Do',
     color: 'bg-gray-100 text-gray-800',
     order: 1,
   },
-  in_progress: {
+  IN_PROGRESS: {
     label: 'In Progress',
     color: 'bg-blue-100 text-blue-800',
     order: 2,
   },
-  review: {
-    label: 'Review',
-    color: 'bg-purple-100 text-purple-800',
-    order: 3,
-  },
-  done: {
+  DONE: {
     label: 'Done',
     color: 'bg-green-100 text-green-800',
     order: 4,
   },
-  cancelled: {
-    label: 'Cancelled',
-    color: 'bg-red-100 text-red-800',
-    order: 5,
-  },
+
 } as const;
 
 // Default table columns - matching the interface design
@@ -62,7 +53,7 @@ export const DEFAULT_COLUMNS = [
     sortable: true,
   },
   {
-    key: 'dueDate' as const,
+    key: 'deadline' as const,
     label: 'Due date',
     width: 'w-[120px]',
     sortable: true,
@@ -99,7 +90,7 @@ export const getPriorityConfig = (priority: TaskPriority) => {
 };
 
 export const getStatusConfig = (status: TaskStatus) => {
-  return STATUS_CONFIG[status] || STATUS_CONFIG.todo;
+  return STATUS_CONFIG[status] || STATUS_CONFIG.TODO;
 };
 
 export const formatDate = (dateString: string | Date): string => {
@@ -121,7 +112,7 @@ export const formatDate = (dateString: string | Date): string => {
 };
 
 export const formatTaskDate = (task: {
-  dueDate?: string | Date | null;
+  deadline?: string | Date | null;
   deadline?: string | Date | null;
   startDate?: string | Date | null;
   endDate?: string | Date | null;
@@ -137,9 +128,9 @@ export const formatTaskDate = (task: {
     
     // Validate dates
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-      // If enhanced dates are invalid, fall back to regular dueDate
-      if (task.dueDate) {
-        return formatDate(task.dueDate);
+      // If enhanced dates are invalid, fall back to regular deadline
+      if (task.deadline) {
+        return formatDate(task.deadline);
       }
       return '-';
     }
@@ -190,8 +181,8 @@ export const formatTaskDate = (task: {
     return result;
   }
   
-  // Fallback to regular deadline/dueDate formatting with consistent format
-  const fallbackDate = task.deadline || task.dueDate;
+  // Fallback to regular deadline/deadline formatting with consistent format
+  const fallbackDate = task.deadline || task.deadline;
   if (fallbackDate) {
     const date = new Date(fallbackDate);
     if (!isNaN(date.getTime())) {
@@ -298,11 +289,11 @@ export const groupTasksByAssignmentDate = (tasks: TaskListItem[]): TaskSection[]
     const startDate = new Date(task.startDate || task.createdAt);
     const daysSinceCreated = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (task.dueDate) {
-      const dueDate = new Date(task.dueDate);
+    if (task.deadline) {
+      const deadline = new Date(task.deadline);
       
       // Check for enhanced calendar dates
-      let effectiveDate = dueDate;
+      let effectiveDate = deadline;
       if (task.startDate) {
         const startDate = new Date(task.startDate);
         if (!isNaN(startDate.getTime())) {
@@ -359,9 +350,9 @@ export const sortTasks = (tasks: TaskListItem[], field: keyof TaskListItem, dire
     } else if (field === 'status') {
       aValue = STATUS_CONFIG[a.status as TaskStatus]?.order || 0;
       bValue = STATUS_CONFIG[b.status as TaskStatus]?.order || 0;
-    } else if (field === 'dueDate') {
-      aValue = a.dueDate ? new Date(a.dueDate).getTime() : 0;
-      bValue = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+    } else if (field === 'deadline') {
+      aValue = a.deadline ? new Date(a.deadline).getTime() : 0;
+      bValue = b.deadline ? new Date(b.deadline).getTime() : 0;
     } else {
       // Handle other field types safely
       const aFieldValue = a[field];
@@ -459,22 +450,22 @@ export const getStatusColor = (status: string): string => {
   }
 };
 
-export const getDueDateColor = (dueDate: string): string => {
-  if (!dueDate) return 'text-gray-500';
+export const getdeadlineColor = (deadline: string): string => {
+  if (!deadline) return 'text-gray-500';
   
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
   
-  if (dueDate.toLowerCase().includes('today')) {
+  if (deadline.toLowerCase().includes('today')) {
     return 'text-orange-600 font-medium';
   }
   
-  if (dueDate.toLowerCase().includes('tomorrow')) {
+  if (deadline.toLowerCase().includes('tomorrow')) {
     return 'text-yellow-600 font-medium';
   }
   
-  if (dueDate.toLowerCase().includes('overdue')) {
+  if (deadline.toLowerCase().includes('overdue')) {
     return 'text-red-600 font-medium';
   }
   

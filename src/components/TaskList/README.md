@@ -94,7 +94,7 @@ interface TaskListItem {
   name: string;
   description?: string;
   assignees: TaskAssignee[];
-  dueDate?: string;
+  deadline?: string;
   startDate?: string;
   endDate?: string;
   startTime?: string;

@@ -43,9 +43,9 @@ export function useProjectTaskActions(): TaskListActions {
     await updateTask(taskId, { assignedTo, assigneeAvatar: assignedTo.substring(0, 2).toUpperCase() });
   }, [updateTask]);
 
-  const handleTaskDueDateChange = useCallback(async (taskId: string, dueDate: string) => {
-    const dueDateISO = new Date(dueDate).toISOString();
-    await updateTask(taskId, { dueDate, dueDateISO });
+  const handleTaskdeadlineChange = useCallback(async (taskId: string, deadline: string) => {
+    const deadlineISO = new Date(deadline).toISOString();
+    await updateTask(taskId, { deadline, deadlineISO });
   }, [updateTask]);
 
   const handleBulkStatusChange = useCallback(async (taskIds: string[], status: string) => {
@@ -83,7 +83,7 @@ export function useProjectTaskActions(): TaskListActions {
     onTaskStatusChange: handleTaskStatusChange,
     onTaskPriorityChange: handleTaskPriorityChange,
     onTaskAssign: handleTaskAssign,
-    onTaskDueDateChange: handleTaskDueDateChange,
+    onTaskdeadlineChange: handleTaskdeadlineChange,
     onBulkStatusChange: handleBulkStatusChange,
     onBulkPriorityChange: handleBulkPriorityChange,
     onBulkAssign: handleBulkAssign,

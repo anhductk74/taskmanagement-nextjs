@@ -44,24 +44,24 @@ const MyTaskBoardPage = ({ searchValue = "" }: MyTaskBoardPageProps) => {
     });
 
     const doToday = taskListItems.filter(task => {
-      if (!task.dueDate) return false;
-      const dueDate = new Date(task.dueDate);
-      dueDate.setHours(0, 0, 0, 0);
-      return dueDate.getTime() === today.getTime();
+      if (!task.deadline) return false;
+      const deadline = new Date(task.deadline);
+      deadline.setHours(0, 0, 0, 0);
+      return deadline.getTime() === today.getTime();
     });
 
     const doNextWeek = taskListItems.filter(task => {
-      if (!task.dueDate) return false;
-      const dueDate = new Date(task.dueDate);
-      dueDate.setHours(0, 0, 0, 0);
-      return dueDate > today && dueDate <= nextWeek;
+      if (!task.deadline) return false;
+      const deadline = new Date(task.deadline);
+      deadline.setHours(0, 0, 0, 0);
+      return deadline > today && deadline <= nextWeek;
     });
 
     const doLater = taskListItems.filter(task => {
-      if (!task.dueDate) return true; // Tasks without due date go to "Do later"
-      const dueDate = new Date(task.dueDate);
-      dueDate.setHours(0, 0, 0, 0);
-      return dueDate > nextWeek;
+      if (!task.deadline) return true; // Tasks without due date go to "Do later"
+      const deadline = new Date(task.deadline);
+      deadline.setHours(0, 0, 0, 0);
+      return deadline > nextWeek;
     });
 
     return {
@@ -117,16 +117,16 @@ const MyTaskBoardPage = ({ searchValue = "" }: MyTaskBoardPageProps) => {
             
             switch (sectionId) {
               case 'do-today':
-                updates.dueDate = today.toISOString().split('T')[0];
+                updates.deadline = today.toISOString().split('T')[0];
                 break;
               case 'do-next-week':
-                updates.dueDate = nextWeek.toISOString().split('T')[0];
+                updates.deadline = nextWeek.toISOString().split('T')[0];
                 break;
               case 'do-later':
-                updates.dueDate = later.toISOString().split('T')[0];
+                updates.deadline = later.toISOString().split('T')[0];
                 break;
               case 'recently-assigned':
-                updates.dueDate = undefined; // Remove due date
+                updates.deadline = undefined; // Remove due date
                 break;
             }
             

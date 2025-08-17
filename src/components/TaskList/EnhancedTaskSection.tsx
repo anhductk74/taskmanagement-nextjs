@@ -38,7 +38,7 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
   const [isCollapsed, setIsCollapsed] = useState(section.collapsed || false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskName, setNewTaskName] = useState('');
-  const [newTaskDueDate, setNewTaskDueDate] = useState('');
+  const [newTaskdeadline, setNewTaskdeadline] = useState('');
   const [newTaskProject, setNewTaskProject] = useState('');
   const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>('TODO');
   const [isEnhancedCalendarOpen, setIsEnhancedCalendarOpen] = useState(false);
@@ -119,7 +119,7 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
       }
     }
 
-    setNewTaskDueDate(dateDisplay);
+    setNewTaskdeadline(dateDisplay);
     setEnhancedDateData({
       startDate: data.startDate,
       endDate: data.endDate,
@@ -131,23 +131,23 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
 
   const handleAddTask = async () => {
     if (newTaskName.trim()) {
-      let defaultDueDate = newTaskDueDate;
-      if (!defaultDueDate && !enhancedDateData.startDate) {
+      let defaultdeadline = newTaskdeadline;
+      if (!defaultdeadline && !enhancedDateData.startDate) {
         const today = new Date();
         const nextWeek = new Date(today);
         nextWeek.setDate(today.getDate() + 7);
 
         switch (section.id) {
           case 'do-today':
-            defaultDueDate = today.toISOString().split('T')[0];
+            defaultdeadline = today.toISOString().split('T')[0];
             break;
           case 'do-next-week':
-            defaultDueDate = nextWeek.toISOString().split('T')[0];
+            defaultdeadline = nextWeek.toISOString().split('T')[0];
             break;
           case 'do-later':
             const laterDate = new Date(today);
             laterDate.setDate(today.getDate() + 14);
-            defaultDueDate = laterDate.toISOString().split('T')[0];
+            defaultdeadline = laterDate.toISOString().split('T')[0];
             break;
         }
       }
@@ -158,8 +158,8 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
         description: '',
         status: newTaskStatus,
         priority: 'normal',
-        startDate: enhancedDateData.startDate || defaultDueDate || new Date().toISOString().split('T')[0],
-        deadline: enhancedDateData.endDate || defaultDueDate,
+        startDate: enhancedDateData.startDate || defaultdeadline || new Date().toISOString().split('T')[0],
+        deadline: enhancedDateData.endDate || defaultdeadline,
         creatorId: tokenPayload?.userId,
         assignedToIds: [],
         tags: [],
@@ -204,7 +204,7 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
 
     setIsAddingTask(false);
     setNewTaskName('');
-    setNewTaskDueDate('');
+    setNewTaskdeadline('');
     setNewTaskProject('');
     setNewTaskStatus('TODO');
     setEnhancedDateData({});
@@ -213,7 +213,7 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
   const handleCancelAdd = () => {
     setIsAddingTask(false);
     setNewTaskName('');
-    setNewTaskDueDate('');
+    setNewTaskdeadline('');
     setNewTaskProject('');
     setNewTaskStatus('TODO');
     setEnhancedDateData({});
@@ -333,7 +333,7 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
                       >
                         <Calendar className="w-3 h-3" />
                         <span className="truncate">
-                          {newTaskDueDate || 'Set date'}
+                          {newTaskdeadline || 'Set date'}
                         </span>
                       </button>
                     )}

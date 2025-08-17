@@ -45,7 +45,7 @@ export function useProjectBoardActions(): TaskListActions {
 
     onCreateTask: async (taskData?: string | { 
       name: string; 
-      dueDate?: string; 
+      deadline?: string; 
       startDate?: string;
       endDate?: string;
       startTime?: string;
@@ -74,7 +74,7 @@ export function useProjectBoardActions(): TaskListActions {
           priority: 'medium',
           status: taskData.status || 'todo',
           tags: [],
-          dueDate: taskData.dueDate,
+          deadline: taskData.deadline,
           startDate: taskData.startDate,
           endDate: taskData.endDate,
           startTime: taskData.startTime,

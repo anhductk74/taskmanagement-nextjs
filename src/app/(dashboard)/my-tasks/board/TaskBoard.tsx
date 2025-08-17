@@ -49,7 +49,7 @@ const TaskCard = ({ task }: { task: Task }) => (
       {task.assignee.map((assignee) => (
         <Avatar key={assignee} src={assignee} />
       ))}
-      {task.dueDate}
+      {task.deadline}
     </div>
   </div>
 );

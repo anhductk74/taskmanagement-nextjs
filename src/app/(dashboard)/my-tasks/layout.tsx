@@ -78,7 +78,7 @@ function MyTaskContent({ children }: { children: React.ReactNode }) {
                 className="text-sm px-3 py-1 inline-flex items-center whitespace-nowrap" 
                 style={{ color: theme.text.secondary }}
               >
-                No date ({tasks?.filter(t => !t.dueDateISO).length || 0})
+                No date ({tasks?.filter(t => !t.deadlineISO).length || 0})
               </span>
               
 

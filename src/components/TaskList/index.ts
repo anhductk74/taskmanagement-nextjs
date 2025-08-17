@@ -52,5 +52,5 @@ export {
   // Legacy compatibility functions
   getPriorityColor,
   getStatusColor,
-  getDueDateColor,
+  getdeadlineColor,
 } from './utils';

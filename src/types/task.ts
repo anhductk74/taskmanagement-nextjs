@@ -1,11 +1,11 @@
 // Task Domain Types - Clean Type Definitions
-
+import {TaskStatus} from '@/components/TaskList/types';
 // Backend Task interface (matches Spring Boot exactly)
 export interface BackendTask {
   id: number;
   title: string;
   description?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'TESTING' | 'BLOCKED' | 'REVIEW';
+  status: TaskStatus;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   deadline?: string; // LocalDate format: YYYY-MM-DD (optional)
   start_date?: string; // LocalDate format: YYYY-MM-DD (backend uses snake_case)
@@ -24,7 +24,7 @@ export interface MyTasksSummaryItem {
   id: number;
   title: string;
   description?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'TESTING' | 'BLOCKED' | 'REVIEW';
+  status: TaskStatus;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   deadline?: string; // Optional
   startDate: string; // REQUIRED for calendar display - camelCase to match backend
@@ -42,7 +42,7 @@ export interface MyTasksFullItem {
   id: number;
   title: string;
   description?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'TESTING' | 'BLOCKED' | 'REVIEW';
+  status: TaskStatus;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   deadline?: string;
   createdAt: string;
@@ -73,8 +73,8 @@ export interface Task {
   id: number;
   title: string;
   description?: string;
-  dueDate?: string;
-  dueDateISO?: Date;
+  deadline?: string;
+  deadlineISO?: Date;
   completed: boolean;
   priority: string;
   status: string;
@@ -112,8 +112,8 @@ export interface CreateTaskDTO {
   creatorId: number;
   assignedToIds?: number[];
   tags?: string[];
-  dueDate?: string;
-  dueDateISO?: Date;
+  deadline?: string;
+  deadlineISO?: Date;
 }
 
 export interface UpdateTaskDTO {
@@ -123,7 +123,7 @@ export interface UpdateTaskDTO {
   priority?: string;
   deadline?: string; // LocalDate format: YYYY-MM-DD
   startDate?: string; // LocalDate format: YYYY-MM-DD - for calendar operations
-  dueDate?: string; // LocalDate format: YYYY-MM-DD - legacy support
+  deadline?: string; // LocalDate format: YYYY-MM-DD - legacy support
   tags?: string[];
   assigneeId?: number;
   projectId?: number;
@@ -162,7 +162,7 @@ export interface TaskFilter {
   teamId?: number;
   search?: string;
   tags?: string[];
-  dueDate?: {
+  deadline?: {
     start?: string;
     end?: string;
   };
@@ -287,9 +287,6 @@ export const TASK_STATUSES: BackendTask['status'][] = [
   'TODO',
   'IN_PROGRESS', 
   'DONE',
-  'TESTING',
-  'BLOCKED',
-  'REVIEW'
 ];
 
 export const TASK_PRIORITIES: BackendTask['priority'][] = [
@@ -324,30 +321,6 @@ export const TASK_STATUS_CONFIG: Record<BackendTask['status'], TaskStatusInfo> =
     textColor: '#065F46',
     icon: '✅'
   },
-  'TESTING': {
-    value: 'TESTING',
-    label: 'Testing',
-    color: '#F59E0B',
-    bgColor: '#FEF3C7',
-    textColor: '#92400E',
-    icon: '🧪'
-  },
-  'BLOCKED': {
-    value: 'BLOCKED',
-    label: 'Blocked',
-    color: '#EF4444',
-    bgColor: '#FEE2E2',
-    textColor: '#991B1B',
-    icon: '🚫'
-  },
-  'REVIEW': {
-    value: 'REVIEW',
-    label: 'Review',
-    color: '#8B5CF6',
-    bgColor: '#EDE9FE',
-    textColor: '#5B21B6',
-    icon: '👀'
-  }
 };
 
 // Task priority display configuration

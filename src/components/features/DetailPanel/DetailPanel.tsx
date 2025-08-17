@@ -109,7 +109,7 @@ function TaskDetail({ data }: { data: TaskDetailData }) {
           Due Date
         </div>
         <div className="text-base" style={{ color: theme.text.primary }}>
-          {data.dueDate}
+          {data.deadline}
         </div>
       </div>
 

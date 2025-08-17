@@ -145,7 +145,7 @@ const TaskList = ({
     // Create enhanced task data
     const enhancedTaskData = {
       name: 'New Task',
-      dueDate: startDateFormatted,
+      deadline: startDateFormatted,
       startDate: startDateFormatted,
       endDate: endDateFormatted,
       startTime: data.startTime,

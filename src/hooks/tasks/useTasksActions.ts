@@ -18,9 +18,9 @@ export const useCreateTask = () => {
       let taskDate = now;
       let taskDateString = 'Today';
       
-      // Always use calendar click date (dueDateISO) - no string parsing needed
-      if (arg.dueDateISO) {
-        taskDate = arg.dueDateISO;
+      // Always use calendar click date (deadlineISO) - no string parsing needed
+      if (arg.deadlineISO) {
+        taskDate = arg.deadlineISO;
         taskDateString = `${taskDate.getFullYear()}-${String(taskDate.getMonth() + 1).padStart(2, '0')}-${String(taskDate.getDate()).padStart(2, '0')}`;
       }
       
@@ -28,8 +28,8 @@ export const useCreateTask = () => {
         id: optimisticId as any,
         title: arg.title,
         description: arg.description || '',
-        dueDate: taskDateString,
-        dueDateISO: taskDate,
+        deadline: taskDateString,
+        deadlineISO: taskDate,
         completed: false,
         priority: arg.priority || 'medium',
         status: arg.status || 'pending',

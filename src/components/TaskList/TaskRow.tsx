@@ -24,7 +24,7 @@ const TaskRow = ({
   const { theme } = useTheme();
   const priorityConfig = getPriorityConfig(task.priority);
   const statusConfig = getStatusConfig(task.status);
-  const overdueDate = task.dueDate && isOverdue(task.dueDate);
+  const overdeadline = task.deadline && isOverdue(task.deadline);
 
   const handleRowClick = () => {
     actions?.onTaskClick?.(task);
@@ -89,10 +89,10 @@ const TaskRow = ({
 
       {/* Due Date */}
       <td className="w-[120px] py-3 px-2">
-        {task.dueDate || task.startDate || task.endDate ? (
+        {task.deadline || task.startDate || task.endDate ? (
           <span 
-            className={`text-sm ${overdueDate ? 'text-red-600 font-medium' : ''}`}
-            style={{ color: overdueDate ? '#dc2626' : theme.text.primary }}
+            className={`text-sm ${overdeadline ? 'text-red-600 font-medium' : ''}`}
+            style={{ color: overdeadline ? '#dc2626' : theme.text.primary }}
           >
             {formatTaskDate(task)}
           </span>

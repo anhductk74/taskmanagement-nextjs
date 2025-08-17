@@ -51,13 +51,13 @@ const groupTasksByAssignmentDate = (tasks: TaskListItem[]): Record<string, TaskL
   };
 
   tasks.forEach(task => {
-    if (!task.dueDate) {
+    if (!task.deadline) {
       groups['recently-assigned'].push(task);
       return;
     }
 
-    const dueDate = new Date(task.dueDate);
-    const daysDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    const deadline = new Date(task.deadline);
+    const daysDiff = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
     if (daysDiff <= 1) {
       groups['do-today'].push(task);
@@ -80,7 +80,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'in_progress' as TaskStatus,
     priority: 'high' as TaskPriority,
     assignees: [{ id: 'sarah.wilson', name: 'Sarah Wilson', avatar: 'SW' }],
-    dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Today
+    deadline: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Today
     tags: ['design', 'frontend', 'ui'],
     project: projectName,
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
@@ -93,7 +93,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'todo' as TaskStatus,
     priority: 'medium' as TaskPriority,
     assignees: [{ id: 'john.doe', name: 'John Doe', avatar: 'JD' }],
-    dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Next week
+    deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Next week
     tags: ['backend', 'integration', 'api'],
     project: projectName,
     createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
@@ -106,7 +106,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'done' as TaskStatus,
     priority: 'high' as TaskPriority,
     assignees: [{ id: 'mike.chen', name: 'Mike Chen', avatar: 'MC' }],
-    dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Yesterday (completed)
+    deadline: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Yesterday (completed)
     tags: ['testing', 'quality', 'automation'],
     project: projectName,
     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -119,7 +119,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'in_progress' as TaskStatus,
     priority: 'low' as TaskPriority,
     assignees: [{ id: 'emma.davis', name: 'Emma Davis', avatar: 'ED' }],
-    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Later
+    deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Later
     tags: ['documentation', 'writing'],
     project: projectName,
     createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
@@ -144,7 +144,7 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'todo' as TaskStatus,
     priority: 'urgent' as TaskPriority,
     assignees: [{ id: 'lisa.park', name: 'Lisa Park', avatar: 'LP' }],
-    dueDate: new Date(Date.now() + 0 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Today
+    deadline: new Date(Date.now() + 0 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Today
     tags: ['security', 'audit', 'urgent'],
     project: projectName,
     createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
@@ -285,25 +285,25 @@ export function ProjectBoardProvider({ children }: ProjectBoardProviderProps) {
       const later = new Date(today);
       later.setDate(today.getDate() + 14);
 
-      let newDueDate: string | undefined;
+      let newdeadline: string | undefined;
       
       switch (sectionId) {
         case 'do-today':
-          newDueDate = today.toISOString().split('T')[0];
+          newdeadline = today.toISOString().split('T')[0];
           break;
         case 'do-next-week':
-          newDueDate = nextWeek.toISOString().split('T')[0];
+          newdeadline = nextWeek.toISOString().split('T')[0];
           break;
         case 'do-later':
-          newDueDate = later.toISOString().split('T')[0];
+          newdeadline = later.toISOString().split('T')[0];
           break;
         case 'recently-assigned':
-          newDueDate = undefined; // Remove due date
+          newdeadline = undefined; // Remove due date
           break;
       }
 
       // Update task with new due date
-      await updateTask(taskId, { dueDate: newDueDate });
+      await updateTask(taskId, { deadline: newdeadline });
       
     } catch (err) {
       setError('Failed to move task');

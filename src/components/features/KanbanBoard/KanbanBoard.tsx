@@ -187,24 +187,24 @@ const KanbanBoard = ({
     const later = new Date(today);
     later.setDate(today.getDate() + 14);
 
-    let dueDate: string | undefined;
+    let deadline: string | undefined;
     
     switch (newTaskSection) {
       case 'do-today':
-        dueDate = today.toISOString().split('T')[0];
+        deadline = today.toISOString().split('T')[0];
         break;
       case 'do-next-week':
-        dueDate = nextWeek.toISOString().split('T')[0];
+        deadline = nextWeek.toISOString().split('T')[0];
         break;
       case 'do-later':
-        dueDate = later.toISOString().split('T')[0];
+        deadline = later.toISOString().split('T')[0];
         break;
       // 'recently-assigned' gets no default due date
     }
 
     const taskData = {
       name: newTaskName.trim(),
-      dueDate,
+      deadline,
       project: '',
       status: 'todo' as const
     };
@@ -238,10 +238,10 @@ const KanbanBoard = ({
     const endDateFormatted = parseDate(data.endDate);
     
     // Determine appropriate due date and status based on section
-    let defaultDueDate = startDateFormatted;
+    let defaultdeadline = startDateFormatted;
     let taskStatus: TaskStatus = 'todo';
     
-    if (!defaultDueDate) {
+    if (!defaultdeadline) {
       const today = new Date();
       const tomorrow = new Date(today);
       tomorrow.setDate(today.getDate() + 1);
@@ -252,13 +252,13 @@ const KanbanBoard = ({
 
       switch (newTaskSection) {
         case 'do-today':
-          defaultDueDate = today.toISOString().split('T')[0];
+          defaultdeadline = today.toISOString().split('T')[0];
           break;
         case 'do-next-week':
-          defaultDueDate = nextWeek.toISOString().split('T')[0];
+          defaultdeadline = nextWeek.toISOString().split('T')[0];
           break;
         case 'do-later':
-          defaultDueDate = later.toISOString().split('T')[0];
+          defaultdeadline = later.toISOString().split('T')[0];
           break;
         // 'recently-assigned' gets no default due date
       }
@@ -267,7 +267,7 @@ const KanbanBoard = ({
     // Create enhanced task data
     const enhancedTaskData = {
       name: 'New Task',
-      dueDate: defaultDueDate || undefined,
+      deadline: defaultdeadline || undefined,
       startDate: startDateFormatted || undefined,
       endDate: endDateFormatted || undefined,
       startTime: data.startTime,

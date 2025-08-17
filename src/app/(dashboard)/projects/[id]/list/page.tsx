@@ -74,7 +74,7 @@ function ProjectTaskListContent({ searchValue = "" }: ProjectListPageProps) {
               { key: 'status', label: 'Status', sortable: true, width: '120px' },
               { key: 'priority', label: 'Priority', sortable: true, width: '100px' },
               { key: 'assignees', label: 'Assignee', sortable: true, width: '140px' },
-              { key: 'dueDate', label: 'Due Date', sortable: true, width: '120px' },
+              { key: 'deadline', label: 'Due Date', sortable: true, width: '120px' },
               { key: 'tags', label: 'Tags', sortable: false, width: '200px' },
               { key: 'actions', label: 'Actions', sortable: false, width: '80px' },
             ]

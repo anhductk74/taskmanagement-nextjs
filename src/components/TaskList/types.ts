@@ -23,7 +23,7 @@ export interface TaskListItem {
   name: string;
   description?: string;
   assignees: TaskAssignee[];
-  dueDate?: string;
+  deadline?: string;
   startDate?: string; // ISO date string for enhanced calendar
   endDate?: string; // ISO date string for enhanced calendar
   startTime?: string; // Time string like "10:00"
@@ -46,8 +46,8 @@ export interface TaskAssignee {
 }
 
 export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'REVIEW' | 'DONE' | 'CANCELLED';
-export type TaskGroupBy = 'status' | 'priority' | 'assignee' | 'project' | 'dueDate' | 'assignmentDate';
+export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+export type TaskGroupBy = 'status' | 'priority' | 'assignee' | 'project' | 'deadline' | 'assignmentDate';
 
 export interface TaskSection {
   id: string;
@@ -98,7 +98,7 @@ export interface TaskListActions {
 export interface NewTaskDataType {
   name: string;
   assignee: string[];
-  dueDate: string;
+  deadline: string;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   status: string;
 }
