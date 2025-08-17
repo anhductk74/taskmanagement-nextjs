@@ -16,10 +16,6 @@ import {
   Archive,
   Star,
   Clock,
-  CreditCard,
-  Building,
-  User,
-  Wrench,
 } from "lucide-react";
 
 export interface NavigationItem {
@@ -54,10 +50,10 @@ export interface NavigationConfig {
 const ICON_SIZE = 20;
 const ICON_CLASS = "text-gray-300";
 
-// Main navigation configuration - Role-based menu structure
+// Main navigation configuration
 export const navigationConfig: NavigationConfig = {
   sections: [
-    // Main section (always visible for all roles)
+    // Main section (no title, always visible)
     {
       id: "main",
       items: [
@@ -70,7 +66,7 @@ export const navigationConfig: NavigationConfig = {
         },
         {
           id: "my-tasks",
-          label: "My Task",
+          label: "My tasks",
           href: "/my-tasks/list",
           icon: <CheckSquare size={ICON_SIZE} className={ICON_CLASS} />,
           activePattern: "/my-tasks",
@@ -92,8 +88,8 @@ export const navigationConfig: NavigationConfig = {
         },
       ],
     },
-    
-    // Insights section (contains Goals, Reports, Portfolios)
+
+    // Insights section
     {
       id: "insights",
       title: "Insights",
@@ -101,15 +97,8 @@ export const navigationConfig: NavigationConfig = {
       defaultExpanded: true,
       items: [
         {
-          id: "goals",
-          label: "Goals",
-          href: "/goals",
-          icon: <Target size={ICON_SIZE} className={ICON_CLASS} />,
-          activePattern: "/goals",
-        },
-        {
-          id: "reports",
-          label: "Reports",
+          id: "reporting",
+          label: "Reporting",
           href: "/reporting",
           icon: <BarChart3 size={ICON_SIZE} className={ICON_CLASS} />,
           activePattern: "/reporting",
@@ -121,49 +110,162 @@ export const navigationConfig: NavigationConfig = {
           icon: <Briefcase size={ICON_SIZE} className={ICON_CLASS} />,
           activePattern: "/portfolios",
         },
+        {
+          id: "goals",
+          label: "Goals",
+          href: "/goals",
+          icon: <Target size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/goals",
+        },
       ],
     },
 
-    // Projects section (contains actual projects - scope varies by role)
+    // Projects section
     {
       id: "projects",
       title: "Projects",
       collapsible: true,
       defaultExpanded: true,
       items: [
-        // Dummy item to prevent section from being filtered out
-        // Real projects will be loaded dynamically by PrivateSidebar
         {
-          id: "projects-placeholder",
-          label: "Loading...",
-          href: "/projects",
+          id: "cross-functional",
+          label: "Cross-functional project plan",
+          href: "/project/list",
           icon: <Folder size={ICON_SIZE} className={ICON_CLASS} />,
-          activePattern: "/projects",
+          activePattern: "/project",
+        },
+        {
+          id: "marketing",
+          label: "Marketing Campaign",
+          href: "/projects/marketing",
+          icon: <Folder size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/projects/marketing",
+        },
+        {
+          id: "website-redesign",
+          label: "Website Redesign",
+          href: "/projects/website",
+          icon: <Folder size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/projects/website",
         },
       ],
     },
 
-    // Management Center section (unified management interface)
+    // Team & Collaboration section
     {
-      id: "management",
-      title: "Management",
+      id: "collaboration",
+      title: "Team & Collaboration",
       collapsible: true,
-      defaultExpanded: true,
+      defaultExpanded: false,
       items: [
         {
-          id: "management-center",
-          label: "Management Center",
-          href: "/manager",
-          icon: <Settings size={ICON_SIZE} className={ICON_CLASS} />,
-          activePattern: "/manager",
-          permission: "management_center", // Custom permission for management center access
+
+          id: "projects-management",
+          label: "Project Management",
+          href: "/projects-management",
+          icon: <Folder size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/projects-management",
+          permission: "project_management", // Custom permission for projects management (Owner only)
+        },
+        {
+          id: "team-management",
+          label: "Team Management",
+          href: "/team-management",
+          icon: <Users size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/team-management",
+          permission: "admin", // Only admins can see this
+        },
+        {
+          id: "members",
+          label: "Members",
+          href: "/owner/Members",
+          icon: <Users size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/owner/Members",
+          permission: "admin", // Only admins can see this
+        },
+        {
+          id: "messages",
+          label: "Messages",
+          href: "/messages",
+          icon: <MessageSquare size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/messages",
+          badge: {
+            count: 3,
+            color: "success",
+          },
+        },
+        {
+          id: "calendar",
+          label: "Calendar",
+          href: "/calendar",
+          icon: <Calendar size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/calendar",
         },
       ],
     },
 
+    // Tools section
+    {
+      id: "tools",
+      title: "Tools",
+      collapsible: true,
+      defaultExpanded: false,
+      items: [
+        {
+          id: "search",
+          label: "Search",
+          href: "/search",
+          icon: <Search size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/search",
+        },
+        {
+          id: "archive",
+          label: "Archive",
+          href: "/archive",
+          icon: <Archive size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/archive",
+        },
+        {
+          id: "starred",
+          label: "Starred",
+          href: "/starred",
+          icon: <Star size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/starred",
+        },
+        {
+          id: "recent",
+          label: "Recent",
+          href: "/recent",
+          icon: <Clock size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/recent",
+        },
+      ],
+    },
 
-
-
+    // Settings section
+    {
+      id: "settings",
+      title: "Settings",
+      collapsible: true,
+      defaultExpanded: false,
+      items: [
+        {
+          id: "workspace-settings",
+          label: "Workspace Settings",
+          href: "/settings/workspace",
+          icon: <Settings size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/settings",
+          permission: "admin",
+        },
+        {
+          id: "notifications",
+          label: "Notifications",
+          href: "/settings/notifications",
+          icon: <Bell size={ICON_SIZE} className={ICON_CLASS} />,
+          activePattern: "/settings/notifications",
+        },
+      ],
+    },
   ],
 };
 
@@ -199,13 +301,9 @@ export const getVisibleSections = (userPermissions: string[] = []): NavigationSe
     .filter(section => !section.permission || userPermissions.includes(section.permission))
     .map(section => ({
       ...section,
-      items: section.items.filter(item => {
-        // If no permission required, show item
-        if (!item.permission) return true;
-        
-        // Check if user has the required permission
-        return userPermissions.includes(item.permission);
-      }),
+      items: section.items.filter(item =>
+        !item.permission || userPermissions.includes(item.permission)
+      ),
     }))
     .filter(section => section.items.length > 0);
 };
@@ -214,7 +312,7 @@ export const getVisibleSections = (userPermissions: string[] = []): NavigationSe
 export const badgeColors = {
   default: "bg-gray-600 text-gray-300",
   primary: "bg-blue-600 text-white",
-  success: "bg-green-600 text-white", 
+  success: "bg-green-600 text-white",
   warning: "bg-yellow-600 text-white",
   error: "bg-red-600 text-white",
 };

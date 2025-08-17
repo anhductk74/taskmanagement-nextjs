@@ -27,6 +27,7 @@ import { GrProjects } from "react-icons/gr";
 import { Users } from 'lucide-react';
 
 export function useSidebarNavigation() {
+  
   // Get RBAC data and contexts
   const rbac = useRBAC();
   const { projects } = useProjectsContext();
@@ -54,7 +55,7 @@ export function useSidebarNavigation() {
               return {
                 ...item,
                 badge: {
-                  count: taskStats?.byStatus?.pending || 0,
+                  count: taskStats?.byStatus?.TO_DO || 0,
                   color: "default" as const,
                 }
               };

@@ -4,7 +4,12 @@ import React, { useState } from 'react';
 import { X, Calendar, User, CheckCircle, Plus, MessageCircle, Paperclip, MoreHorizontal } from 'lucide-react';
 import { useTheme } from '@/layouts/hooks/useTheme';
 import { TaskListItem, TaskStatus, TaskPriority } from '@/components/TaskList/types';
+<<<<<<< HEAD
 
+=======
+import DueDatePicker from '@/app/project/list/components/DueDatePicker';
+import { EnhancedCalendar } from '@/components/features/EnhancedCalendar';
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
 
 interface TaskDetailPanelProps {
   task: TaskListItem | null;
@@ -178,9 +183,9 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
         }}
       >
         {/* Header */}
-        <div
+        <div 
           className="flex items-center justify-between p-6 border-b"
-          style={{
+          style={{ 
             backgroundColor: theme.background.primary,
             borderColor: theme.border.default
           }}
@@ -209,26 +214,34 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
               </h2>
             )}
           </div>
-
+          
           <div className="flex items-center gap-2">
-            <button
-                className="p-2 rounded transition-colors text-secondary hover:bg-secondary"
+            <button 
+              className="p-2 rounded transition-colors"
+              style={{ 
+                color: theme.text.secondary,
+                ':hover': { backgroundColor: theme.background.secondary }
+              }}
             >
-              <MoreHorizontal className="w-4 h-4"/>
+              <MoreHorizontal className="w-4 h-4" />
             </button>
             <button
-                onClick={onClose}
-                className="p-2 rounded transition-colors text-secondary hover:bg-secondary"
+              onClick={onClose}
+              className="p-2 rounded transition-colors"
+              style={{ 
+                color: theme.text.secondary,
+                ':hover': { backgroundColor: theme.background.secondary }
+              }}
             >
-              <X className="w-4 h-4"/>
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-6 space-y-6">
-        {/* Task visibility notice */}
-          <div
+          {/* Task visibility notice */}
+          <div 
             className="flex items-start gap-3 p-4 rounded-lg"
             style={{ backgroundColor: theme.background.secondary }}
           >
@@ -252,19 +265,22 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           {/* Task Title */}
           <div>
             <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                onBlur={handleSave}
-                className="w-full text-2xl font-bold bg-transparent border-none outline-none resize-none placeholder:text-gray-400"
-                style={{color: theme.text.primary}}
-                placeholder="Task name"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={handleSave}
+              className="w-full text-2xl font-bold bg-transparent border-none outline-none resize-none"
+              style={{ 
+                color: theme.text.primary,
+                '::placeholder': { color: theme.text.secondary }
+              }}
+              placeholder="Task name"
             />
           </div>
 
           {/* Assignees */}
           <div className="space-y-2">
-            <label className="text-sm font-medium" style={{color: theme.text.secondary}}>
+            <label className="text-sm font-medium" style={{ color: theme.text.secondary }}>
               Assignees
             </label>
             <div className="flex items-center gap-3 flex-wrap">
@@ -401,37 +417,47 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
               Description
             </label>
             <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                onBlur={handleSave}
-                className="w-full h-24 bg-transparent border-none outline-none resize-none placeholder:text-gray-400"
-                style={{color: theme.text.primary}}
-                placeholder="What is this task about?"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              onBlur={handleSave}
+              className="w-full h-24 bg-transparent border-none outline-none resize-none"
+              style={{ 
+                color: theme.text.primary,
+                '::placeholder': { color: theme.text.secondary }
+              }}
+              placeholder="What is this task about?"
             />
           </div>
 
           {/* Comments */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
+<<<<<<< HEAD
               <div
                   className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                 {task?.assignees?.[0]?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'U'}
+=======
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                {task.assignees[0]?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'U'}
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
               </div>
               <input
-                  type="text"
-                  value={comment || ''}
-                  onChange={(e) => setComment(e.target.value)}
-                  className="flex-1 px-3 py-2 rounded border-none outline-none placeholder:text-gray-400"
-                  style={{
-                    backgroundColor: theme.background.secondary,
-                    color: theme.text.primary
-                  }}
-                  placeholder="Add a comment"
+                type="text"
+                value={comment || ''}
+                onChange={(e) => setComment(e.target.value)}
+                className="flex-1 px-3 py-2 rounded border-none outline-none"
+                style={{ 
+                  backgroundColor: theme.background.secondary,
+                  color: theme.text.primary,
+                  '::placeholder': { color: theme.text.secondary }
+                }}
+                placeholder="Add a comment"
               />
             </div>
           </div>
 
           {/* Tags */}
+<<<<<<< HEAD
           {task?.tags?.length && task.tags.length > 0 && (
               <div className="space-y-2">
                 <label className="text-sm font-medium" style={{color: theme.text.secondary}}>
@@ -439,6 +465,15 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                 </label>
                 <div className="flex items-center gap-2 flex-wrap">
                 {task.tags?.map((tag, index) => (
+=======
+          {task.tags && task.tags.length > 0 && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium" style={{ color: theme.text.secondary }}>
+                Tags
+              </label>
+              <div className="flex items-center gap-2 flex-wrap">
+                {task.tags.map((tag, index) => (
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
                   <span
                     key={index}
                     className="px-2 py-1 rounded text-xs"
@@ -483,6 +518,60 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           </div>
         </div>
 
+<<<<<<< HEAD
+=======
+        {/* Enhanced Calendar Modal */}
+        <EnhancedCalendar
+          isOpen={isEnhancedCalendarOpen}
+          onClose={() => setIsEnhancedCalendarOpen(false)}
+          onSave={(data) => {
+            console.log('Calendar data saved:', data);
+            
+            // Convert dd/mm/yy format to proper date
+            const parseDate = (dateStr: string) => {
+              if (!dateStr) return null;
+              const [day, month, year] = dateStr.split('/');
+              return `20${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            };
+            
+            const startDateFormatted = parseDate(data.startDate);
+            const endDateFormatted = parseDate(data.endDate);
+            
+            // Update local state immediately for UI sync
+            if (startDateFormatted) setStartDate(new Date(startDateFormatted));
+            if (endDateFormatted) setEndDate(new Date(endDateFormatted));
+            
+            // Update time state if provided
+            if (data.startTime) {
+              setStartTime(data.startTime);
+              setHasStartTime(true);
+            }
+            if (data.endTime) {
+              setEndTime(data.endTime);
+              setHasEndTime(true);
+            }
+            
+            // Save to task data with complete sync
+            if (onSave) {
+              console.log('TaskDetailPanel saving:', {
+                dueDate: endDateFormatted || startDateFormatted, // dueDate should be end date
+                startDate: startDateFormatted,
+                endDate: endDateFormatted,
+              });
+              
+              onSave(task.id, { 
+                dueDate: endDateFormatted || startDateFormatted, // ✅ Fix: dueDate = end date
+                startDate: startDateFormatted,
+                endDate: endDateFormatted,
+                startTime: data.startTime || startTime,
+                endTime: data.endTime || endTime,
+                hasStartTime: !!(data.startTime || startTime),
+                hasEndTime: !!(data.endTime || endTime)
+              });
+            }
+          }}
+        />
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
       </div>
     </div>
   );

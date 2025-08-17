@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+<<<<<<< HEAD
 /* Base styles and theme variables */
 :root {
   /* Default to dark to avoid white flash before hydration */
@@ -53,6 +54,37 @@ body {
 /* Ensure main content inherits dark background */
 main {
   background-color: var(--color-background-primary) !important;
+=======
+
+/* Base styles and theme variables */
+:root {
+  --background: white;
+  --text-primary: #213547;
+  --text-secondary: #64748b;
+}
+
+:root[class="dark"] {
+  --background: #0f172a;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+}
+
+/* Prevent elastic/bounce scrolling and overscroll behavior */
+html, body {
+  overscroll-behavior: none !important;
+  overscroll-behavior-x: none !important;
+  overscroll-behavior-y: none !important;
+  
+  /* Prevent pull-to-refresh and elastic scrolling on iOS/macOS */
+  -webkit-overflow-scrolling: touch !important;
+  overflow-anchor: none !important;
+  
+  /* Theme-aware background and text colors */
+  background-color: var(--background) !important;
+  color: var(--text-primary) !important;
+  min-height: 100vh !important;
+  height: 100% !important;
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
 }
 
 @layer utilities {

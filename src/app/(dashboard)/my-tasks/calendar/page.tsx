@@ -55,7 +55,105 @@ const MyTaskCalendarPage = ({
     searchValue
   });
 
+<<<<<<< HEAD
   // Calendar-specific event handlers using shared actions
+=======
+  // Filter tasks based on search
+  const filteredTasks = React.useMemo(() => {
+    if (!searchValue.trim()) return taskManagement.tasks;
+    return taskManagement.tasks.filter(task => 
+      task.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+      task.description?.toLowerCase().includes(searchValue.toLowerCase()) ||
+      task.project?.toLowerCase().includes(searchValue.toLowerCase())
+    );
+  }, [taskManagement.tasks, searchValue]);
+
+  // Convert filtered tasks to FullCalendar events
+  const calendarEvents = convertToFullCalendarEvents(filteredTasks);
+  console.log('Calendar events recalculated:', calendarEvents.length, 'tasks');
+
+  // Task detail panel logic
+  const handleTaskSave = (taskId: string, updates: Partial<TaskListItem>) => {
+    console.log('Calendar handleTaskSave called:', taskId, updates);
+    taskManagement.updateTask(taskId, updates);
+    
+    // Force calendar re-render by updating currentDate (triggers key change)
+    setTimeout(() => {
+      if (calendarRef.current) {
+        const calendarApi = calendarRef.current.getApi();
+        calendarApi.refetchEvents();
+        console.log('Calendar re-rendered after task update');
+      }
+    }, 100);
+  };
+
+  const handleTaskDelete = (taskId: string) => {
+    console.log('Calendar handleTaskDelete called:', taskId);
+    taskManagement.deleteTask(taskId);
+    
+    // Force calendar re-render
+    setTimeout(() => {
+      if (calendarRef.current) {
+        const calendarApi = calendarRef.current.getApi();
+        calendarApi.refetchEvents();
+        console.log('Calendar re-rendered after task delete');
+      }
+    }, 100);
+  };
+
+  // FullCalendar event handlers
+
+  const handleEventClick = (info: any) => {
+    const originalTask = info.event.extendedProps.originalTask;
+    if (originalTask) {
+      taskActions.onTaskClick?.(originalTask);
+    }
+  };
+
+  const handleDateClick = (info: any) => {
+    // Create new task for the selected date
+    const dateStr = info.dateStr;
+    console.log('Creating task for date:', dateStr);
+    
+    // Create single-day task by default (user can edit to extend duration)
+    const taskData = {
+      name: 'New Task',
+      dueDate: dateStr,
+      startDate: dateStr,
+      project: '',
+      status: 'todo' as const
+    };
+    
+    console.log('Task data being created:', taskData);
+    taskActions.onCreateTask?.(taskData);
+  };
+
+
+  const handleEventDrop = (info: any) => {
+    // Update task with new date
+    const taskId = info.event.id;
+    const newStart = info.event.start;
+    const dateStr = newStart.toISOString().split('T')[0];
+    
+    taskManagement.updateTask(taskId, {
+      dueDate: dateStr,
+      startDate: dateStr
+    });
+  };
+
+  const handleEventResize = (info: any) => {
+    // Update task end date when resized
+    const taskId = info.event.id;
+    const newEnd = info.event.end;
+    const endDateStr = newEnd ? newEnd.toISOString().split('T')[0] : null;
+    
+    if (endDateStr) {
+      taskManagement.updateTask(taskId, {
+        dueDate: endDateStr
+      });
+    }
+  };
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
 
   // Calendar navigation handlers
   const handlePrevious = () => {

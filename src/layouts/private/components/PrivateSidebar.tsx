@@ -17,10 +17,10 @@ import {
   useSidebarDisplay 
 } from "../hooks/useSidebarNavigation";
 
-// Components
 import SidebarSection from "./SidebarSection";
 import SidebarFooter from "./SidebarFooter";
 import SidebarNavigationItem from "./SidebarNavigationItem";
+
 
 // Constants
 import { SIDEBAR_CLASSES, NAV_SECTIONS } from "../constants/sidebarConstants";
@@ -46,6 +46,7 @@ export default function PrivateSidebar({
   const { navigationSections, rbac, checkItemActive } = useSidebarNavigation();
   const { expandedSections, toggleSection } = useSidebarState(navigationSections);
   const { sidebarWidth, showLabels } = useSidebarDisplay(isCollapsed);
+
 
   return (
     <>

@@ -1,10 +1,13 @@
 "use client";
 
 import React from 'react';
+import { taskKeys, useTaskStats } from '@/hooks/useTasks';
 import { CheckCircle, User, MoreHorizontal } from 'lucide-react';
 import { useTheme } from '@/layouts/hooks/useTheme';
 import { TaskListItem, TaskListActions } from './types';
+import useSWR, { mutate } from 'swr';
 import { getPriorityConfig, getStatusConfig, formatDate, formatTaskDate, isOverdue } from './utils';
+import { taskService } from '@/services/taskService';
 
 interface TaskRowProps {
   task: TaskListItem;
@@ -14,7 +17,12 @@ interface TaskRowProps {
   className?: string;
 }
 
+<<<<<<< HEAD
 const TaskRow = ({
+=======
+
+const TaskRow: React.FC<TaskRowProps> = ({
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
   task,
   actions,
   isSelected = false,
@@ -25,6 +33,7 @@ const TaskRow = ({
   const priorityConfig = getPriorityConfig(task.priority);
   const statusConfig = getStatusConfig(task.status);
   const overdueDate = task.dueDate && isOverdue(task.dueDate);
+  const { revalidate } = useTaskStats();
 
   const handleRowClick = () => {
     actions?.onTaskClick?.(task);
@@ -35,11 +44,22 @@ const TaskRow = ({
     onSelect?.(task.id);
   };
 
-  const handleStatusChange = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const nextStatus = task.status === 'done' ? 'todo' : 'done';
-    actions?.onTaskStatusChange?.(task.id, nextStatus);
-  };
+  //button change status 
+  const handleStatusChange = async (e: React.MouseEvent) => {
+  e.stopPropagation();
+  let nextStatus: TaskListItem["status"];
+  if (task.status === 'todo') {
+    nextStatus = 'in_progress';
+  } else if (task.status === 'in_progress') {
+    nextStatus = 'done';
+  } else {
+    nextStatus = 'todo';
+  }
+  if (actions?.onTaskStatusChange) {
+    await actions.onTaskStatusChange(task.id, nextStatus);
+    if (revalidate) await revalidate();
+  }
+};
 
   return (
     <tr

@@ -1,4 +1,3 @@
-// Login Page - NextAuth.js Integration
 'use client';
 
 import React from 'react';
@@ -13,6 +12,7 @@ export default function LoginPage() {
           <p className="text-muted-foreground mt-2">Sign in to your account</p>
         </div>
         <LoginForm />
+
       </div>
     </div>
   );

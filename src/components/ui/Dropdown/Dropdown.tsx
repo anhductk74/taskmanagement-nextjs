@@ -150,11 +150,16 @@ export function DropdownItem({
       onClick={onClick}
       disabled={disabled}
       className={cn(
+<<<<<<< HEAD
         "w-full flex items-center px-4 py-2 text-sm text-left",
         "text-gray-700 dark:text-gray-200",
         "hover:bg-gray-700 dark:hover:bg-gray-700/50",
         "hover:text-gray-900 dark:hover:text-white",
         "disabled:opacity-50 disabled:cursor-not-allowed transition-colors",
+=======
+
+        "w-full flex items-center px-4 py-2 text-sm text-left text-gray-200 hover:bg-gray-600/50 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors",
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
         className
       )}
     >
@@ -170,6 +175,7 @@ export interface DropdownSeparatorProps {
 
 export function DropdownSeparator({ className }: DropdownSeparatorProps) {
   return (
-    <div className={cn("my-2 mx-2 border-t border-gray-200 dark:border-gray-600", className)} />
+
+    <div className={cn("my-2 mx-2 border-t border-gray-600", className)} />
   );
 }

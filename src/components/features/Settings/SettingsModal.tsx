@@ -21,11 +21,11 @@ type SettingsTab = 'profile' | 'notifications' | 'email-forwarding' | 'account' 
 // SettingsModal Props
 interface SettingsModalProps {
   isOpen: boolean;
-  onClose: () => void;
+
+  onClose: () => void
   user: User;
   backdropColor?: 'black' | 'white';
   backdropOpacity?: number;
-  customBackdrop?: string;
 }
 
 // SettingsModal Component
@@ -34,9 +34,15 @@ const SettingsModal = ({
   onClose, 
   user, 
   backdropColor = 'white',
+<<<<<<< HEAD
   backdropOpacity = 0.8,
   customBackdrop
 }: SettingsModalProps) => {
+=======
+
+  backdropOpacity = 0.8 
+}) => {
+>>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
 

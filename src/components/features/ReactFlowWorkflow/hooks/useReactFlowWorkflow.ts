@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { useCallback, useState, useMemo, useEffect } from 'react';
+=======
+import { useCallback, useState, useMemo } from 'react';
+>>>>>>> origin/anhduc
 import { 
   useNodesState, 
   useEdgesState, 
@@ -9,8 +13,12 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   NodeChange,
+<<<<<<< HEAD
   EdgeChange,
   MarkerType
+=======
+  EdgeChange
+>>>>>>> origin/anhduc
 } from 'reactflow';
 import { TaskNode, DependencyEdge, WorkflowTask, WorkflowSection, DependencyType } from '../types';
 import { layoutNodes } from '../utils/layoutUtils';
@@ -68,12 +76,21 @@ export const useReactFlowWorkflow = ({
   }, [tasks, sections, selectedNodeId, connectingFrom, onTaskClick, onTaskUpdate, initialLayout]);
 
   // Convert dependencies to React Flow edges
+<<<<<<< HEAD
   const initialEdges: Edge[] = useMemo(() => {
     const edges: Edge[] = [];
     
     tasks.forEach(task => {
       task.dependencies?.forEach(depId => {
         const edge: Edge = {
+=======
+  const initialEdges: DependencyEdge[] = useMemo(() => {
+    const edges: DependencyEdge[] = [];
+    
+    tasks.forEach(task => {
+      task.dependencies?.forEach(depId => {
+        edges.push({
+>>>>>>> origin/anhduc
           id: `${depId}-${task.id}`,
           source: depId,
           target: task.id,
@@ -84,6 +101,7 @@ export const useReactFlowWorkflow = ({
             strokeWidth: 2
           },
           markerEnd: {
+<<<<<<< HEAD
             type: MarkerType.ArrowClosed,
             color: '#6B7280'
           },
@@ -94,6 +112,17 @@ export const useReactFlowWorkflow = ({
           }
         };
         edges.push(edge);
+=======
+            type: 'arrowclosed',
+            color: '#6B7280'
+          },
+          data: {
+            dependencyType: 'finish-to-start',
+            onEdgeUpdate: handleEdgeUpdate,
+            onEdgeDelete: handleEdgeDelete
+          }
+        } as DependencyEdge);
+>>>>>>> origin/anhduc
       });
     });
     
@@ -105,6 +134,7 @@ export const useReactFlowWorkflow = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   // Update nodes when external data changes
+<<<<<<< HEAD
   useEffect(() => {
     setNodes(initialNodes);
   }, [initialNodes, setNodes]);
@@ -112,6 +142,15 @@ export const useReactFlowWorkflow = ({
   useEffect(() => {
     setEdges(initialEdges);
   }, [initialEdges, setEdges]);
+=======
+  useState(() => {
+    setNodes(initialNodes);
+  });
+
+  useState(() => {
+    setEdges(initialEdges);
+  });
+>>>>>>> origin/anhduc
 
   // Handle new connections
   const onConnect = useCallback((connection: Connection) => {
@@ -136,10 +175,16 @@ export const useReactFlowWorkflow = ({
       return;
     }
 
+<<<<<<< HEAD
     const newEdge: Edge = {
       id: `${connection.source}-${connection.target}`,
       source: connection.source!,
       target: connection.target!,
+=======
+    const newEdge: DependencyEdge = {
+      ...connection,
+      id: `${connection.source}-${connection.target}`,
+>>>>>>> origin/anhduc
       type: 'dependencyEdge',
       animated: true,
       style: { 
@@ -147,6 +192,7 @@ export const useReactFlowWorkflow = ({
         strokeWidth: 2
       },
       markerEnd: {
+<<<<<<< HEAD
         type: MarkerType.ArrowClosed,
         color: '#3B82F6'
       },
@@ -156,6 +202,17 @@ export const useReactFlowWorkflow = ({
         onEdgeDelete: handleEdgeDelete
       }
     };
+=======
+        type: 'arrowclosed',
+        color: '#3B82F6'
+      },
+      data: {
+        dependencyType: 'finish-to-start',
+        onEdgeUpdate: handleEdgeUpdate,
+        onEdgeDelete: handleEdgeDelete
+      }
+    } as DependencyEdge;
+>>>>>>> origin/anhduc
 
     setEdges(eds => addEdge(newEdge, eds));
     
@@ -208,7 +265,11 @@ export const useReactFlowWorkflow = ({
   }, []);
 
   // Handle edge updates
+<<<<<<< HEAD
   function handleEdgeUpdate(edgeId: string, updates: Partial<Edge>) {
+=======
+  function handleEdgeUpdate(edgeId: string, updates: Partial<DependencyEdge>) {
+>>>>>>> origin/anhduc
     setEdges(eds => eds.map(edge => 
       edge.id === edgeId ? { ...edge, ...updates } : edge
     ));
