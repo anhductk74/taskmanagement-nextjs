@@ -2,13 +2,13 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useProject } from '../../components/DynamicProjectProvider';
+import TeamMembers from '@/app/(dashboard)/teams/components/TeamMembers';
 
 interface TeamMember {
   id: string;
-  name: string;
   role: string;
-  avatar: string;
-  email?: string;
+  avatar?: string;
+  email: string;
 }
 
 interface Goal {
@@ -17,14 +17,14 @@ interface Goal {
   description?: string;
   progress: number;
   dueDate?: Date;
-  status: 'not_started' | 'in_progress' | 'completed';
+  status:'PLANNED' | 'IN_PROGRESS' | 'AT_RISK' | 'COMPLETED' | 'CANCELLED' | 'BLOCKED';
 }
 
 interface Portfolio {
   id: string;
   name: string;
   color: string;
-  status: 'on_track' | 'at_risk' | 'off_track';
+  status: 'PLANNED' | 'IN_PROGRESS' | 'AT_RISK' | 'COMPLETED' | 'CANCELLED' | 'BLOCKED';
   owner: TeamMember;
 }
 
@@ -35,7 +35,7 @@ interface StatusUpdate {
   description: string;
   author: TeamMember;
   timestamp: Date;
-  status?: 'on_track' | 'at_risk' | 'off_track';
+  status?: 'PLANNED' | 'IN_PROGRESS' | 'AT_RISK' | 'COMPLETED' | 'CANCELLED' | 'BLOCKED';
 }
 
 interface ProjectOverviewData {
@@ -44,7 +44,7 @@ interface ProjectOverviewData {
   goals: Goal[];
   portfolios: Portfolio[];
   statusUpdates: StatusUpdate[];
-  projectStatus: 'on_track' | 'at_risk' | 'off_track';
+  projectStatus: 'PLANNED' | 'IN_PROGRESS' | 'AT_RISK' | 'COMPLETED' | 'CANCELLED' | 'BLOCKED';
 }
 
 interface ProjectOverviewContextValue {
@@ -59,7 +59,7 @@ interface ProjectOverviewContextValue {
   addGoal: (goal: Omit<Goal, 'id'>) => Promise<void>;
   updateGoal: (goalId: string, updates: Partial<Goal>) => Promise<void>;
   addStatusUpdate: (update: Omit<StatusUpdate, 'id' | 'timestamp'>) => Promise<void>;
-  updateProjectStatus: (status: 'on_track' | 'at_risk' | 'off_track') => Promise<void>;
+  updateProjectStatus: (status: 'IN_PROGRESS' | 'AT_RISK' | 'PLANNED' | 'COMPLETED' | 'BLOCKED' | 'CANCELLED') => Promise<void>;
 }
 
 const ProjectOverviewContext = createContext<ProjectOverviewContextValue | undefined>(undefined);
@@ -69,95 +69,62 @@ interface ProjectOverviewProviderProps {
 }
 
 // Mock data
-const mockData: ProjectOverviewData = {
-  description: "This is a sample projects description",
-  projectStatus: 'on_track',
-  members: [
-    {
-      id: '1',
-      name: 'Vân Lê',
-      role: 'Project owner',
-      avatar: 'VL',
-      email: 'van.le@company.com'
-    }
-  ],
-  goals: [
-    {
-      id: '1',
-      title: 'Complete projects setup',
-      description: 'Set up projects infrastructure and team',
-      progress: 100,
-      status: 'completed'
-    }
-  ],
-  portfolios: [
-    {
-      id: '1',
-      name: 'My first portfolio',
-      color: '#8b5cf6',
-      status: 'on_track',
-      owner: {
-        id: '1',
-        name: 'Vân Lê',
-        role: 'Portfolio owner',
-        avatar: 'VL'
-      }
-    }
-  ],
-  statusUpdates: [
-    {
-      id: '1',
-      type: 'status_update',
-      title: 'This projects is kicked off!',
-      description: 'This is a sample projects status update in Asana. Use status updates to communicate the progress of your projects with your teammates.',
-      author: {
-        id: '1',
-        name: 'Vân Lê',
-        role: 'Project owner',
-        avatar: 'VL'
-      },
-      timestamp: new Date(Date.now() - 60000), // 1 minute ago
-      status: 'on_track'
-    },
-    {
-      id: '2',
-      type: 'activity',
-      title: 'My workspace team joined',
-      description: 'Team members were added to the projects',
-      author: {
-        id: '1',
-        name: 'Vân Lê',
-        role: 'Project owner',
-        avatar: 'VL'
-      },
-      timestamp: new Date(Date.now() - 240000), // 4 minutes ago
-    }
-  ]
-};
 
 export function ProjectOverviewProvider({ children }: ProjectOverviewProviderProps) {
   const { project } = useProject();
-  const [data, setData] = useState<ProjectOverviewData>(mockData);
-  const [loading, setLoading] = useState(false);
+  console.log('ProjectOverviewProvider project:', project);
+  const [data, setData] = useState<ProjectOverviewData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Update description based on projects data
   useEffect(() => {
-    if (project) {
-      setData(prev => ({
-        ...prev,
-        description: project.description || prev.description
-      }));
-    }
+    const fetchOverviewData = async () => {
+      if (!project) return;
+      setLoading(true);
+      try {
+        setData({
+          description: project.description || "",
+          projectStatus: (project.status as any) || "PLANNED",
+          members: [
+            {
+              id: project.pmEmail || "unknown",
+              role: project.role || "Member",
+              avatar: project.avatarPm || "",
+              email: project.pmEmail || "",
+            }
+          ],
+          goals: [],
+          portfolios: [],
+          statusUpdates: [],
+        });
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch overview data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOverviewData();
   }, [project]);
 
   // Actions
   const updateDescription = async (description: string) => {
     setLoading(true);
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
-      setData(prev => ({ ...prev, description }));
+      setData(prev => {
+        if (!prev) {
+          return {
+            description,
+            projectStatus: "PLANNED",
+            members: [],
+            goals: [],
+            portfolios: [],
+            statusUpdates: [],
+          };
+        }
+        return { ...prev, description };
+      });
     } catch (err) {
       setError('Failed to update description');
     } finally {
@@ -173,10 +140,19 @@ export function ProjectOverviewProvider({ children }: ProjectOverviewProviderPro
         ...member,
         id: Date.now().toString()
       };
-      setData(prev => ({
-        ...prev,
-        members: [...prev.members, newMember]
-      }));
+      setData(prev => {
+        if (!prev) {
+          return {
+            description: "",
+            projectStatus: "PLANNED",
+            members: [newMember],
+            goals: [],
+            portfolios: [],
+            statusUpdates: [],
+          };
+        }
+        return { ...prev, members: [...prev.members, newMember] };
+      });
     } catch (err) {
       setError('Failed to add member');
     } finally {
@@ -188,10 +164,19 @@ export function ProjectOverviewProvider({ children }: ProjectOverviewProviderPro
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 300));
-      setData(prev => ({
-        ...prev,
-        members: prev.members.filter(m => m.id !== memberId)
-      }));
+      setData(prev => {
+        if (!prev) {
+          return {
+            description: "",
+            projectStatus: "PLANNED",
+            members: [],
+            goals: [],
+            portfolios: [],
+            statusUpdates: [],
+          };
+        }
+        return { ...prev, members: prev.members.filter(m => m.id !== memberId) };
+      });
     } catch (err) {
       setError('Failed to remove member');
     } finally {
@@ -207,10 +192,19 @@ export function ProjectOverviewProvider({ children }: ProjectOverviewProviderPro
         ...goal,
         id: Date.now().toString()
       };
-      setData(prev => ({
-        ...prev,
-        goals: [...prev.goals, newGoal]
-      }));
+      setData(prev => {
+        if (!prev) {
+          return {
+            description: "",
+            projectStatus: "PLANNED",
+            members: [],
+            goals: [newGoal],
+            portfolios: [],
+            statusUpdates: [],
+          };
+        }
+        return { ...prev, goals: [...prev.goals, newGoal] };
+      });
     } catch (err) {
       setError('Failed to add goal');
     } finally {
@@ -222,12 +216,24 @@ export function ProjectOverviewProvider({ children }: ProjectOverviewProviderPro
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 300));
-      setData(prev => ({
-        ...prev,
-        goals: prev.goals.map(goal =>
-          goal.id === goalId ? { ...goal, ...updates } : goal
-        )
-      }));
+      setData(prev => {
+        if (!prev) {
+          return {
+            description: "",
+            projectStatus: "PLANNED",
+            members: [],
+            goals: [],
+            portfolios: [],
+            statusUpdates: [],
+          };
+        }
+        return {
+          ...prev,
+          goals: prev.goals.map(goal =>
+            goal.id === goalId ? { ...goal, ...updates } : goal
+          )
+        };
+      });
     } catch (err) {
       setError('Failed to update goal');
     } finally {
@@ -244,10 +250,19 @@ export function ProjectOverviewProvider({ children }: ProjectOverviewProviderPro
         id: Date.now().toString(),
         timestamp: new Date()
       };
-      setData(prev => ({
-        ...prev,
-        statusUpdates: [newUpdate, ...prev.statusUpdates]
-      }));
+      setData(prev => {
+        if (!prev) {
+          return {
+            description: "",
+            projectStatus: "PLANNED",
+            members: [],
+            goals: [],
+            portfolios: [],
+            statusUpdates: [newUpdate],
+          };
+        }
+        return { ...prev, statusUpdates: [newUpdate, ...prev.statusUpdates] };
+      });
     } catch (err) {
       setError('Failed to add status update');
     } finally {
@@ -255,11 +270,23 @@ export function ProjectOverviewProvider({ children }: ProjectOverviewProviderPro
     }
   };
 
-  const updateProjectStatus = async (status: 'on_track' | 'at_risk' | 'off_track') => {
+  const updateProjectStatus = async (status: 'PLANNED' | 'IN_PROGRESS' | 'AT_RISK' | 'COMPLETED' | 'CANCELLED' | 'BLOCKED') => {
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 300));
-      setData(prev => ({ ...prev, projectStatus: status }));
+      setData(prev => {
+        if (!prev) {
+          return {
+            description: "",
+            projectStatus: status,
+            members: [],
+            goals: [],
+            portfolios: [],
+            statusUpdates: [],
+          };
+        }
+        return { ...prev, projectStatus: status };
+      });
     } catch (err) {
       setError('Failed to update projects status');
     } finally {
@@ -268,7 +295,14 @@ export function ProjectOverviewProvider({ children }: ProjectOverviewProviderPro
   };
 
   const value: ProjectOverviewContextValue = {
-    data,
+    data: data || {
+      description: "",
+      projectStatus: "PLANNED",
+      members: [],
+      goals: [],
+      portfolios: [],
+      statusUpdates: [],
+    },
     loading,
     error,
     updateDescription,

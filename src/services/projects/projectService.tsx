@@ -1,36 +1,8 @@
 import { api } from "@/lib/api";
-import { CreateProjectApiData } from "@/components/modals/validator/createProjectSchema";
+
 import { usersService, User } from "@/services/users/usersService";
 
-// Types
-export interface Project {
-  id: number;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate?: string;
-  ownerId: number;
-  emailPm: string;
-  organizationId: number;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface CreateProjectRequest extends CreateProjectApiData {}
-
-export interface CreateProjectResponse {
-  success: boolean;
-  data: Project;
-  message?: string;
-}
-
-export interface ApiError {
-  message: string;
-  status?: number;
-  code?: string;
-  details?: Record<string, unknown>;
-}
+import type { Project, CreateProjectRequest, CreateProjectResponse, ApiError } from "@/types/project";
 
 // Project Service Class
 class ProjectService {
@@ -76,6 +48,7 @@ class ProjectService {
    */
   async getProjectById(id: number): Promise<Project> {
     try {
+      // Gọi trực tiếp API backend
       const response = await api.get<Project>(`${this.baseUrl}/${id}`);
       return response.data;
     } catch (error: any) {

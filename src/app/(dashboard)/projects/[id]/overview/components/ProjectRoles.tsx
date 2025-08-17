@@ -4,10 +4,13 @@ import { useState } from 'react';
 import { ACTION_ICONS } from '@/constants/icons';
 import { useTheme } from '@/layouts/hooks/useTheme';
 import { useProjectOverview } from '../context/ProjectOverviewContext';
+import { useSession } from 'next-auth/react';
 
 export function ProjectRoles() {
   const { data, addMember, removeMember, loading } = useProjectOverview();
   const { theme } = useTheme();
+  const user = useSession().data?.user;
+  console.log("User in ProjectRoles:", user);
   const [isAddingMember, setIsAddingMember] = useState(false);
   const [newMember, setNewMember] = useState({
     name: '',
@@ -42,11 +45,15 @@ export function ProjectRoles() {
           <div key={member.id} className="flex items-center justify-between group">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
-                {member.avatar}
+                {user?.image ? (
+                  <img src={user.image} alt={user.image} className="w-full h-full rounded-full" />
+                ) : (
+                  <span>{member.avatar || member.email.substring(0, 2).toUpperCase()}</span>
+                )}
               </div>
               <div>
                 <div className="text-sm font-medium" style={{ color: theme.text.primary }}>
-                  {member.name}
+                  {member.email}
                 </div>
                 <div className="text-xs" style={{ color: theme.text.muted }}>
                   {member.role}

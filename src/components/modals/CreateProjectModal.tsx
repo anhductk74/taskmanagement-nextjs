@@ -1,42 +1,13 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { yupResolver } from "@hookform/resolvers/yup";
-import "@/app/globals.css";
-import {
-  Calendar,
-  FileText,
-  Mail,
-  User,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  X,
-} from "lucide-react";
-import { useMemo, useState } from "react";
-import Input from "@/components/ui/Input/Input";
-import { Button } from "@/components/ui/Button";
-import Dropdown, { DropdownItem } from "@/components/ui/Dropdown/Dropdown";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/Dialog";
+import React, { useState } from "react";
 import { useTheme } from "@/layouts/hooks/useTheme";
-import { useProjects } from "@/hooks";
-import { GrProjects } from "react-icons/gr";
-import { createProjectSchema, CreateProjectFormData } from "./validator/createProjectSchema";
-import { projectService } from "@/services/projects/projectService";
-import { useSession } from "next-auth/react";
-import toast from 'react-hot-toast';
-
+import { ChevronDown, ArrowLeft, X, Sparkles } from "lucide-react";
+import { BaseModal } from "@/components/ui";
+import Image from "next/image";
 
 /* ===================== Types ===================== */
-// Using the imported CreateProjectFormData type from the schema
-
-interface Props {
+interface CreateProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateProject?: (projectData: ProjectFormData) => void;
@@ -83,204 +54,155 @@ export default function CreateProjectModal({
   onCreateProject
 }: CreateProjectModalProps) {
   const { theme } = useTheme();
-  const { addProject } = useProjects();
-    // console.log("Role: ",useSession().data?.user?.role);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<CreateProjectFormData>({
-    defaultValues: {
-      name: "",
-      description: "",
-      startDate: "",
-      endDate: "",
-      pmEmail: "",
-      status: "Planned",
-    },
-    resolver: yupResolver(createProjectSchema),
-    mode: "onSubmit",
-  });
-
-  const today = useMemo(() => formatYMD(new Date()), []);
-  const startDateValue = watch("startDate");
-  const statusValue = watch("status");
-
-  const [isStatusOpen, setIsStatusOpen] = useState(false);
-  const [isStartCalOpen, setIsStartCalOpen] = useState(false);
-  const [isEndCalOpen, setIsEndCalOpen] = useState(false);
-  const [startMonth, setStartMonth] = useState<Date>(new Date());
-  const [endMonth, setEndMonth] = useState<Date>(new Date());
-
-  const handleStatusChange = (status: string) => {
-    setValue("status", status, { shouldDirty: true });
-    setIsStatusOpen(false);
+  
+  // Form state
+  const [projectName, setProjectName] = useState("");
+  const [selectedPrivacy, setSelectedPrivacy] = useState<PrivacyOption>(PRIVACY_OPTIONS[0]);
+  const [isPrivacyDropdownOpen, setIsPrivacyDropdownOpen] = useState(false);
+  const [nameError, setNameError] = useState("");
+  
+  // Validation
+  const validateForm = () => {
+    if (!projectName.trim()) {
+      setNameError("Project name is required.");
+      return false;
+    }
+    setNameError("");
+    return true;
   };
   
-  const onSubmit = async (data: CreateProjectFormData) => {
-    try {
-      // Get user context and PM ID
-      const [userContext] = await Promise.all([
-        projectService.getUserContext(),
-       
-      ]);
-
-      // Transform form data to API format
-      const apiData = {
-        name: data.name,
-        description: data.description,
-        startDate: data.startDate,
-        endDate: data.endDate || undefined,
-        ownerId: userContext.ownerId,
-        emailPm: data.pmEmail,
-        organizationId: userContext.organizationId,
-      };
-
-      console.log("🚀 Creating project with API:", apiData);
-      
-      // Call project service
-      const response = await projectService.createProject(apiData);
-      
-     alert(`Project created successfully!`);
-
-      // Add to global projects system for UI consistency
-      const randomColor = PROJECT_COLORS[Math.floor(Math.random() * PROJECT_COLORS.length)];
-      const newProject = {
-        name: data.name,
-        description: data.description,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        pmEmail: data.pmEmail,
-        status: (() => {
-          switch (data.status) {
-            case "Completed":
-              return "completed" as const;
-            case "Cancelled":
-              return "archived" as const;
-            default:
-              return "active" as const;
-          }
-        })(),
-        color: randomColor,
-        icon: GrProjects,
-        tasksDue: 0,
-      };
-
-      addProject(newProject);
-
-      reset();
-      onClose();
-      router.refresh();
-    } catch (error: any) {
-      console.error("Failed to create project:", error);
-      // You can add toast notification here
-      alert(`Failed to create project: ${error.message || 'Unknown error'}`);
+  // Handlers
+  const handleProjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProjectName(e.target.value);
+    if (nameError) {
+      setNameError("");
     }
+  };
+  
+  const handlePrivacySelect = (privacy: PrivacyOption) => {
+    setSelectedPrivacy(privacy);
+    setIsPrivacyDropdownOpen(false);
+  };
+  
+  const handleSetupWithAI = () => {
+    if (validateForm()) {
+      console.log("Setting up with Asana AI:", { projectName, privacy: selectedPrivacy });
+      // Handle AI setup logic
+    }
+  };
+  
+  const handleContinue = () => {
+    if (validateForm()) {
+      const projectData: ProjectFormData = {
+        name: projectName,
+        privacy: selectedPrivacy.id
+      };
+      
+      if (onCreateProject) {
+        onCreateProject(projectData);
+      }
+      
+      // Reset form
+      setProjectName("");
+      setSelectedPrivacy(PRIVACY_OPTIONS[0]);
+      setNameError("");
+      onClose();
+    }
+  };
+  
+  const handleClose = () => {
+    // Reset form on close
+    setProjectName("");
+    setSelectedPrivacy(PRIVACY_OPTIONS[0]);
+    setNameError("");
+    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        className="sm:max-w-[600px] border"
-        style={{
-          borderColor: theme.border.default,
-          color: theme.text.primary,
-        }}
+    <BaseModal
+      isOpen={isOpen}
+      onClose={handleClose}
+      maxWidth="7xl"
+      height="screen"
+      showHeader={false}
+      className="m-0 max-w-none w-screen h-screen rounded-none overflow-hidden"
+    >
+      <div 
+        className="flex h-screen"
+        style={{ backgroundColor: theme.background.primary }}
       >
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle>Create New Project</DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-0"
-              onClick={() => {
-                onClose();
-                reset();
-              }}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Name */} 
-          <div>
-            <label className="font-medium flex items-center gap-1 mb-1">
-              <FileText className="w-4 h-4" /> Project Name *
-            </label>
-            <Input
-              leftIcon={<FileText className="w-4 h-4" />}
-              error={!!errors.name}
-              helperText={errors.name?.message?.toString()}
-              {...register("name")}
-              placeholder="Enter project name"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="font-medium flex items-center gap-1 mb-1">
-              <FileText className="w-4 h-4" /> Description
-            </label>
-            <Input
-              leftIcon={<FileText className="w-4 h-4" />}
-              {...register("description")}
-              placeholder="Describe the project..."
-            />
+        {/* Left Panel - Form */}
+        <div 
+          className="w-1/2 flex flex-col px-16 py-12 relative"
+          style={{ backgroundColor: theme.background.primary }}
+        >
+          {/* Header - Within left panel only */}
+          <div className="flex items-center justify-between mb-16">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleClose}
+                className="p-2 rounded-lg transition-colors"
+                style={{ 
+                  color: theme.text.secondary,
+                  backgroundColor: 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = theme.background.secondary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <h1 
+                className="text-3xl font-semibold"
+                style={{ color: theme.text.primary }}
+              >
+                New project
+              </h1>
+            </div>
           </div>
 
+          {/* Form Content */}
+          <div className="max-w-md mx-auto flex-1 flex flex-col justify-center">
 
-
-          {/* Dates */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Start Date */}
-            <div>
-              <label className="font-medium flex items-center gap-1 mb-1">
-                <Calendar className="w-4 h-4" /> Start Date *
+            {/* Project Name */}
+            <div className="mb-8">
+              <label 
+                className="block text-base font-medium mb-3"
+                style={{ color: theme.text.primary }}
+              >
+                Project name
               </label>
-              <div className="relative">
-                <Dropdown
-                  trigger={
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" />
+              <input
+                type="text"
+                value={projectName}
+                onChange={handleProjectNameChange}
+                className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-base ${
+                  nameError ? 'border-red-500 bg-red-50' : ''
+                }`}
+                style={{
+                  backgroundColor: nameError ? 'rgba(239, 68, 68, 0.1)' : theme.background.secondary,
+                  color: theme.text.primary,
+                  borderColor: nameError ? '#ef4444' : 'transparent',
+                  outline: 'none'
+                }}
+                placeholder=""
+                onFocus={(e) => {
+                  if (!nameError) {
+                    e.target.style.borderColor = '#3b82f6';
                   }
-                  isOpen={isStartCalOpen}
-                  onOpenChange={setIsStartCalOpen}
-                  placement="bottom-left"
-                >
-                  <CalendarPopover
-                    month={startMonth}
-                    setMonth={setStartMonth}
-                    onSelect={(d) => {
-                      const val = formatYMD(d);
-                      setValue("startDate", val, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      });
-                      setIsStartCalOpen(false);
-                    }}
-                    theme={theme}
-                    todayYMD={today}
-                  />
-                </Dropdown>
-
-                <Input
-                  type="date"
-                  min={today} // native guard
-                  leftIcon={<Calendar className="w-4 h-4" />}
-                  onClick={() => setIsStartCalOpen(true)}
-                  className="pl-10 custom-date"
-                  // placeholder="YYYY-MM-DD"
-                  error={!!errors.startDate}
-                  helperText={errors.startDate?.message?.toString()}
-                  {...register("startDate")}
-                />
-              </div>
+                }}
+                onBlur={(e) => {
+                  if (!nameError) {
+                    e.target.style.borderColor = 'transparent';
+                  }
+                }}
+              />
+              {nameError && (
+                <p className="text-red-500 text-sm mt-2 font-medium">{nameError}</p>
+              )}
             </div>
 
             {/* Privacy */}
@@ -292,88 +214,56 @@ export default function CreateProjectModal({
                 Privacy
               </label>
               <div className="relative">
-                <Dropdown
-                  trigger={
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" />
-                  }
-                  isOpen={isEndCalOpen}
-                  onOpenChange={setIsEndCalOpen}
-                  placement="bottom-left"
+                <button
+                  onClick={() => setIsPrivacyDropdownOpen(!isPrivacyDropdownOpen)}
+                  className="w-full p-4 rounded-lg border flex items-center justify-between transition-all duration-200 text-base"
+                  style={{
+                    backgroundColor: theme.background.secondary,
+                    borderColor: 'transparent',
+                    color: theme.text.primary,
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#3b82f6';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'transparent';
+                  }}
                 >
-                  <CalendarPopover
-                    month={endMonth}
-                    setMonth={setEndMonth}
-                    minDate={startDateValue || today}
-                    onSelect={(d) => {
-                      const val = formatYMD(d);
-                      if (startDateValue && val < startDateValue) return;
-                      setValue("endDate", val, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      });
-                      setIsEndCalOpen(false);
-                    }}
-                    theme={theme}
-                    todayYMD={today}
-                  />
-                </Dropdown>
-
-                <Input
-                  type="date"
-                  min={startDateValue || today} // native guard
-                  leftIcon={<Calendar className="w-4 h-4" />}
-                  onClick={() => setIsEndCalOpen(true)} 
-                  className="pl-10 custom-date"
-                  // placeholder="YYYY-MM-DD"
-                  error={!!errors.endDate}
-                  helperText={errors.endDate?.message?.toString()}
-                  {...register("endDate")}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Email + Status */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* PM Email */}
-            <div>
-              <label className="font-medium flex items-center gap-1 mb-1">
-                <Mail className="w-4 h-4" /> Project Manager Email *
-              </label>
-              <Input
-                type="email"
-                leftIcon={<Mail className="w-4 h-4" />}
-                error={!!errors.pmEmail}
-                helperText={errors.pmEmail?.message?.toString()}
-                {...register("pmEmail")}
-                placeholder="pm@company.com"
-              />
-            </div>
-
-            {/* Status */}
-            <div>
-              <label className="font-medium flex items-center gap-1 mb-1">
-                <User className="w-4 h-4" /> Project Status *
-              </label>
-              <Dropdown
-                trigger={
-                  <Button variant="outline" className="w-full justify-between text-white">
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      <span className="text-white">{statusValue || "Select status"}</span>
-                    </div>
-                    <ChevronDown className="w-4 h-4" />
-                  </Button>
-                }
-                className="w-full"
-                isOpen={isStatusOpen}
-                onOpenChange={setIsStatusOpen}
-              >
-                <div className="py-1">
-                  {STATUS_OPTIONS.map((status) => (
-                    <DropdownItem
-                      key={status.label}
-                      onClick={() => handleStatusChange(status.label)}
+                <div className="flex items-center space-x-3">
+                  <span className="text-lg">{selectedPrivacy.icon}</span>
+                  <span>{selectedPrivacy.label}</span>
+                </div>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              
+              {isPrivacyDropdownOpen && (
+                <div 
+                  className="absolute top-full left-0 right-0 mt-1 border rounded-lg shadow-lg z-50"
+                  style={{
+                    backgroundColor: theme.background.primary,
+                    borderColor: theme.border.default,
+                  }}
+                >
+                  {PRIVACY_OPTIONS.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handlePrivacySelect(option)}
+                      className="w-full p-3 text-left hover:bg-opacity-80 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                      style={{
+                        backgroundColor: selectedPrivacy.id === option.id 
+                          ? theme.background.secondary 
+                          : 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (selectedPrivacy.id !== option.id) {
+                          e.currentTarget.style.backgroundColor = theme.background.secondary;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedPrivacy.id !== option.id) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }
+                      }}
                     >
                       <div className="flex items-center space-x-3">
                         <span className="text-lg">{option.icon}</span>
@@ -399,21 +289,75 @@ export default function CreateProjectModal({
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-4 pt-4">
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              size="lg"
-              className="flex-1"
+          </div>
+
+          {/* Action Buttons - Fixed at bottom */}
+          <div className="max-w-md mx-auto w-full space-y-4 mt-8">
+            <button
+              onClick={handleSetupWithAI}
+              className="w-full p-4 rounded-lg border-2 border-dashed transition-all duration-200 flex items-center justify-center space-x-3 text-base font-medium"
+              style={{
+                borderColor: theme.text.secondary,
+                backgroundColor: 'transparent',
+                color: theme.text.primary,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = theme.background.secondary;
+                e.currentTarget.style.borderColor = theme.text.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.borderColor = theme.text.secondary;
+              }}
             >
-              {isSubmitting ? "Creating..." : "Create Project"}
-            </Button>
-            <Button
-            className="text-white"
-              type="button"
-              onClick={() => {
-                reset();
+              <Sparkles className="w-5 h-5" />
+              <span>Set up with Asana AI</span>
+            </button>
+            
+            <button
+              onClick={handleContinue}
+              className="w-full p-4 rounded-lg transition-all duration-200 text-base font-medium"
+              style={{
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                border: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#2563eb';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#3b82f6';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+
+        {/* Right Panel - Preview */}
+        <div 
+          className="w-1/2 flex flex-col px-16 py-12 border-l relative"
+          style={{ 
+            backgroundColor: theme.background.secondary,
+            borderLeftColor: theme.border.default
+          }}
+        >
+          {/* Close button in top right */}
+          <div className="absolute top-6 right-6">
+            <button
+              onClick={handleClose}
+              className="p-2 rounded-lg transition-colors"
+              style={{ 
+                color: theme.text.secondary,
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = theme.background.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
               }}
             >
               <X className="w-6 h-6" />

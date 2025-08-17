@@ -157,4 +157,13 @@ export const usersService = {
       throw error;
     }
   },
+  getUserById: async (id: number): Promise<User> => {
+    try {
+      const response = await api.get(`/api/users/${id}`);
+      return transformUser(response.data);
+    } catch (error) {
+      console.error('❌ Failed to fetch user by ID:', error);
+      throw error;
+    }
+  }
 };

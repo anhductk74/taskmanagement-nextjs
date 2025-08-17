@@ -1,18 +1,22 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { projectService } from '@/services/projects/projectService';
 import { useParams } from 'next/navigation';
+import { usersService } from '@/services/users/usersService';
+
 
 interface Project {
   id: string;
   name: string;
   description: string;
   color: string;
-  teamId: string;
-  managerId: string;
   status: string;
   startDate: Date | string;
   endDate: Date | string;
+  pmEmail?: string;
+  avatarPm?: string;
+  role?: string;
 }
 
 interface ProjectContextValue {
@@ -30,7 +34,7 @@ interface DynamicProjectProviderProps {
 
 export function DynamicProjectProvider({ children }: DynamicProjectProviderProps) {
   const params = useParams();
-  const projectId = params?.id as string;
+  const projectId = params?.id;
   
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
@@ -61,27 +65,41 @@ export function DynamicProjectProvider({ children }: DynamicProjectProviderProps
   useEffect(() => {
     const fetchProject = async () => {
       if (!projectId) {
-        setError('No projects ID provided');
+        setError('No project ID provided');
         updatePageTitle('Invalid Project');
         setLoading(false);
         return;
       }
-      
       try {
         setLoading(true);
         setError(null);
         setProject(null);
-        
-        // Set initial loading title
         updatePageTitle('Loading Project...');
-        
-        const response = await fetch('/api/projects');
-        const projects = await response.json();
-        const currentProject = projects.find((p: Project) => p.id === projectId);
-        
+        const currentProject = await projectService.getProjectById(Number(projectId));
+        let pmName = "";
+        let pmEmail = "";
+        let avatarPm = "";
+        let role = "Member"; // Default role
+        if (currentProject && currentProject.pmId) {
+          try {
+           const pmUser = await usersService.getUserById(currentProject.pmId ?? 0);
+            pmName = pmUser.name;
+            pmEmail = pmUser.email;
+            avatarPm = pmUser.avatar || "U";
+            role = pmUser.role || "Member"; // Use role from user if available
+          } catch (err) {
+            console.warn('Không lấy được thông tin PM:', err);
+          }
+        }
         if (currentProject) {
-          setProject(currentProject);
-          // Delay title update to ensure component is ready
+          setProject({
+            ...currentProject,
+            id: String(currentProject.id),
+            color: "#3b82f6",
+            endDate: currentProject.endDate ?? "",
+            pmEmail,
+            avatarPm,
+          });
           setTimeout(() => updatePageTitle(currentProject.name), 50);
         } else {
           setProject(null);
@@ -89,15 +107,14 @@ export function DynamicProjectProvider({ children }: DynamicProjectProviderProps
           setTimeout(() => updatePageTitle('Project Not Found'), 50);
         }
       } catch (err) {
-        console.error('Error fetching projects:', err);
+        console.error('Error fetching project:', err);
         setProject(null);
-        setError('Failed to load projects');
+        setError('Failed to load project');
         setTimeout(() => updatePageTitle('Project Error'), 50);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProject();
   }, [projectId]);
 
