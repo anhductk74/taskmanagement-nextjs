@@ -289,15 +289,15 @@ const TaskSection = ({
 
                                   switch (section.id) {
                                     case 'do-today':
-                                      defaultdeadline = today.toISOString().split('T')[0];
+                                      defaultdeadline = today.toLocaleDateString("en-CA").split('T')[0];
                                       break;
                                     case 'do-next-week':
-                                      defaultdeadline = nextWeek.toISOString().split('T')[0];
+                                      defaultdeadline = nextWeek.toLocaleDateString("en-CA").split('T')[0];
                                       break;
                                     case 'do-later':
                                       const laterDate = new Date(today);
                                       laterDate.setDate(today.getDate() + 14); // 2 weeks later
-                                      defaultdeadline = laterDate.toISOString().split('T')[0];
+                                      defaultdeadline = laterDate.toLocaleDateString("en-CA").split('T')[0];
                                       break;
                                     // 'recently-assigned' gets no default due date
                                   }

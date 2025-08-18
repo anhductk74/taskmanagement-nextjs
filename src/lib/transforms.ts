@@ -51,7 +51,7 @@ export const formatDateString = (date: Date | string | any[]): string => {
     return `${year}-${month}-${day}`;
   }
   
-  return new Date().toISOString().split('T')[0];
+  return new Date().toLocaleDateString("en-CA").split('T')[0];
 };
 
 // Normalize status from backend to frontend format

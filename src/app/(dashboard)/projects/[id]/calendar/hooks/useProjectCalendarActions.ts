@@ -64,9 +64,9 @@ export function useProjectCalendarActions(): TaskListActions {
           priority: 'MEDIUM',
           status: 'TODO',
           tags: [],
-          startDate: new Date().toISOString().split('T')[0],
-          endDate: new Date().toISOString().split('T')[0],
-          deadline: new Date().toISOString().split('T')[0],
+          startDate: new Date().toLocaleDateString("en-CA").split('T')[0],
+          endDate: new Date().toLocaleDateString("en-CA").split('T')[0],
+          deadline: new Date().toLocaleDateString("en-CA").split('T')[0],
         });
       } else if (taskData) {
         // Enhanced task creation with all details
@@ -88,7 +88,7 @@ export function useProjectCalendarActions(): TaskListActions {
         });
       } else {
         // Default task creation
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString("en-CA").split('T')[0];
         await addTask({
           name: 'New Task',
           description: '',

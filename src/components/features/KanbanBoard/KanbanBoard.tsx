@@ -191,13 +191,13 @@ const KanbanBoard = ({
     
     switch (newTaskSection) {
       case 'do-today':
-        deadline = today.toISOString().split('T')[0];
+        deadline = today.toLocaleDateString("en-CA").split('T')[0];
         break;
       case 'do-next-week':
-        deadline = nextWeek.toISOString().split('T')[0];
+        deadline = nextWeek.toLocaleDateString("en-CA").split('T')[0];
         break;
       case 'do-later':
-        deadline = later.toISOString().split('T')[0];
+        deadline = later.toLocaleDateString("en-CA").split('T')[0];
         break;
       // 'recently-assigned' gets no default due date
     }
@@ -252,13 +252,13 @@ const KanbanBoard = ({
 
       switch (newTaskSection) {
         case 'do-today':
-          defaultdeadline = today.toISOString().split('T')[0];
+          defaultdeadline = today.toLocaleDateString("en-CA").split('T')[0];
           break;
         case 'do-next-week':
-          defaultdeadline = nextWeek.toISOString().split('T')[0];
+          defaultdeadline = nextWeek.toLocaleDateString("en-CA").split('T')[0];
           break;
         case 'do-later':
-          defaultdeadline = later.toISOString().split('T')[0];
+          defaultdeadline = later.toLocaleDateString("en-CA").split('T')[0];
           break;
         // 'recently-assigned' gets no default due date
       }

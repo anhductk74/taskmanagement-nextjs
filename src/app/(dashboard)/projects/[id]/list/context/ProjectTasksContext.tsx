@@ -42,11 +42,11 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'in_progress' as TaskStatus,
     priority: 'high' as TaskPriority,
     assignees: [{ id: 'sarah.wilson', name: 'Sarah Wilson', avatar: 'SW' }],
-    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA").split('T')[0],
     tags: ['design', 'frontend', 'ui'],
     project: projectName,
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-2`,
@@ -55,11 +55,11 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'todo' as TaskStatus,
     priority: 'medium' as TaskPriority,
     assignees: [{ id: 'john.doe', name: 'John Doe', avatar: 'JD' }],
-    deadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA").split('T')[0],
     tags: ['backend', 'integration', 'api'],
     project: projectName,
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-3`,
@@ -68,11 +68,11 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'done' as TaskStatus,
     priority: 'high' as TaskPriority,
     assignees: [{ id: 'mike.chen', name: 'Mike Chen', avatar: 'MC' }],
-    deadline: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA").split('T')[0],
     tags: ['testing', 'quality', 'automation'],
     project: projectName,
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-4`,
@@ -81,11 +81,11 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'in_progress' as TaskStatus,
     priority: 'low' as TaskPriority,
     assignees: [{ id: 'emma.davis', name: 'Emma Davis', avatar: 'ED' }],
-    deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA").split('T')[0],
     tags: ['documentation', 'writing'],
     project: projectName,
-    createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-5`,
@@ -94,11 +94,11 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     status: 'todo' as TaskStatus,
     priority: 'medium' as TaskPriority,
     assignees: [{ id: 'alex.taylor', name: 'Alex Taylor', avatar: 'AT' }],
-    deadline: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    deadline: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA").split('T')[0],
     tags: ['performance', 'optimization', 'frontend'],
     project: projectName,
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
   },
 ];
 
@@ -152,8 +152,8 @@ export function ProjectTasksProvider({ children }: ProjectTasksProviderProps) {
         ...taskData,
         id: `${project.id}-task-${Date.now()}`,
         project: project.name,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleDateString("en-CA"),
+        updatedAt: new Date().toLocaleDateString("en-CA"),
       };
       
       setTasks(prev => [newTask, ...prev]);
@@ -177,14 +177,14 @@ export function ProjectTasksProvider({ children }: ProjectTasksProviderProps) {
           ? { 
               ...task, 
               ...updates, 
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toLocaleDateString("en-CA")
             }
           : task
       ));
       
       // Update selected task if it's the one being updated
       if (selectedTask?.id === taskId) {
-        setSelectedTask(prev => prev ? { ...prev, ...updates, updatedAt: new Date().toISOString() } : null);
+        setSelectedTask(prev => prev ? { ...prev, ...updates, updatedAt: new Date().toLocaleDateString("en-CA") } : null);
       }
       
     } catch (err) {
@@ -228,7 +228,7 @@ export function ProjectTasksProvider({ children }: ProjectTasksProviderProps) {
           ? { 
               ...task, 
               ...updates, 
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toLocaleDateString("en-CA")
             }
           : task
       ));

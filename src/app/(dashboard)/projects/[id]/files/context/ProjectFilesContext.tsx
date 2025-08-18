@@ -83,8 +83,8 @@ const generateMockFiles = (projectId: string, projectName: string): ProjectFile[
     size: 1245680,
     type: 'png',
     mimeType: 'image/png',
-    uploadedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    uploadedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     uploadedBy: {
       id: 'van.le',
       name: 'Van Le',
@@ -104,8 +104,8 @@ const generateMockFiles = (projectId: string, projectName: string): ProjectFile[
     size: 2547823,
     type: 'pdf',
     mimeType: 'application/pdf',
-    uploadedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    uploadedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     uploadedBy: {
       id: 'sarah.wilson',
       name: 'Sarah Wilson',
@@ -125,8 +125,8 @@ const generateMockFiles = (projectId: string, projectName: string): ProjectFile[
     size: 892341,
     type: 'png',
     mimeType: 'image/png',
-    uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     uploadedBy: {
       id: 'john.doe',
       name: 'John Doe', 
@@ -146,8 +146,8 @@ const generateMockFiles = (projectId: string, projectName: string): ProjectFile[
     size: 567234,
     type: 'png',
     mimeType: 'image/png',
-    uploadedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    uploadedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     uploadedBy: {
       id: 'emma.davis',
       name: 'Emma Davis',
@@ -167,8 +167,8 @@ const generateMockFiles = (projectId: string, projectName: string): ProjectFile[
     size: 156432,
     type: 'markdown',
     mimeType: 'text/markdown',
-    uploadedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    uploadedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     uploadedBy: {
       id: 'john.doe',
       name: 'John Doe',
@@ -188,8 +188,8 @@ const generateMockFiles = (projectId: string, projectName: string): ProjectFile[
     size: 8934521,
     type: 'archive',
     mimeType: 'application/zip',
-    uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     uploadedBy: {
       id: 'emma.davis',
       name: 'Emma Davis',
@@ -209,8 +209,8 @@ const generateMockFiles = (projectId: string, projectName: string): ProjectFile[
     size: 23456,
     type: 'sql',
     mimeType: 'application/sql',
-    uploadedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    uploadedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     uploadedBy: {
       id: 'mike.chen',
       name: 'Mike Chen',
@@ -231,8 +231,8 @@ const generateMockFolders = (projectId: string): FileFolder[] => [
     id: 'root',
     name: 'Root',
     parentId: null,
-    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     color: '#6B7280',
     isShared: false
   },
@@ -240,8 +240,8 @@ const generateMockFolders = (projectId: string): FileFolder[] => [
     id: 'docs',
     name: 'Documentation',
     parentId: 'root',
-    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     color: '#3B82F6',
     isShared: true
   },
@@ -249,8 +249,8 @@ const generateMockFolders = (projectId: string): FileFolder[] => [
     id: 'assets',
     name: 'Assets',
     parentId: 'root',
-    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     color: '#10B981',
     isShared: true
   },
@@ -258,8 +258,8 @@ const generateMockFolders = (projectId: string): FileFolder[] => [
     id: 'database',
     name: 'Database',
     parentId: 'root',
-    createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
+    updatedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"),
     color: '#F59E0B',
     isShared: false
   }
@@ -319,8 +319,8 @@ export function ProjectFilesProvider({ children }: ProjectFilesProviderProps) {
         size: file.size,
         type: file.name.split('.').pop() || 'unknown',
         mimeType: file.type,
-        uploadedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        uploadedAt: new Date().toLocaleDateString("en-CA"),
+        updatedAt: new Date().toLocaleDateString("en-CA"),
         uploadedBy: {
           id: 'current-user',
           name: 'Current User',
@@ -370,7 +370,7 @@ export function ProjectFilesProvider({ children }: ProjectFilesProviderProps) {
       
       setFiles(prev => prev.map(file => 
         file.id === fileId 
-          ? { ...file, ...updates, updatedAt: new Date().toISOString() }
+          ? { ...file, ...updates, updatedAt: new Date().toLocaleDateString("en-CA") }
           : file
       ));
       
@@ -421,8 +421,8 @@ export function ProjectFilesProvider({ children }: ProjectFilesProviderProps) {
         id: `folder-${Date.now()}`,
         name,
         parentId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleDateString("en-CA"),
+        updatedAt: new Date().toLocaleDateString("en-CA"),
         color: '#6B7280',
         isShared: false
       };
@@ -481,7 +481,7 @@ export function ProjectFilesProvider({ children }: ProjectFilesProviderProps) {
       
       setFolders(prev => prev.map(folder => 
         folder.id === folderId 
-          ? { ...folder, ...updates, updatedAt: new Date().toISOString() }
+          ? { ...folder, ...updates, updatedAt: new Date().toLocaleDateString("en-CA") }
           : folder
       ));
       

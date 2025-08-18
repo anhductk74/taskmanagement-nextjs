@@ -148,7 +148,7 @@ export const tasksService = {
       } else if (data.startDate) {
         startDate = data.startDate;
       } else {
-        startDate = new Date().toISOString().split('T')[0];
+        startDate = new Date().toLocaleDateString("en-CA").split('T')[0];
       }
       console.log('Task status:', data.status);
 

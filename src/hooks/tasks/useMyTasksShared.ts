@@ -105,8 +105,8 @@ export const useMyTasksShared = (params: UseMyTasksSharedParams = {}): MyTasksSh
               task.status === 'IN_PROGRESS' ? 'IN_PROGRESS' : 'TODO',
       tags: task.tags || [],
       project: task.tagText || 'Default Project',
-      createdAt: task.createdAt.toISOString(),
-      updatedAt: task.updatedAt.toISOString(),
+      createdAt: task.createdAt.toLocaleDateString("en-CA"),
+      updatedAt: task.updatedAt.toLocaleDateString("en-CA"),
     };
   }, [formatDate]);
 
@@ -144,7 +144,7 @@ export const useMyTasksShared = (params: UseMyTasksSharedParams = {}): MyTasksSh
           priority: task.priority === 'LOW' ? 'LOW' :
                    task.priority === 'MEDIUM' ? 'MEDIUM' :
                    task.priority === 'HIGH' ? 'HIGH' : 'URGENT',
-          startDate: task.startDate || new Date().toISOString().split('T')[0],
+          startDate: task.startDate || new Date().toLocaleDateString("en-CA").split('T')[0],
           deadline: task.deadline || task.deadline || null,
           groupId: null,
           projectId: null,
@@ -172,7 +172,7 @@ export const useMyTasksShared = (params: UseMyTasksSharedParams = {}): MyTasksSh
           priority: taskData.priority === 'LOW' ? 'LOW' :
                    taskData.priority === 'MEDIUM' ? 'MEDIUM' :
                    taskData.priority === 'HIGH' ? 'HIGH' : 'MEDIUM',
-          startDate: taskData.startDate || new Date().toISOString().split('T')[0],
+          startDate: taskData.startDate || new Date().toLocaleDateString("en-CA").split('T')[0],
           deadline: taskData.deadline || taskData.endDate || null,
           groupId: taskData.groupId || null,
           projectId: taskData.projectId || null,
@@ -206,7 +206,7 @@ export const useMyTasksShared = (params: UseMyTasksSharedParams = {}): MyTasksSh
           id: taskId, 
           data: { 
             status: backendStatus,
-            startDate: new Date().toISOString().split('T')[0],
+            startDate: new Date().toLocaleDateString("en-CA").split('T')[0],
             deadline: null
           }
         });
@@ -220,7 +220,7 @@ export const useMyTasksShared = (params: UseMyTasksSharedParams = {}): MyTasksSh
       try {
         const backendData = {
           assignedToIds: [assigneeId],
-          startDate: new Date().toISOString().split('T')[0]
+          startDate: new Date().toLocaleDateString("en-CA").split('T')[0]
         };
         
         await updateTask({ 

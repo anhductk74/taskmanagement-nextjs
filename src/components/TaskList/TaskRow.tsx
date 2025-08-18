@@ -5,6 +5,9 @@ import { CheckCircle, User, MoreHorizontal } from 'lucide-react';
 import { useTheme } from '@/layouts/hooks/useTheme';
 import { TaskListItem, TaskListActions } from './types';
 import { getPriorityConfig, getStatusConfig, formatDate, formatTaskDate, isOverdue } from './utils';
+import {
+  TaskStatus,
+} from "./types";
 
 interface TaskRowProps {
   task: TaskListItem;
@@ -36,10 +39,13 @@ const TaskRow = ({
   };
 
   const handleStatusChange = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const nextStatus = task.status === 'done' ? 'todo' : 'done';
-    actions?.onTaskStatusChange?.(task.id, nextStatus);
-  };
+      e.stopPropagation(); // Define the status cycle: TODO -> IN_PROGRESS -> DONE -> TODO
+      const statusCycle: TaskStatus[] = ["TODO", "IN_PROGRESS", "DONE"];
+      const currentIndex = statusCycle.indexOf(task.status as TaskStatus);
+      const nextIndex = (currentIndex + 1) % statusCycle.length;
+      const nextStatus = statusCycle[nextIndex];
+      actions?.onTaskStatusChange?.(task.id, nextStatus);
+    };
 
   return (
     <tr
@@ -59,7 +65,7 @@ const TaskRow = ({
             >
               <CheckCircle
                 className={`w-5 h-5 ${
-                  task.status === 'done' 
+                  task.status === 'DONE' 
                     ? 'text-green-500 fill-current' 
                     : 'text-gray-400 hover:text-gray-600'
                 }`}
@@ -69,9 +75,9 @@ const TaskRow = ({
           <div className="min-w-0 flex-1">
             <div 
               className={`font-medium truncate ${
-                task.status === 'done' ? 'line-through text-gray-500' : ''
+                task.status === 'DONE' ? 'line-through text-gray-500' : ''
               }`}
-              style={{ color: task.status === 'done' ? theme.text.secondary : theme.text.primary }}
+              style={{ color: task.status === 'DONE' ? theme.text.secondary : theme.text.primary }}
             >
               {task.name}
             </div>

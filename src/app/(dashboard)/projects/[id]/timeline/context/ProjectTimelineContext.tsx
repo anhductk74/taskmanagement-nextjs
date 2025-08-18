@@ -111,8 +111,8 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     deadline: '2025-08-08',
     tags: ['kickoff', 'meeting'],
     project: projectName,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date().toLocaleDateString("en-CA"),
+    updatedAt: new Date().toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-2`,
@@ -126,8 +126,8 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     deadline: '2025-08-16',
     tags: ['timeline', 'communication'],
     project: projectName,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date().toLocaleDateString("en-CA"),
+    updatedAt: new Date().toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-3`,
@@ -141,8 +141,8 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     deadline: '2025-07-25',
     tags: ['frontend', 'development'],
     project: projectName,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date().toLocaleDateString("en-CA"),
+    updatedAt: new Date().toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-4`,
@@ -156,8 +156,8 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     deadline: '2025-09-05',
     tags: ['backend', 'api'],
     project: projectName,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date().toLocaleDateString("en-CA"),
+    updatedAt: new Date().toLocaleDateString("en-CA"),
   },
   {
     id: `${projectId}-task-5`,
@@ -171,8 +171,8 @@ const generateMockTasks = (projectId: string, projectName: string): TaskListItem
     deadline: '2025-09-20',
     tags: ['testing', 'qa'],
     project: projectName,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date().toLocaleDateString("en-CA"),
+    updatedAt: new Date().toLocaleDateString("en-CA"),
   },
 ];
 
@@ -233,8 +233,8 @@ export function ProjectTimelineProvider({ children }: ProjectTimelineProviderPro
         ...taskData,
         id: `${project.id}-task-${Date.now()}`,
         project: project.name,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleDateString("en-CA"),
+        updatedAt: new Date().toLocaleDateString("en-CA"),
       };
       
       setTasks(prev => [newTask, ...prev]);
@@ -258,7 +258,7 @@ export function ProjectTimelineProvider({ children }: ProjectTimelineProviderPro
           ? { 
               ...task, 
               ...updates, 
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toLocaleDateString("en-CA")
             }
           : task
       ));
@@ -298,7 +298,7 @@ export function ProjectTimelineProvider({ children }: ProjectTimelineProviderPro
           ? { 
               ...task, 
               ...updates, 
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toLocaleDateString("en-CA")
             }
           : task
       ));
@@ -328,13 +328,13 @@ export function ProjectTimelineProvider({ children }: ProjectTimelineProviderPro
       
       switch (sectionId) {
         case 'do-today':
-          newdeadline = today.toISOString().split('T')[0];
+          newdeadline = today.toLocaleDateString("en-CA").split('T')[0];
           break;
         case 'do-next-week':
-          newdeadline = nextWeek.toISOString().split('T')[0];
+          newdeadline = nextWeek.toLocaleDateString("en-CA").split('T')[0];
           break;
         case 'do-later':
-          newdeadline = later.toISOString().split('T')[0];
+          newdeadline = later.toLocaleDateString("en-CA").split('T')[0];
           break;
         case 'recently-assigned':
           newdeadline = undefined; // Remove due date
@@ -359,8 +359,8 @@ export function ProjectTimelineProvider({ children }: ProjectTimelineProviderPro
   };
 
   const handleTaskMove = async (taskId: string, newStartDate: Date, newEndDate: Date) => {
-    const startDateStr = newStartDate.toISOString().split('T')[0];
-    const endDateStr = newEndDate.toISOString().split('T')[0];
+    const startDateStr = newStartDate.toLocaleDateString("en-CA").split('T')[0];
+    const endDateStr = newEndDate.toLocaleDateString("en-CA").split('T')[0];
     
     await updateTask(taskId, { 
       startDate: startDateStr,

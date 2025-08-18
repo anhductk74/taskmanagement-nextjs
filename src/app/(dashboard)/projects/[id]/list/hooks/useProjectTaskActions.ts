@@ -44,7 +44,7 @@ export function useProjectTaskActions(): TaskListActions {
   }, [updateTask]);
 
   const handleTaskdeadlineChange = useCallback(async (taskId: string, deadline: string) => {
-    const deadlineISO = new Date(deadline).toISOString();
+    const deadlineISO = new Date(deadline).toLocaleDateString("en-CA");
     await updateTask(taskId, { deadline, deadlineISO });
   }, [updateTask]);
 

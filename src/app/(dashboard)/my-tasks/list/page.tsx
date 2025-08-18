@@ -54,8 +54,8 @@ const MyTaskListPage = ({ searchValue = "" }: MyTaskListPageProps) => {
     // Create task with proper backend mapping for startDate and deadline
     const taskData = {
       name: 'New Task',
-      deadline: data.endDate || data.startDate || new Date().toISOString().split('T')[0], // deadline field
-      startDate: data.startDate || new Date().toISOString().split('T')[0], // startDate field (required)
+      deadline: data.endDate || data.startDate || new Date().toLocaleDateString("en-CA").split('T')[0], // deadline field
+      startDate: data.startDate || new Date().toLocaleDateString("en-CA").split('T')[0], // startDate field (required)
       endDate: data.endDate || data.startDate || undefined,
       project: '',
       status: 'todo' as const

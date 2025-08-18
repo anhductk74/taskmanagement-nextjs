@@ -98,8 +98,8 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
       onSave(task?.id || 'new', {
         name: title,
         description: description,
-        startDate: (startDate && !isNaN(startDate.getTime())) ? startDate.toISOString().split('T')[0] : undefined,
-        endDate: (endDate && !isNaN(endDate.getTime())) ? endDate.toISOString().split('T')[0] : undefined,
+        startDate: (startDate && !isNaN(startDate.getTime())) ? startDate.toLocaleDateString("en-CA").split('T')[0] : undefined,
+        endDate: (endDate && !isNaN(endDate.getTime())) ? endDate.toLocaleDateString("en-CA").split('T')[0] : undefined,
         startTime: hasStartTime ? startTime : undefined,
         endTime: hasStartTime ? endTime : undefined,
         hasStartTime,
@@ -309,8 +309,8 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                 {(() => {
                   // Display enhanced calendar data if available
                   if ((startDate && !isNaN(startDate.getTime())) || (endDate && !isNaN(endDate.getTime()))) {
-                    const startStr = (startDate && !isNaN(startDate.getTime())) ? startDate.toISOString().split('T')[0] : null;
-                    const endStr = (endDate && !isNaN(endDate.getTime())) ? endDate.toISOString().split('T')[0] : null;
+                    const startStr = (startDate && !isNaN(startDate.getTime())) ? startDate.toLocaleDateString("en-CA").split('T')[0] : null;
+                    const endStr = (endDate && !isNaN(endDate.getTime())) ? endDate.toLocaleDateString("en-CA").split('T')[0] : null;
                     
                     if (startStr && endStr) {
                       let display = formatDateRange(startStr, endStr);

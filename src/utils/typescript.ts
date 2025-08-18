@@ -71,7 +71,7 @@ export function toString(value: unknown): string {
   if (isString(value)) return value;
   if (isNumber(value)) return value.toString();
   if (isBoolean(value)) return value.toString();
-  if (isDate(value)) return value.toISOString();
+  if (isDate(value)) return value.toLocaleDateString("en-CA");
   if (value === null) return '';
   if (value === undefined) return '';
   return String(value);

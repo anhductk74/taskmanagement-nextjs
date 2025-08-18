@@ -139,15 +139,15 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
 
         switch (section.id) {
           case 'do-today':
-            defaultdeadline = today.toISOString().split('T')[0];
+            defaultdeadline = today.toLocaleDateString("en-CA").split('T')[0];
             break;
           case 'do-next-week':
-            defaultdeadline = nextWeek.toISOString().split('T')[0];
+            defaultdeadline = nextWeek.toLocaleDateString("en-CA").split('T')[0];
             break;
           case 'do-later':
             const laterDate = new Date(today);
             laterDate.setDate(today.getDate() + 14);
-            defaultdeadline = laterDate.toISOString().split('T')[0];
+            defaultdeadline = laterDate.toLocaleDateString("en-CA").split('T')[0];
             break;
         }
       }
@@ -158,7 +158,7 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
         description: '',
         status: newTaskStatus,
         priority: 'normal',
-        startDate: enhancedDateData.startDate || defaultdeadline || new Date().toISOString().split('T')[0],
+        startDate: enhancedDateData.startDate || defaultdeadline || new Date().toLocaleDateString("en-CA").split('T')[0],
         deadline: enhancedDateData.endDate || defaultdeadline,
         creatorId: tokenPayload?.userId,
         assignedToIds: [],
@@ -179,8 +179,8 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
             ? (created as any).assignedToIds.map((aid: string) => ({ id: aid }))
             : [],
             status: (created as any).status ?? newTaskStatus,
-          createdAt: (created as any).createdAt ?? (created as any).created_at ?? new Date().toISOString(),
-          updatedAt: (created as any).updatedAt ?? (created as any).updated_at ?? new Date().toISOString(),
+          createdAt: (created as any).createdAt ?? (created as any).created_at ?? new Date().toLocaleDateString("en-CA"),
+          updatedAt: (created as any).updatedAt ?? (created as any).updated_at ?? new Date().toLocaleDateString("en-CA"),
           // preserve other properties so the component can access them if needed
           ...(created as any),
         } as TaskListItem;

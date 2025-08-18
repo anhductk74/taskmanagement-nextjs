@@ -117,13 +117,13 @@ const MyTaskBoardPage = ({ searchValue = "" }: MyTaskBoardPageProps) => {
             
             switch (sectionId) {
               case 'do-today':
-                updates.deadline = today.toISOString().split('T')[0];
+                updates.deadline = today.toLocaleDateString("en-CA").split('T')[0];
                 break;
               case 'do-next-week':
-                updates.deadline = nextWeek.toISOString().split('T')[0];
+                updates.deadline = nextWeek.toLocaleDateString("en-CA").split('T')[0];
                 break;
               case 'do-later':
-                updates.deadline = later.toISOString().split('T')[0];
+                updates.deadline = later.toLocaleDateString("en-CA").split('T')[0];
                 break;
               case 'recently-assigned':
                 updates.deadline = undefined; // Remove due date

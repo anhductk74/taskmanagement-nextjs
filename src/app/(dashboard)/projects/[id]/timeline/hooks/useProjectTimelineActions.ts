@@ -55,8 +55,8 @@ export function useProjectTimelineActions(): TaskListActions {
       project?: string; 
       status?: TaskStatus;
     }) => {
-      const today = new Date().toISOString().split('T')[0];
-      const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const today = new Date().toLocaleDateString("en-CA").split('T')[0];
+      const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA").split('T')[0];
       
       if (typeof taskData === 'string') {
         // Simple string task creation
