@@ -197,7 +197,7 @@ export const tasksService = {
 if (data.deadline !== undefined) {
   backendData.deadline = data.deadline;
 }
-
+    console.log('🔄 Updating task:', id, 'with data:', backendData);
       const response = await api.put<BackendTask>(`/api/tasks/${id}`, backendData);
       return transformBackendTask(response.data);
     } catch (error) {

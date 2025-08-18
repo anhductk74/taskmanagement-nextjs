@@ -72,7 +72,11 @@ const EnhancedTaskRow = ({
     const currentIndex = statusCycle.indexOf(task.status as TaskStatus);
     const nextIndex = (currentIndex + 1) % statusCycle.length;
     const nextStatus = statusCycle[nextIndex];
-    actions?.onTaskStatusChange?.(task.id, nextStatus);
+    actions?.onTaskEdit?.({
+      ...task,
+      id: task.id,
+      status: nextStatus,
+    });
   };
 
   const startEditing = (field: string, value: string, e: React.MouseEvent) => {
