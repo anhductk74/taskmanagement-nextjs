@@ -7,6 +7,7 @@ import { TaskSection as TaskSectionType, TaskListActions, TaskStatus } from './t
 import EnhancedTaskRow from './EnhancedTaskRow';
 import { taskService } from '@/services/tasks';
 import { CreateTaskDTO } from '@/types/task';
+import DatePicker from "react-datepicker";
 import { CookieAuth } from '@/utils/cookieAuth';
 import { TaskListItem } from './types';
 import { useRouter } from 'next/navigation';
@@ -42,12 +43,8 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
   const [newTaskProject, setNewTaskProject] = useState('');
   const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>('TODO');
   const [isEnhancedCalendarOpen, setIsEnhancedCalendarOpen] = useState(false);
-  const [enhancedDateData, setEnhancedDateData] = useState<{
-    startDate?: string;
-    endDate?: string;
-    startTime?: string;
-    endTime?: string;
-  }>({});
+  const [newTaskStartDate, setNewTaskStartDate] = useState<Date | null>(null);
+  const [newTaskDeadline, setNewTaskDeadline] = useState<Date | null>(null);
   const [tasks, setTasks] = useState(section.tasks); // Thêm state cục bộ cho tasks
 
   // Khi nhận prop section thay đổi, cập nhật lại tasks
@@ -120,37 +117,26 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
     }
 
     setNewTaskdeadline(dateDisplay);
-    setEnhancedDateData({
-      startDate: data.startDate,
-      endDate: data.endDate,
-      startTime: data.startTime,
-      endTime: data.endTime
-    });
+    // setEnhancedDateData({
+    //   startDate: data.startDate,
+    //   endDate: data.endDate,
+    //   startTime: data.startTime,
+    //   endTime: data.endTime
+    // });
     setIsEnhancedCalendarOpen(false);
   };
 
   const handleAddTask = async () => {
     if (newTaskName.trim()) {
-      let defaultdeadline = newTaskdeadline;
-      if (!defaultdeadline && !enhancedDateData.startDate) {
-        const today = new Date();
-        const nextWeek = new Date(today);
-        nextWeek.setDate(today.getDate() + 7);
-
-        switch (section.id) {
-          case 'do-today':
-            defaultdeadline = today.toLocaleDateString("en-CA").split('T')[0];
-            break;
-          case 'do-next-week':
-            defaultdeadline = nextWeek.toLocaleDateString("en-CA").split('T')[0];
-            break;
-          case 'do-later':
-            const laterDate = new Date(today);
-            laterDate.setDate(today.getDate() + 14);
-            defaultdeadline = laterDate.toLocaleDateString("en-CA").split('T')[0];
-            break;
-        }
-      }
+      // Nếu người dùng đã chọn ngày trong datepicker thì sử dụng ngày đó
+      // Nếu không thì mặc định là ngày hiện tại
+      const today = new Date().toLocaleDateString("en-CA").split('T')[0];
+      const startDate = newTaskStartDate
+        ? newTaskStartDate.toLocaleDateString("en-CA").split('T')[0]
+        : today;
+      const deadline = newTaskDeadline
+        ? newTaskDeadline.toLocaleDateString("en-CA").split('T')[0]
+        : today;
 
       const tokenPayload = CookieAuth.getTokenPayload();
       const taskData: CreateTaskDTO = {
@@ -158,8 +144,8 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
         description: '',
         status: newTaskStatus,
         priority: 'normal',
-        startDate: enhancedDateData.startDate || defaultdeadline || new Date().toLocaleDateString("en-CA").split('T')[0],
-        deadline: enhancedDateData.endDate || defaultdeadline,
+        startDate: startDate,
+        deadline: deadline,
         creatorId: tokenPayload?.userId,
         assignedToIds: [],
         tags: [],
@@ -207,7 +193,8 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
     setNewTaskdeadline('');
     setNewTaskProject('');
     setNewTaskStatus('TODO');
-    setEnhancedDateData({});
+    setNewTaskStartDate(null);
+    setNewTaskDeadline(null);
   };
 
   const handleCancelAdd = () => {
@@ -216,7 +203,8 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
     setNewTaskdeadline('');
     setNewTaskProject('');
     setNewTaskStatus('TODO');
-    setEnhancedDateData({});
+    setNewTaskStartDate(null);
+    setNewTaskDeadline(null);
   };
 
   const isAllSelected = section.tasks.length > 0 && section.tasks.every(task => selectedTasks.includes(task.id));
@@ -322,22 +310,59 @@ const EnhancedTaskSection: React.FC<EnhancedTaskSectionProps> = ({
 
                   {/* Due Date */}
                   <td className="w-[120px] py-3 px-2">
-                    {isAddingTask && (
-                      <button
-                        onClick={() => setIsEnhancedCalendarOpen(true)}
-                        className="flex items-center gap-1 w-full px-2 py-1 text-xs rounded border border-gray-300 hover:border-blue-500 transition-colors"
-                        style={{
-                          backgroundColor: theme.background.secondary,
-                          color: theme.text.primary
-                        }}
-                      >
-                        <Calendar className="w-3 h-3" />
-                        <span className="truncate">
-                          {newTaskdeadline || 'Set date'}
-                        </span>
-                      </button>
-                    )}
-                  </td>
+  {isAddingTask && (
+    <>
+      {isEnhancedCalendarOpen ? (
+        <div className="relative">
+          <DatePicker
+            startDate={newTaskStartDate}
+            endDate={newTaskDeadline}
+            selectsRange
+            onChange={(dates) => {
+              const [start, end] = dates as [Date | null, Date | null];
+              setNewTaskStartDate(start);
+              setNewTaskDeadline(end);
+
+              if (start && end) {
+                // khi đã chọn đủ start + end thì đóng picker
+                setIsEnhancedCalendarOpen(false);
+              }
+            }}
+            onClickOutside={() => setIsEnhancedCalendarOpen(false)}
+            className="w-full text-sm bg-white border border-blue-500 rounded px-2 py-1 focus:outline-none shadow-sm"
+            placeholderText="Select date range"
+            dateFormat="yyyy-MM-dd"
+            autoFocus
+            open={true}
+            popperClassName="react-datepicker-popper-custom"
+            popperPlacement="bottom-start"
+          />
+        </div>
+      ) : (
+        <div
+          className="flex items-center gap-1 w-full px-2 py-1 text-xs rounded border border-gray-300 hover:border-blue-500 transition-colors cursor-pointer"
+          style={{
+            backgroundColor: theme.background.secondary,
+            color: theme.text.primary
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsEnhancedCalendarOpen(true);
+          }}
+          title="Click to set date range"
+        >
+          <Calendar className="w-3 h-3" />
+          <span className="truncate">
+            {newTaskStartDate && newTaskDeadline
+              ? `${newTaskStartDate.toLocaleDateString("en-CA")} → ${newTaskDeadline.toLocaleDateString("en-CA")}`
+              : "Set date"}
+          </span>
+        </div>
+      )}
+    </>
+  )}
+</td>
+
 
                   {/* Collaborators */}
                   <td className="w-[150px] py-3 px-2">
