@@ -4,6 +4,7 @@ import { User } from "@/types/user";
 
 export async function createUser(user: UserRegister): Promise<User> {
   // Call Next.js API route (same-origin) to avoid CORS; the route will proxy to backend
+  
   const res = await fetch('/api/users', {
     method: 'POST',
     headers: await buildClientAuthHeaders(),

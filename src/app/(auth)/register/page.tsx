@@ -1,4 +1,4 @@
-// import { RegisterForm } from '@/features/auth/components/RegisterForm'; // Legacy removed
+
 
 'use client'
 import { useState } from "react";

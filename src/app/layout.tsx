@@ -4,14 +4,19 @@ import "./globals.css";
 import { DetailPanelProvider } from "@/contexts/DetailPanelContext";
 import { AppProvider } from "@/contexts/AppProvider";
 import { NextAuthProvider } from "@/providers";
-<<<<<<< HEAD
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Geist, Geist_Mono } from "next/font/google";
+
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+});
 
 const inter = Inter({
-=======
-import { Geist, Geist_Mono } from "next/font/google";
-const geistSans = Geist({
->>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
   subsets: ["latin"],
   variable: "--font-inter",
 });
@@ -35,12 +40,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-<<<<<<< HEAD
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
-=======
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
->>>>>>> 76874d89e9a9b15cf12e4cc0defe59593994d24d
       >
+        {/* Disable StrictMode in production to reduce duplicate renders */}
         <NextAuthProvider>
           <ThemeProvider defaultTheme="dark" storageKey="taskmanagement-theme">
             <AppProvider>

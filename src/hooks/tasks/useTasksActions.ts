@@ -1,4 +1,3 @@
-// Task Actions Hooks - CRUD operations with SWR mutations
 import useSWRMutation from 'swr/mutation';
 import { mutate } from 'swr';
 import { taskService } from '@/services/tasks';
@@ -166,7 +165,7 @@ export const useUpdateTask = () => {
           true
         );
 
-        // Update My Tasks Summary cache
+        // Update My Tasks Summary cache - Fixed cache key matching
         mutate(
           (key) => Array.isArray(key) && key[0] === 'tasks' && key[1] === 'my-tasks' && key[2] === 'summary',
           (currentData: any) => {
@@ -183,6 +182,9 @@ export const useUpdateTask = () => {
           },
           true
         );
+
+        // ✅ FIX: Also force revalidate My Tasks Summary to ensure UI sync
+        mutate((key) => Array.isArray(key) && key[0] === 'tasks' && key[1] === 'my-tasks' && key[2] === 'summary');
 
         return updatedTask;
       } catch (error) {

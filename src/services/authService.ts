@@ -18,7 +18,7 @@ export const authService = {
   loginWithGoogle: async (authorizationCode: string): Promise<GoogleAuthResponse> => {
     const response = await api.post<GoogleAuthResponse>('/auth/google', {
       code: authorizationCode,
-      redirectUri: `${window.location.origin}/auth/callback`
+      redirectUri: `${window.location.origin}/callback`
     }, {
       // Ensure cookies are included in requests
       withCredentials: true
@@ -54,14 +54,7 @@ export const authService = {
     return response.data;
   },
 
-  // Get current user - Using NextAuth.js API route
-  getCurrentUser: async (): Promise<UserWithRole> => {
-    const response = await api.get<UserWithRole>('/api/auth/me', {
-      // Ensure cookies are included in requests
-      withCredentials: true
-    });
-    return response.data;
-  },
+  // getCurrentUser method removed - Use UserContext.useUser() instead
 
   // Refresh token
   refreshToken: async (): Promise<AuthTokens> => {

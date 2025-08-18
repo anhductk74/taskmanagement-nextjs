@@ -96,6 +96,7 @@ export const usersService = {
     }
   },
 
+<<<<<<< HEAD
   // Get current user
   getCurrentUser: async (): Promise<User> => {
     try {
@@ -107,6 +108,9 @@ export const usersService = {
       throw error;
     }
   },
+=======
+  // getCurrentUser method removed - Use UserContext.useUser() instead
+>>>>>>> 13e9189ac33b3e48260c3144a79eb8efd9f43272
 
   // Create user
   createUser: async (data: CreateUserDTO): Promise<User> => {
